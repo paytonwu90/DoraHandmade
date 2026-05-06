@@ -55,9 +55,9 @@ function Products() {
         setSortedProducts(enabledProducts);
       } catch (err) {
         console.error("取得商品失敗", err);
-      }finally {
-      setIsLoading(false);
-    }
+      } finally {
+        setIsLoading(false);
+      }
     }
     fetchProducts();
   }, []);
@@ -207,7 +207,7 @@ function Products() {
 
         {/* 主要內容 */}
         <main className="col-12 col-md-9 col-lg-9 p-4">
-          <Loading isLoading={isLoading} text="商品載入中..." />
+          <Loading isLoading={isLoading} text="商品載入中" />
           <header className="mb-4">
             <ul className="list-unstyled mb-4 d-flex align-items-center main-content-title">
               <li>
