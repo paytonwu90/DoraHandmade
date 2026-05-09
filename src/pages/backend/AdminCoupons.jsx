@@ -1,7 +1,7 @@
 import axios from 'axios';
 import useMessage from "@hooks/useMessage.jsx";
 import { useState, useCallback, useEffect } from 'react';
-import Pagination from '@components/backend/Pagination';
+import Pagination from '@components/Pagination';
 import { confirmDelete } from "@utils/sweetAlert";
 const VITE_API_BASE = import.meta.env.VITE_API_BASE;
 const VITE_API_PATH = import.meta.env.VITE_API_PATH;
