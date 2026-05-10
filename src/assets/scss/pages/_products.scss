@@ -23,45 +23,6 @@
   }
 }
 
-// 分頁樣式自定義
-.pagination {
-  gap: 8px;
-
-  .page-item {
-    .page-link {
-      background-color: transparent;
-      border: none;
-      color: $secondary-700;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.3s ease, color 0.3s ease;
-
-      &:hover {
-        background-color: $primary-100;
-      }
-
-      &:focus {
-        box-shadow: none;
-      }
-    }
-
-    &.active .page-link {
-      background-color: $primary-700;
-      color: #fff; // 文字白色
-    }
-
-    &.disabled .page-link {
-      background-color: transparent;
-      opacity: 0.3;
-      pointer-events: none;
-    }
-  }
-}
-
 // 移除 Bootstrap 預設小箭頭
 .dropdown-toggle::after {
     display: none;

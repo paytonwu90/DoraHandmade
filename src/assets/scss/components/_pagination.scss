@@ -1,0 +1,19 @@
+.pagination {
+  gap: 12px;
+
+  .page-link {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:focus-visible {
+      outline: 2px solid $primary-700;
+    }
+  }
+
+  .page-link.disabled, .disabled > .page-link {
+    opacity: 0.3;
+  }
+}

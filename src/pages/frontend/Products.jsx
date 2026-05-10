@@ -1,14 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import axios from "axios";
+import Pagination from "@/components/Pagination";
 import ProductCard from "@components/ProductCard";
 import Loading from "@components/Loading";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -86,7 +82,7 @@ function Products() {
     setSortOpen(false);
   };
 
-  // 側邊欄點擊分類：透過路由跳轉來應用分類（这樣类別狀態全部由路由驅動）
+  // 側邊欄點擊分類：透過路由跳轉來應用分類（這樣類別狀態全部由路由驅動）
   const handleCategoryChange = (newSubCat) => {
     setCurrentPage(1);
     setMaterialOpen(false);
@@ -111,6 +107,15 @@ function Products() {
     (effectivePage - 1) * itemsPerPage,
     effectivePage * itemsPerPage,
   );
+
+  // 創建 pagination 物件供 Pagination 元件使用
+  // 模仿六角 /admin/products api 回傳的 pagination 格式
+  const pagination = {
+    current_page: effectivePage,
+    total_pages: totalPages,
+    has_pre: effectivePage > 1,
+    has_next: effectivePage < totalPages,
+  };
 
   // 分頁切換時滾動到頂部
   useEffect(() => {
@@ -316,58 +321,7 @@ function Products() {
 
           {/* 分頁 */}
           {totalPages > 1 && (
-            <nav className="mt-5">
-              <ul className="pagination justify-content-center align-items-center">
-                <li
-                  className={`page-item ${effectivePage === 1 ? "disabled" : ""}`}
-                >
-                  <a
-                    className="page-link"
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (effectivePage > 1) setCurrentPage(effectivePage - 1);
-                    }}
-                  >
-                    <ChevronLeft size={20} className="text-secondary-700" />
-                  </a>
-                </li>
-
-                {[...Array(totalPages).keys()].map((pageNum) => (
-                  <li
-                    className={`page-item ${pageNum + 1 === effectivePage ? "active" : ""}`}
-                    key={pageNum}
-                  >
-                    <a
-                      className="page-link"
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCurrentPage(pageNum + 1);
-                      }}
-                    >
-                      {pageNum + 1}
-                    </a>
-                  </li>
-                ))}
-
-                <li
-                  className={`page-item ${effectivePage === totalPages ? "disabled" : ""}`}
-                >
-                  <a
-                    className="page-link"
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (effectivePage < totalPages)
-                        setCurrentPage(effectivePage + 1);
-                    }}
-                  >
-                    <ChevronRight size={20} className="text-secondary-700" />
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            <Pagination pagination={pagination} onPageChange={setCurrentPage} />
           )}
         </main>
       </div>
