@@ -214,13 +214,11 @@ function Products() {
         <main className="col-12 col-md-9 col-lg-9 p-4">
           <Loading isLoading={isLoading} text="商品載入中" />
           <header className="mb-4">
-            <ul className="list-unstyled mb-4 d-flex align-items-center main-content-title">
-              <li>
-                <h2 className="fs-2 fw-bold">
-                  {currentCategory === "all" ? "全部商品" : currentCategory}
-                </h2>
-              </li>
-            </ul>
+            <div className="d-flex align-items-center gap-3 mb-6 mb-lg-4 main-content-title">
+              <h2 className="fs-4 fw-bold text-primary-700 mb-0">
+                {currentCategory === "all" ? "全部商品" : currentCategory}
+              </h2>
+            </div>
 
             <div className="d-flex justify-content-between align-items-center">
               {/* 排序下拉 */}

@@ -1,25 +1,10 @@
 .main-content-title {
-  display: flex;
-  align-items: center;
-
-  li {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    &::before {
-      content: "";
-      display: inline-block;
-      width: 6px;
-      height: 43px;
-      background-color: $primary-700;
-    }
-  }
-
-  h2 {
-    color: $primary-700;
-    margin-bottom: 0;
-    line-height: 1;
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    align-self: stretch; // 填滿父元素高度
+    background-color: $primary-700;
   }
 }
 
@@ -83,15 +68,6 @@ nav .nav-link,
   .nav-link.dropdown-toggle {
     border: none;
   }
-}
-
-// 主要內容標題區
-.main-content-title {
-    color: $primary-700;
-    
-    h2 {
-        color: $primary-700;
-    }
 }
 
 //左側選單文字
