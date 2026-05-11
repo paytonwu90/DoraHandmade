@@ -54,42 +54,34 @@ nav .nav-link,
   }
 }
 
-//材料下拉選單
-.material-dropdown {
-  .dropdown-menu {
+// Sidebar 手風琴 (目前只有材料下拉區塊)
+.sidebar-accordion {
+  &__toggle {
     border: none;
-    box-shadow: none;
+    background: transparent;
+    color: $secondary-700;
 
-  a.dropdown-item {
-      padding-left: 48px;
+    &:hover,
+    &:focus {
+      color: $primary-700;
+      background-color: transparent;
     }
   }
 
-  .nav-link.dropdown-toggle {
-    border: none;
+  &__items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
-}
 
-//左側選單文字
-nav .nav-link,
-.sort-dropdown-btn {
-  color: $secondary-700;
-  font-weight: 700;
-  transition: color 0.2s ease;
-
-  &:hover,
-  &:focus {
-    color: $primary-700;
+  &__link {
+    display: block;
+    font-weight: 700;
     text-decoration: none;
-  }
-}
+    padding: 0.5rem 0.5rem 0.5rem 40px;
 
-//材料下拉標題
-.material-dropdown .nav-link.dropdown-toggle {
-  color: $secondary-700;
-
-  &:hover,
-  &:focus {
-    color: $primary-700;
+    &:hover {
+      color: $primary-700;
+    }
   }
 }

@@ -149,28 +149,22 @@ function Products() {
               蝴蝶結
             </a>
 
-            <div className="dropdown material-dropdown">
-              <a
-                className="nav-link d-flex justify-content-between align-items-center fw-bold ps-4 py-2 text-secondary-700"
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMaterialOpen(!materialOpen);
-                }}
+            <div className="sidebar-accordion">
+              <button
+                className="sidebar-accordion__toggle px-4 w-100 d-flex justify-content-between align-items-center fw-bold py-2"
+                type="button"
+                aria-expanded={materialOpen}
+                onClick={() => setMaterialOpen(!materialOpen)}
               >
-                材料{" "}
-                {materialOpen ? (
-                  <ChevronUp size={16} />
-                ) : (
-                  <ChevronDown size={16} />
-                )}
-              </a>
+                材料
+                {materialOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </button>
 
               {materialOpen && (
-                <ul className="dropdown-menu show">
+                <ul className="sidebar-accordion__items">
                   <li>
                     <a
-                      className="dropdown-item fw-bold"
+                      className="sidebar-accordion__link"
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
@@ -182,7 +176,7 @@ function Products() {
                   </li>
                   <li>
                     <a
-                      className="dropdown-item fw-bold"
+                      className="sidebar-accordion__link"
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
@@ -194,7 +188,7 @@ function Products() {
                   </li>
                   <li>
                     <a
-                      className="dropdown-item fw-bold"
+                      className="sidebar-accordion__link"
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
