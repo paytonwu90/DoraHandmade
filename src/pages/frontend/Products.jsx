@@ -157,7 +157,7 @@ function Products() {
                 onClick={() => setMaterialOpen(!materialOpen)}
               >
                 材料
-                {materialOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                {materialOpen ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
               </button>
 
               {materialOpen && (
@@ -214,24 +214,24 @@ function Products() {
               </h2>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-between align-items-end mb-6">
               {/* 排序下拉 */}
-              <div className="dropdown app-dropdown ms-4 mt-2 mb-4">
+              <div className="dropdown sort-dropdown">
                 <button
-                  className="btn dropdown-toggle border-0 p-0 fw-bold d-flex align-items-center gap-1 text-secondary-700"
+                  className="btn dropdown-toggle border-0 px-6 py-3 fw-bold d-flex align-items-center gap-1 text-secondary-700"
                   type="button"
                   onClick={() => setSortOpen(!sortOpen)}
                 >
                   {sortLabel}{" "}
                   {sortOpen ? (
-                    <ChevronUp size={16} />
+                    <ChevronUp size={24} />
                   ) : (
-                    <ChevronDown size={16} />
+                    <ChevronDown size={24} />
                   )}
                 </button>
 
                 {sortOpen && (
-                  <ul className="dropdown-menu show">
+                  <ul className="dropdown-menu show text-center">
                     <li>
                       <button
                         className="dropdown-item fw-bold"

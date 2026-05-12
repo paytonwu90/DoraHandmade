@@ -1354,29 +1354,29 @@ $navbar-dark-brand-hover-color:     $navbar-dark-active-color !default;
 // scss-docs-start dropdown-variables
 $dropdown-min-width:                10rem !default;
 $dropdown-padding-x:                0 !default;
-$dropdown-padding-y:                .5rem !default;
+$dropdown-padding-y:                0; //.5rem !default;
 $dropdown-spacer:                   .125rem !default;
 $dropdown-font-size:                $font-size-base !default;
 $dropdown-color:                    var(--#{$prefix}body-color) !default;
 $dropdown-bg:                       var(--#{$prefix}body-bg) !default;
-$dropdown-border-color:             var(--#{$prefix}border-color-translucent) !default;
-$dropdown-border-radius:            var(--#{$prefix}border-radius) !default;
+$dropdown-border-color:             $primary-100; //var(--#{$prefix}border-color-translucent) !default;
+$dropdown-border-radius:            4px; //var(--#{$prefix}border-radius) !default;
 $dropdown-border-width:             var(--#{$prefix}border-width) !default;
 $dropdown-inner-border-radius:      calc(#{$dropdown-border-radius} - #{$dropdown-border-width}) !default; // stylelint-disable-line function-disallowed-list
 $dropdown-divider-bg:               $dropdown-border-color !default;
 $dropdown-divider-margin-y:         $spacer * .5 !default;
-$dropdown-box-shadow:               var(--#{$prefix}box-shadow) !default;
+$dropdown-box-shadow:               none; //var(--#{$prefix}box-shadow) !default;
 
-$dropdown-link-color:               var(--#{$prefix}body-color) !default;
+$dropdown-link-color:               $secondary-700; //var(--#{$prefix}body-color) !default;
 $dropdown-link-hover-color:         $dropdown-link-color !default;
-$dropdown-link-hover-bg:            var(--#{$prefix}tertiary-bg) !default;
+$dropdown-link-hover-bg:            $primary-50; //var(--#{$prefix}tertiary-bg) !default;
 
 $dropdown-link-active-color:        $component-active-color !default;
 $dropdown-link-active-bg:           $component-active-bg !default;
 
 $dropdown-link-disabled-color:      var(--#{$prefix}tertiary-color) !default;
 
-$dropdown-item-padding-y:           $spacer * .25 !default;
+$dropdown-item-padding-y:           .5rem; //$spacer * .25 !default;
 $dropdown-item-padding-x:           $spacer !default;
 
 $dropdown-header-color:             $gray-600 !default;

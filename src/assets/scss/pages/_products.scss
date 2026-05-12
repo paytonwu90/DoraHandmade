@@ -10,47 +10,22 @@
 
 // 移除 Bootstrap 預設小箭頭
 .dropdown-toggle::after {
-    display: none;
+  display: none;
 }
 
-// 導覽連結、下拉選項Hover
-.app-dropdown,
-.material-dropdown,
-nav .nav-link,
-.sort-dropdown-btn {
-  transition: color 0.2s ease;
+// 排序下拉選單
+.sort-dropdown {
 
   // 按鈕
-  .dropdown-toggle,
-  &.nav-link {
-    &:hover,
-    &.show {
+  .dropdown-toggle {
+    &:hover {
       color: $primary-700 !important;
-      background-color: transparent;
     }
   }
 
   // 下拉選項文字
   .dropdown-item {
-    font-weight: 600;
-    &:hover {
-      background-color: transparent;
-      color: $primary-700;
-    }
-  }
-}
-
-// 預設排序
-.app-dropdown {
-  .dropdown-menu {
-    border: 1px solid $primary-100 !important;
-    box-shadow: none;
-    padding: 8px 0;
-  }
-
-  .btn {
-    font-weight: 700;
-    &:focus { box-shadow: none; }
+    font-size: 14px;
   }
 }
 
