@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router";
 import axios from "axios";
 import Pagination from "@/components/Pagination";
@@ -38,6 +38,20 @@ function Products() {
 
   // 載入中
   const [isLoading, setIsLoading] = useState(false);
+
+  const sortDropdownRef = useRef(null);
+
+  // main.jsx 的全域 handler 只操作 DOM class，無法同步 React state（sortOpen）
+  // 這裡用 mousedown 監聽確保點外部時 sortOpen 也一併重置
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
+        setSortOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // API 取得商品
   useEffect(() => {
@@ -216,7 +230,7 @@ function Products() {
 
             <div className="d-flex justify-content-between align-items-end mb-6">
               {/* 排序下拉 */}
-              <div className="dropdown sort-dropdown">
+              <div className="dropdown sort-dropdown" ref={sortDropdownRef}>
                 <button
                   className="btn dropdown-toggle border-0 px-6 py-3 fw-bold d-flex align-items-center gap-1 text-secondary-700"
                   type="button"
