@@ -122,6 +122,60 @@ const Header = () => {
     }
   };
 
+  // mobile（btn-icon）與 desktop（nav-link）的 toggle 樣式不同，無法合併成單一元素，
+  // 但選單內容完全相同，提取為變數避免重複維護兩份
+  const userDropdownMenu = (
+    <ul className="dropdown-menu dropdown-menu-end text-center">
+      {!isLoggedIn ? (
+        <>
+          <li>
+            <Link className="dropdown-item" to="/login?mode=register">
+              會員註冊
+            </Link>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/login">
+              會員登入
+            </Link>
+          </li>
+        </>
+      ) : (
+        <>
+          <li>
+            <span className="dropdown-item-text fw-bold text-primary-700">
+              {userName}, 您好！
+            </span>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/account">
+              我的帳戶
+            </Link>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/order">
+              訂單查詢
+            </Link>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/favorites">
+              我的收藏
+            </Link>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/admin">
+              後台管理
+            </Link>
+          </li>
+          <li>
+            <a className="dropdown-item" href="#" onClick={handleLogout}>
+              登出
+            </a>
+          </li>
+        </>
+      )}
+    </ul>
+  );
+
   return (
     <header className="header sticky-top">
       {/* Mobile Menu Overlay */}
@@ -149,7 +203,7 @@ const Header = () => {
               <ShoppingCart size={20} />
             </Link>
 
-            <div className="dropdown">
+            <div className="dropdown user-dropdown">
               <button
                 className="btn-icon"
                 data-bs-toggle="dropdown"
@@ -159,59 +213,7 @@ const Header = () => {
               >
                 <User size={20} />
               </button>
-              <ul className="dropdown-menu dropdown-menu-end dropdown-custom">
-                {!isLoggedIn ? (
-                  <>
-                    <li>
-                      <Link className="dropdown-item" to="/login?mode=register">
-                        會員註冊
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/login">
-                        會員登入
-                      </Link>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li>
-                      <span className="dropdown-item-text fw-bold text-center user-greeting">
-                        {userName}, 您好！
-                      </span>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/account">
-                        我的帳戶
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/order">
-                        訂單查詢
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/favorites">
-                        我的收藏
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/admin">
-                        後台管理
-                      </Link>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item"
-                        href="#"
-                        onClick={handleLogout}
-                      >
-                        登出
-                      </a>
-                    </li>
-                  </>
-                )}
-              </ul>
+              {userDropdownMenu}
             </div>
 
             <button
@@ -356,7 +358,7 @@ const Header = () => {
                 </Link>
               </li>
 
-              <li className="nav-item dropdown dropdown-custom d-none d-lg-block">
+              <li className="nav-item dropdown user-dropdown d-none d-lg-block">
                 <a
                   className="nav-link nav-link-custom"
                   href="#"
@@ -366,62 +368,7 @@ const Header = () => {
                 >
                   <User size={20} />
                 </a>
-                <ul className="dropdown-menu dropdown-menu-end">
-                  {!isLoggedIn ? (
-                    <>
-                      <li>
-                        <Link
-                          className="dropdown-item"
-                          to="/login?mode=register"
-                        >
-                          會員註冊
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/login">
-                          會員登入
-                        </Link>
-                      </li>
-                    </>
-                  ) : (
-                    <>
-                      <li>
-                        <span className="dropdown-item-text fw-bold text-center user-greeting">
-                          {userName}, 您好！
-                        </span>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/account">
-                          我的帳戶
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/order">
-                          訂單查詢
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/favorites">
-                          我的收藏
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/admin">
-                          後台管理
-                        </Link>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item"
-                          href="#"
-                          onClick={handleLogout}
-                        >
-                          登出
-                        </a>
-                      </li>
-                    </>
-                  )}
-                </ul>
+                {userDropdownMenu}
               </li>
             </ul>
           </div>

@@ -117,12 +117,12 @@
 }
 
 // Dropdown
-.dropdown-custom {
-
-  .dropdown-menu,
-  &.dropdown-menu {
-    border-color: $primary-200;
+.user-dropdown {
+  .dropdown-item {
+    font-weight: 700;
   }
+}
+
 
   .dropdown-item,
   .dropdown-item-toggle {
@@ -184,11 +184,6 @@
 
   // Debug
   // border: 2px solid red !important;
-}
-
-// User Greeting
-.user-greeting {
-  color: $primary;
 }
 
 // Navbar Toggler
