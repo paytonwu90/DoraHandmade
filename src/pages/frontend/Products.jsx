@@ -278,20 +278,20 @@ function Products() {
                       <button
                         className="dropdown-item fw-bold"
                         onClick={() =>
-                          handleSortChange("dateNew", "上架日期由新到舊")
+                          handleSortChange("dateOld", "上架日期由舊到新")
                         }
                       >
-                        上架日期由新到舊
+                        上架日期由舊到新
                       </button>
                     </li>
                     <li>
                       <button
                         className="dropdown-item fw-bold"
                         onClick={() =>
-                          handleSortChange("dateOld", "上架日期由舊到新")
+                          handleSortChange("dateNew", "上架日期由新到舊")
                         }
                       >
-                        上架日期由舊到新
+                        上架日期由新到舊
                       </button>
                     </li>
                     <li>
