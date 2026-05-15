@@ -14,6 +14,20 @@ npm run deploy     # 將 dist/ 部署至 GitHub Pages（gh-pages 分支）
 
 專案目前**未設定測試框架**。
 
+## 視覺驗證
+
+修改 UI 元件後，用 Playwright 截圖確認視覺結果是否符合設計稿：
+
+```bash
+node scripts/verify.js                  # 全跑
+node scripts/verify.js user-dropdown    # 只跑 User Dropdown（Desktop + Mobile）
+node scripts/verify.js sort-dropdown    # 只跑 Sort Dropdown
+```
+
+- 截圖輸出至 `scripts/screenshots/`（已 gitignore）
+- 設計稿參考截圖與說明：`scripts/design-specs/index.md`
+- 執行後讀取對應的 zoom 截圖，與 `design-specs/` 中的設計稿比對
+
 ## 架構概覽
 
 **DoraHandmade** 是一個以 React SPA 建置的手工蝴蝶結飾品電商網站，使用 Vite 建置，部署至 GitHub Pages（base path：`/DoraHandmade/`）。
