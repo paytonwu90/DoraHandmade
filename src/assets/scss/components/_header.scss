@@ -218,10 +218,22 @@
     color: $primary !important;
   }
 
+  .dropdown-custom {
+    .dropdown-item {
+      // 靠左對齊，配合 submenu 展開後的左側 accent border
+      // .dropdown-item-toggle 靠 justify-content 控制
+      text-align: left;
+    }
+  }
+
   .dropdown-submenu {
     .dropdown-menu {
       display: none; // 預設隱藏
-      margin: 4px;
+      margin: 2px 8px 4px 12px;
+      border: none;
+      border-left: 3px solid $primary-200;
+      border-radius: 0;
+      padding: 2px 0;
     }
 
     // 行動版點擊展開（配合 Bootstrap 的 .show 類名，或我們手動加上的 .show）
@@ -231,11 +243,11 @@
 
     .dropdown-item,
     .dropdown-item-toggle {
-      padding-left: 2rem;
-      background-color: transparent;
+      // padding-left: 1rem;
+      // background-color: transparent;
 
       &:hover {
-        background-color: $primary-50 !important;
+        // background-color: $primary-50;
       }
 
       svg {

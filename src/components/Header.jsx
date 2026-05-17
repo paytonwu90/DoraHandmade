@@ -268,7 +268,7 @@ const Header = () => {
                   >
                     <button
                       type="button"
-                      className="dropdown-item-toggle d-flex justify-content-center align-items-center"
+                      className="dropdown-item-toggle d-flex justify-content-lg-center align-items-center"
                       onClick={toggleMobileSubmenu('handmade')}
                     >
                       成品
@@ -296,7 +296,7 @@ const Header = () => {
                   >
                     <button
                       type="button"
-                      className="dropdown-item-toggle d-flex justify-content-center align-items-center"
+                      className="dropdown-item-toggle d-flex justify-content-lg-center align-items-center"
                       onClick={toggleMobileSubmenu('material')}
                     >
                       材料
