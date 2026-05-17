@@ -12,8 +12,7 @@ const Header = () => {
   const userName = user?.name || "使用者";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
-  const [openHandmade, setOpenHandmade] = useState(false);
-  const [openMaterial, setOpenMaterial] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState(null); // null | 'handmade' | 'material'
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -26,8 +25,7 @@ const Header = () => {
         !headerSubmenuRef.current.contains(event.target)
       ) {
         setIsSubmenuOpen(false);
-        setOpenHandmade(false);
-        setOpenMaterial(false);
+        setOpenSubmenu(null);
       }
     };
 
@@ -52,16 +50,14 @@ const Header = () => {
   const closeMobileMenu = () => {
     setIsMenuOpen(false);
     setIsSubmenuOpen(false); // 關閉選單時也重置子選單
-    setOpenHandmade(false);
-    setOpenMaterial(false);
+    setOpenSubmenu(null);
   };
 
   const toggleMobileMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     if (isMenuOpen) {
       setIsSubmenuOpen(false); // 關閉選單時也重置子選單
-      setOpenHandmade(false);
-      setOpenMaterial(false);
+      setOpenSubmenu(null);
     }
   };
 
@@ -77,22 +73,11 @@ const Header = () => {
     setIsSubmenuOpen((prev) => !prev);
   };
 
-  const toggleHandmade = (e) => {
-    e.preventDefault();
+  // 電腦版由 CSS hover 控制，點擊只在手機版觸發（互斥：點一個會關閉另一個）
+  const toggleMobileSubmenu = (name) => (e) => {
     e.stopPropagation();
-    if (e.nativeEvent) e.nativeEvent.stopImmediatePropagation();
-    // 電腦版不觸發點擊 Toggle，僅由 Hover 控制
     if (window.innerWidth >= 992) return;
-    setOpenHandmade(!openHandmade);
-  };
-
-  const toggleMaterial = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.nativeEvent) e.nativeEvent.stopImmediatePropagation();
-    // 電腦版不觸發點擊 Toggle，僅由 Hover 控制
-    if (window.innerWidth >= 992) return;
-    setOpenMaterial(!openMaterial);
+    setOpenSubmenu((prev) => (prev === name ? null : name));
   };
 
   // 自動判斷右側主選單（如使用者選單）展開方向
@@ -278,19 +263,19 @@ const Header = () => {
                   </li>
                   {/* 成品 Submenu */}
                   <li
-                    className={`dropdown-submenu dropdown ${openHandmade ? "show" : ""}`}
+                    className={`dropdown-submenu dropdown ${openSubmenu === 'handmade' ? "show" : ""}`}
                     onMouseEnter={handleSubmenuEnter}
                   >
-                    <a
+                    <button
+                      type="button"
                       className="dropdown-item-toggle d-flex justify-content-center align-items-center"
-                      href="#"
-                      onClick={toggleHandmade}
+                      onClick={toggleMobileSubmenu('handmade')}
                     >
                       成品
                       <ChevronRight size={16} className="ms-2" />
-                    </a>
+                    </button>
                     <ul
-                      className={`dropdown-menu ${openHandmade ? "show force-show" : ""}`}
+                      className={`dropdown-menu ${openSubmenu === 'handmade' ? "show force-show" : ""}`}
                     >
                       <li>
                         <Link
@@ -306,19 +291,19 @@ const Header = () => {
 
                   {/* 材料 Submenu */}
                   <li
-                    className={`dropdown-submenu dropdown ${openMaterial ? "show" : ""}`}
+                    className={`dropdown-submenu dropdown ${openSubmenu === 'material' ? "show" : ""}`}
                     onMouseEnter={handleSubmenuEnter}
                   >
-                    <a
+                    <button
+                      type="button"
                       className="dropdown-item-toggle d-flex justify-content-center align-items-center"
-                      href="#"
-                      onClick={toggleMaterial}
+                      onClick={toggleMobileSubmenu('material')}
                     >
                       材料
                       <ChevronRight size={16} className="ms-2" />
-                    </a>
+                    </button>
                     <ul
-                      className={`dropdown-menu ${openMaterial ? "show force-show" : ""}`}
+                      className={`dropdown-menu ${openSubmenu === 'material' ? "show force-show" : ""}`}
                     >
                       <li>
                         <Link
