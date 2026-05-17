@@ -9,4 +9,6 @@ description: "分析 staged 變更，產生 conventional commits 格式的 commi
 - 使用 conventional commits 格式（feat / fix / docs / refactor 等）
 - 第一行不超過 72 字元
 - 用正體中文撰寫
-- 在第一行後加上 body，簡短說明「為什麼」要做這個變更，保持簡潔，不超過 3 行
+- 在第一行後加上 body，格式依變更性質決定：
+  - 單一目的的變更：用段落說明「為什麼」，不超過 3 行
+  - 多個獨立變更：用 bullet point 條列各項變更
