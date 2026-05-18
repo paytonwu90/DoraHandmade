@@ -15,6 +15,7 @@ const Header = () => {
   const [openSubmenu, setOpenSubmenu] = useState(null); // null | 'handmade' | 'material'
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  console.log("isMenuOpen:", isMenuOpen, ", isSubmenuOpen:", isSubmenuOpen, ', openSubmenu:', openSubmenu);
 
   const headerSubmenuRef = useRef(null);
 
@@ -238,7 +239,7 @@ const Header = () => {
 
               <li
                 ref={headerSubmenuRef}
-                className="nav-item dropdown dropdown-custom me-lg-4 text-p-16-b"
+                className="nav-item dropdown category-dropdown me-lg-4 text-p-16-b"
               >
                 {/* 商品分類：完全使用 React state 控制，不依賴 Bootstrap Dropdown JS */}
                 <a

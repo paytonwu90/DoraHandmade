@@ -141,7 +141,7 @@
   }
 }
 
-.dropdown-custom {
+.category-dropdown {
 
   .dropdown-item,
   .dropdown-item-toggle {
@@ -247,7 +247,7 @@
     color: $primary !important;
   }
 
-  .dropdown-custom {
+  .category-dropdown {
     .dropdown-item {
       // 靠左對齊，配合 submenu 展開後的左側 accent border
       // .dropdown-item-toggle 靠 justify-content 控制
