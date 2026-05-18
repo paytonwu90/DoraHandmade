@@ -24,15 +24,25 @@ async function shoot(page, name) {
 }
 
 async function checkDevServer() {
-  const page = await browser.newPage();
-  try {
-    await page.goto(BASE, { waitUntil: 'networkidle', timeout: 10000 });
-  } catch {
-    console.error('\nDev server 未啟動，請先執行 npm run dev');
-    await browser.close();
-    process.exit(1);
+  const maxRetries = 3;
+  for (let i = 1; i <= maxRetries; i++) {
+    const page = await browser.newPage();
+    try {
+      await page.goto(BASE, { waitUntil: 'networkidle', timeout: 10000 });
+      await page.close();
+      return;
+    } catch (e) {
+      await page.close();
+      if (i < maxRetries) {
+        console.log(`Dev server 連線失敗，2 秒後重試（${i}/${maxRetries}）...`);
+        await new Promise(r => setTimeout(r, 2000));
+      } else {
+        console.error(`\nDev server 無法連線，請先執行 npm run dev\n${e.message}`);
+        await browser.close();
+        process.exit(1);
+      }
+    }
   }
-  await page.close();
 }
 
 async function verifyUserDropdown() {
@@ -176,9 +186,79 @@ async function verifySortDropdown() {
   }
 }
 
+async function assertSubmenuInViewport(page, viewportWidth) {
+  // 點擊開啟商品分類 dropdown
+  await page.click('li.dropdown-custom > a.nav-link-custom');
+  await page.waitForTimeout(300);
+
+  // Hover 材料 → 觸發 handleSubmenuEnter（方向判斷）+ CSS hover（顯示 submenu）
+  const materialLi = page.locator('li.dropdown-submenu').filter({ has: page.locator('button:has-text("材料")') });
+  await materialLi.hover();
+  await page.waitForTimeout(200);
+
+  // 確認 submenu 實際出現
+  const submenuLocator = materialLi.locator('> ul.dropdown-menu');
+  await submenuLocator.waitFor({ state: 'visible', timeout: 3000 });
+
+  const submenuBox = await submenuLocator.boundingBox();
+  if (!submenuBox) throw new Error(`[${viewportWidth}px] 找不到材料 submenu`);
+
+  // 記錄展開方向供參考
+  const isLeft = await materialLi.evaluate(el => el.classList.contains('submenu-left'));
+  console.log(`  → submenu 方向：${isLeft ? '向左' : '向右'} (x=${Math.round(submenuBox.x)}, width=${Math.round(submenuBox.width)})`);
+
+  // 斷言：submenu 完整在 viewport 內
+  if (submenuBox.x < 0)
+    throw new Error(`[${viewportWidth}px] submenu 左側超出 viewport (x=${submenuBox.x})`);
+  if (submenuBox.x + submenuBox.width > viewportWidth)
+    throw new Error(`[${viewportWidth}px] submenu 右側超出 viewport (右邊界=${submenuBox.x + submenuBox.width})`);
+
+  console.log(`  ✓ submenu 完整在 viewport 內`);
+}
+
+async function verifyCategoryDropdown() {
+  // Desktop：兩個寬度，分別觸發 submenu 向右 / 向左展開
+  for (const width of [1920, 1024]) {
+    console.log(`Category Dropdown (Desktop ${width}px)...`);
+    const page = await browser.newPage();
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+
+    await assertSubmenuInViewport(page, width);
+    await shoot(page, `desktop-category-submenu-${width}`);
+
+    await page.close();
+  }
+
+  // Mobile
+  console.log('Category Dropdown (Mobile)...');
+  {
+    const page = await browser.newPage();
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(BASE, { waitUntil: 'networkidle' });
+
+    // 開啟 mobile 選單
+    await page.click('button.navbar-toggler-custom');
+    await page.waitForTimeout(300);
+
+    // 開啟商品分類 dropdown
+    await page.click('a.nav-link-custom:has-text("商品分類")');
+    await page.waitForTimeout(300);
+    await shoot(page, 'mobile-category-dropdown-open');
+
+    // 展開「成品」submenu
+    await page.click('button.dropdown-item-toggle:has-text("成品")');
+    await page.waitForTimeout(300);
+    await shoot(page, 'mobile-category-submenu-open');
+
+    await page.close();
+  }
+}
+
 const sections = {
   'user-dropdown': verifyUserDropdown,
   'sort-dropdown': verifySortDropdown,
+  'category-dropdown': verifyCategoryDropdown,
 };
 
 const target = process.argv[2];
