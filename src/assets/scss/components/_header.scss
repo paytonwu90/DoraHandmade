@@ -73,23 +73,41 @@
   }
 }
 
+// Navbar Toggler
+.navbar-toggler-custom {
+  border: none !important;
+  box-shadow: none !important;
+  font-size: 16px;
+  padding: 12px !important;
+
+  &:hover {
+    color: $primary !important;
+  }
+
+  &:focus {
+    box-shadow: none !important;
+    outline: none !important;
+    color: $primary !important;
+  }
+}
+
 // Navigation Links
 .nav-link-custom {
-  transition: 0.3s ease;
+  // transition: 0.3s ease;
   // 1. 預設顏色
-  color: $gray-600 !important;
+  // color: $gray-600 !important;
 
   svg {
-    color: $gray-600;
+    // color: $gray-600;
   }
 
   // 2. 核心修正：僅在選單「展開中」或是「明確處於 Active」時才強制橘色
   // Hover 狀態下，如果選單是收合的，我們給予較淡的橘色或維持灰色，直到開啟
   &:hover:not(.show) {
-    color: $primary-400 !important; // 懸停但未開啟時，使用較淡的品牌色或不變
+    // color: $primary-400 !important; // 懸停但未開啟時，使用較淡的品牌色或不變
 
     svg {
-      color: $primary-400;
+      // color: $primary-400;
     }
   }
 
@@ -97,7 +115,7 @@
   &.show svg,
   &.active,
   &.active svg {
-    color: $primary !important;
+    // color: $primary !important;
   }
 
   // 3. 焦點重置：移除所有點擊後產生的外框
@@ -107,13 +125,13 @@
   }
 
   // 4. 暴力保護：只要沒展開且滑鼠移開，絕對變灰色
-  &:not(.show):not(:hover) {
-    color: $gray-600 !important;
+  // &:not(.show):not(:hover) {
+  //   color: $gray-600 !important;
 
-    svg {
-      color: $gray-600 !important;
-    }
-  }
+  //   svg {
+  //     color: $gray-600 !important;
+  //   }
+  // }
 }
 
 // Dropdown
@@ -151,29 +169,11 @@
 
   &.show>.nav-link-custom,
   &.show>.nav-link-custom svg {
-    color: $primary !important;
+    // color: $primary !important;
   }
 
   // Debug
   // border: 2px solid red !important;
-}
-
-// Navbar Toggler
-.navbar-toggler-custom {
-  border: none !important;
-  box-shadow: none !important;
-  font-size: 16px;
-  padding: 12px !important;
-
-  &:hover {
-    color: $primary !important;
-  }
-
-  &:focus {
-    box-shadow: none !important;
-    outline: none !important;
-    color: $primary !important;
-  }
 }
 
 // 動態調整選單向左展開（針對靠右邊緣的元素，如使用者選單）
@@ -190,29 +190,58 @@
 .dropdown-submenu {
   position: relative;
 
+  // Mobile: accordion 模式（display: block，在文件流內展開）
+  > .dropdown-menu {
+    display: none;
+    margin: 2px 8px 4px 12px;
+    border: none;
+    border-left: 3px solid $primary-200;
+    border-radius: 0;
+    padding: 2px 0;
+
+    .dropdown-item {
+      padding-left: 1rem;
+    }
+  }
+
+  // 行動版點擊展開（配合 Bootstrap 的 .show 類名，或我們手動加上的 .show）
+  &.show > .dropdown-menu {
+    display: block !important;
+  }
+
+  .dropdown-item-toggle svg {
+    transform: rotate(90deg);
+  }
+
+  // Desktop: submenu 絕對定位浮出，CSS hover 控制
   @include media-breakpoint-up(lg) {
-    >.dropdown-menu {
+    > .dropdown-menu {
       position: absolute;
       top: 0;
       left: 100%;
+      margin: 0;
       margin-top: -1px;
-      display: none;
+      border: $dropdown-border-width solid $dropdown-border-color;
+      border-radius: $dropdown-border-radius;
+      padding: $dropdown-padding-y 0;
     }
 
     // 讓子選單向左展開的樣式
-    &.submenu-left>.dropdown-menu {
+    &.submenu-left > .dropdown-menu {
       left: auto;
       right: 100%;
     }
 
-    &:hover>.dropdown-menu {
+    &:hover > .dropdown-menu {
       display: block !important;
+    }
+
+    .dropdown-item-toggle svg {
+      transform: none;
     }
   }
 }
 
-// Mobile
-// TODO: 拿掉 media query
 @include media-breakpoint-down(lg) {
   .navbar-icons .btn-icon:hover svg {
     color: $primary !important;
@@ -223,36 +252,6 @@
       // 靠左對齊，配合 submenu 展開後的左側 accent border
       // .dropdown-item-toggle 靠 justify-content 控制
       text-align: left;
-    }
-  }
-
-  .dropdown-submenu {
-    .dropdown-menu {
-      display: none; // 預設隱藏
-      margin: 2px 8px 4px 12px;
-      border: none;
-      border-left: 3px solid $primary-200;
-      border-radius: 0;
-      padding: 2px 0;
-    }
-
-    // 行動版點擊展開（配合 Bootstrap 的 .show 類名，或我們手動加上的 .show）
-    &.show>.dropdown-menu {
-      display: block !important;
-    }
-
-    .dropdown-item,
-    .dropdown-item-toggle {
-      // padding-left: 1rem;
-      // background-color: transparent;
-
-      &:hover {
-        // background-color: $primary-50;
-      }
-
-      svg {
-        transform: rotate(90deg);
-      }
     }
   }
 
