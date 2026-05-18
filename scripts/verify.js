@@ -214,6 +214,21 @@ async function assertSubmenuInViewport(page, viewportWidth) {
     throw new Error(`[${viewportWidth}px] submenu 右側超出 viewport (右邊界=${submenuBox.x + submenuBox.width})`);
 
   console.log(`  ✓ submenu 完整在 viewport 內`);
+
+  // 主 dropdown + submenu 合併的 zoom 截圖
+  const mainMenuLocator = page.locator('li.dropdown-custom > .dropdown-menu');
+  const mainMenuBox = await mainMenuLocator.boundingBox();
+  if (mainMenuBox && submenuBox) {
+    const left = Math.min(mainMenuBox.x, submenuBox.x) - 8;
+    const top = Math.min(mainMenuBox.y, submenuBox.y) - 8;
+    const right = Math.max(mainMenuBox.x + mainMenuBox.width, submenuBox.x + submenuBox.width) + 8;
+    const bottom = Math.max(mainMenuBox.y + mainMenuBox.height, submenuBox.y + submenuBox.height) + 8;
+    await page.screenshot({
+      path: `${OUT}/desktop-category-submenu-${viewportWidth}-zoom.png`,
+      clip: { x: left, y: top, width: right - left, height: bottom - top },
+    });
+    console.log(`  ✓ desktop-category-submenu-${viewportWidth}-zoom.png`);
+  }
 }
 
 async function verifyCategoryDropdown() {
@@ -246,8 +261,9 @@ async function verifyCategoryDropdown() {
     await page.waitForTimeout(300);
     await shoot(page, 'mobile-category-dropdown-open');
 
-    // 展開「成品」submenu
-    await page.click('button.dropdown-item-toggle:has-text("成品")');
+    // 展開「材料」submenu，移開滑鼠避免 Playwright hover 假象
+    await page.click('button.dropdown-item-toggle:has-text("材料")');
+    await page.mouse.move(0, 200);
     await page.waitForTimeout(300);
     await shoot(page, 'mobile-category-submenu-open');
 

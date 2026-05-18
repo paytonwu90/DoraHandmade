@@ -19,14 +19,26 @@ npm run deploy     # 將 dist/ 部署至 GitHub Pages（gh-pages 分支）
 修改 UI 元件後，用 Playwright 截圖確認視覺結果是否符合設計稿：
 
 ```bash
-node scripts/verify.js                  # 全跑
-node scripts/verify.js user-dropdown    # 只跑 User Dropdown（Desktop + Mobile）
-node scripts/verify.js sort-dropdown    # 只跑 Sort Dropdown
+node scripts/verify.js                    # 全跑
+node scripts/verify.js user-dropdown      # 只跑 User Dropdown（Desktop + Mobile）
+node scripts/verify.js sort-dropdown      # 只跑 Sort Dropdown
+node scripts/verify.js category-dropdown  # 只跑 Category Dropdown（Desktop + Mobile）
 ```
 
-- 截圖輸出至 `scripts/screenshots/`（已 gitignore）
-- 設計稿參考截圖與說明：`scripts/design-specs/index.md`
-- 執行後讀取對應的 zoom 截圖，與 `design-specs/` 中的設計稿比對
+截圖輸出至 `scripts/screenshots/`（已 gitignore）。
+
+**每次跑完 verify.js 後，必須依序執行以下步驟，缺一不可：**
+
+1. 讀取 `scripts/design-specs/index.md`，確認本次異動涉及哪些設計稿
+2. 檢查對應的設計稿圖片是否存在（`scripts/design-specs/*.png`）：
+   - **有設計稿**：讀取設計稿圖片與本次截圖（優先讀 zoom 版本），逐一列出比對結果：
+     ```
+     設計稿對照結果：
+     - [截圖檔名]：✓ 與 [設計稿檔名] 一致 / ✗ 差異：[說明]
+     ```
+   - **沒有設計稿**：斷言全部通過即視為驗證完成，回覆中註明「無設計稿，以斷言結果為準」
+
+**斷言通過 ≠ 視覺正確。** 程式斷言只驗證數值（如 bounding box），無法取代人眼比對。有設計稿時跑完測試後若未完成視覺比對，視為驗證未完成。
 
 ## 架構概覽
 

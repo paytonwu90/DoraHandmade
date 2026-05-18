@@ -22,3 +22,21 @@
 hover 狀態預期比照 user-dropdown：底色為 $primary-50 全寬淺粉紅色，文字維持深色。
 
 對應 verify.js：`Sort Dropdown` 區段（Desktop 1280px）
+
+---
+
+## category-dropdown-mobile.png
+
+手機版「商品分類」dropdown 展開，「材料」submenu 打開的狀態。
+第一層 item（全部商品、成品、材料）靠左對齊；submenu 項目（帶子、夾子、貼片）有左側粉紅色 accent border，並縮排靠左對齊。
+
+對應 verify.js：`Category Dropdown (Mobile)` 區段
+
+---
+
+## category-dropdown-desktop.png
+
+桌面版「商品分類」dropdown 展開，hover 到「材料」時 submenu 向左浮出的狀態。
+hover 的 item 背景為 $primary-50，submenu 以 Bootstrap 預設浮動樣式呈現。
+
+對應 verify.js：`Category Dropdown (Desktop 1024px)` 區段（向左展開）、`Category Dropdown (Desktop 1920px)` 區段（向右展開）
