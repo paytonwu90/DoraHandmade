@@ -39,6 +39,7 @@
     "globals": "^16.5.0",
     "playwright": "^1.60.0",
     "sass": "^1.97.1",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vite-plugin-qrcode": "^0.4.1"
   }
 }
