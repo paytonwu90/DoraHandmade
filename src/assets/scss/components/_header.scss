@@ -213,6 +213,15 @@
     transform: rotate(90deg);
   }
 
+  // Mobile active 狀態：展開時 toggle 文字改色、chevron 翻轉朝上
+  &.show > .dropdown-item-toggle {
+    color: $primary;
+
+    svg {
+      transform: rotate(-90deg);
+    }
+  }
+
   // Desktop: submenu 絕對定位浮出，CSS hover 控制
   @include media-breakpoint-up(lg) {
     > .dropdown-menu {
