@@ -188,7 +188,7 @@ async function verifySortDropdown() {
 
 async function assertSubmenuInViewport(page, viewportWidth) {
   // 點擊開啟商品分類 dropdown
-  await page.click('li.dropdown-custom > a.nav-link-custom');
+  await page.click('li.category-dropdown > a.nav-link-custom');
   await page.waitForTimeout(300);
 
   // Hover 材料 → 觸發 handleSubmenuEnter（方向判斷）+ CSS hover（顯示 submenu）
@@ -216,7 +216,7 @@ async function assertSubmenuInViewport(page, viewportWidth) {
   console.log(`  ✓ submenu 完整在 viewport 內`);
 
   // 主 dropdown + submenu 合併的 zoom 截圖
-  const mainMenuLocator = page.locator('li.dropdown-custom > .dropdown-menu');
+  const mainMenuLocator = page.locator('li.category-dropdown > .dropdown-menu');
   const mainMenuBox = await mainMenuLocator.boundingBox();
   if (mainMenuBox && submenuBox) {
     const left = Math.min(mainMenuBox.x, submenuBox.x) - 8;
