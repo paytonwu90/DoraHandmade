@@ -56,7 +56,7 @@ async function verifyUserDropdown() {
     await shoot(page, 'desktop-header');
 
     // 開啟使用者選單（desktop li 版本）
-    await page.click('li.user-dropdown a[data-bs-toggle="dropdown"]');
+    await page.click('li.user-dropdown > button');
     await page.waitForTimeout(300);
     await shoot(page, 'desktop-user-menu-open');
 
@@ -79,7 +79,7 @@ async function verifyUserDropdown() {
     });
     await page.reload({ waitUntil: 'networkidle' });
 
-    await page.click('li.user-dropdown a[data-bs-toggle="dropdown"]');
+    await page.click('li.user-dropdown > button');
     await page.waitForTimeout(300);
     await shoot(page, 'desktop-user-menu-loggedin-open');
 
@@ -106,7 +106,7 @@ async function verifyUserDropdown() {
     await shoot(page, 'mobile-header');
 
     // 開啟使用者選單（mobile div 版本）
-    await page.click('div.user-dropdown button[data-bs-toggle="dropdown"]');
+    await page.click('div.user-dropdown > button');
     await page.waitForTimeout(300);
     await shoot(page, 'mobile-user-menu-open');
 
@@ -129,7 +129,7 @@ async function verifyUserDropdown() {
     });
     await page.reload({ waitUntil: 'networkidle' });
 
-    await page.click('div.user-dropdown button[data-bs-toggle="dropdown"]');
+    await page.click('div.user-dropdown > button');
     await page.waitForTimeout(300);
     await shoot(page, 'mobile-user-menu-loggedin-open');
 

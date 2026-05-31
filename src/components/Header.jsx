@@ -13,11 +13,13 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null); // null | 'handmade' | 'material'
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  console.log("isMenuOpen:", isMenuOpen, ", isSubmenuOpen:", isSubmenuOpen, ', openSubmenu:', openSubmenu);
 
   const headerSubmenuRef = useRef(null);
+  const mobileUserMenuRef = useRef(null);
+  const desktopUserMenuRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -27,6 +29,11 @@ const Header = () => {
       ) {
         setIsSubmenuOpen(false);
         setOpenSubmenu(null);
+      }
+      const isOutsideMobile = !mobileUserMenuRef.current?.contains(event.target);
+      const isOutsideDesktop = !desktopUserMenuRef.current?.contains(event.target);
+      if (isOutsideMobile && isOutsideDesktop) {
+        setIsUserMenuOpen(false);
       }
     };
 
@@ -111,7 +118,11 @@ const Header = () => {
   // mobile（btn-icon）與 desktop（nav-link）的 toggle 樣式不同，無法合併成單一元素，
   // 但選單內容完全相同，提取為變數避免重複維護兩份
   const userDropdownMenu = (
-    <ul className="dropdown-menu dropdown-menu-end text-center">
+    <ul
+      className={`dropdown-menu dropdown-menu-end text-center${isUserMenuOpen ? " show" : ""}`}
+      data-bs-popper="static"
+      onClick={() => setIsUserMenuOpen(false)}
+    >
       {!isLoggedIn ? (
         <>
           <li>
@@ -189,13 +200,14 @@ const Header = () => {
               <ShoppingCart size={20} />
             </Link>
 
-            <div className="dropdown user-dropdown">
+            <div className="dropdown user-dropdown" ref={mobileUserMenuRef}>
               <button
                 className="btn-icon"
-                data-bs-toggle="dropdown"
-                data-bs-display="static"
-                aria-expanded="false"
-                onClick={handleUserMenuEnter}
+                aria-expanded={isUserMenuOpen}
+                onClick={(e) => {
+                  handleUserMenuEnter(e);
+                  setIsUserMenuOpen((prev) => !prev);
+                }}
               >
                 <User size={20} />
               </button>
@@ -344,16 +356,18 @@ const Header = () => {
                 </Link>
               </li>
 
-              <li className="nav-item dropdown user-dropdown d-none d-lg-block">
-                <a
+              <li className="nav-item dropdown user-dropdown d-none d-lg-block" ref={desktopUserMenuRef}>
+                <button
+                  type="button"
                   className="nav-link nav-link-custom"
-                  href="#"
-                  data-bs-toggle="dropdown"
-                  data-bs-display="static"
-                  onClick={handleUserMenuEnter}
+                  aria-expanded={isUserMenuOpen}
+                  onClick={(e) => {
+                    handleUserMenuEnter(e);
+                    setIsUserMenuOpen((prev) => !prev);
+                  }}
                 >
                   <User size={20} />
-                </a>
+                </button>
                 {userDropdownMenu}
               </li>
             </ul>
