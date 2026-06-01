@@ -248,7 +248,7 @@ const Header = () => {
                   <ChevronDown size={16} className="ms-1" />
                 </a>
                 <ul
-                  className={`dropdown-menu ${isSubmenuOpen ? "show force-show" : ""}`}
+                  className={`dropdown-menu ${isSubmenuOpen ? "show" : ""}`}
                 >
                   <li>
                     <Link
@@ -273,7 +273,7 @@ const Header = () => {
                       <ChevronRight size={16} className="ms-2" />
                     </button>
                     <ul
-                      className={`dropdown-menu ${openSubmenu === 'handmade' ? "show force-show" : ""}`}
+                      className={`dropdown-menu ${openSubmenu === 'handmade' ? "show" : ""}`}
                     >
                       <li>
                         <Link
@@ -301,7 +301,7 @@ const Header = () => {
                       <ChevronRight size={16} className="ms-2" />
                     </button>
                     <ul
-                      className={`dropdown-menu ${openSubmenu === 'material' ? "show force-show" : ""}`}
+                      className={`dropdown-menu ${openSubmenu === 'material' ? "show" : ""}`}
                     >
                       <li>
                         <Link

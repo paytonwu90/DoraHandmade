@@ -260,9 +260,3 @@
     // border: 3px solid blue !important; // Debug
   }
 }
-
-// TODO: 繞過 main.jsx 的暫時手段，之後要移除
-// 強制顯示，防止 Bootstrap JS 干擾 React 狀態
-.force-show {
-  display: block !important;
-}
