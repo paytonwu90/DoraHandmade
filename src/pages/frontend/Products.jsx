@@ -143,7 +143,7 @@ function Products() {
         <nav className="d-none d-md-block col-md-3 bg-white p-4">
           <div className="nav flex-column sticky-top" style={{ top: "20px" }}>
             <a
-              className="nav-link ps-4 py-2 fw-bold text-secondary-700"
+              className="nav-link ps-4 py-2 fw-bold"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -153,7 +153,7 @@ function Products() {
               全部商品
             </a>
             <a
-              className="nav-link ps-4 py-2 fw-bold text-secondary-700"
+              className="nav-link ps-4 py-2 fw-bold"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
