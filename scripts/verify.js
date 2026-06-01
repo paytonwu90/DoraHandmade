@@ -1,17 +1,20 @@
-// 視覺驗證 script：在 dev server 執行中時跑此 script，
-// 截取關鍵 UI 狀態的截圖，供 Claude Code 讀取確認視覺結果。
+// 視覺驗證 script：截取關鍵 UI 狀態的截圖，供 Claude Code 讀取確認視覺結果。
 // 對照設計稿請參閱 scripts/design-specs/index.md
 //
 // 使用方式：
 //   1. npm run dev（另一個終端）
-//   2. node scripts/verify.js                  # 全跑
+//   2. node scripts/verify.js                  # 全跑（本地）
 //      node scripts/verify.js user-dropdown    # 只跑 User Dropdown
 //      node scripts/verify.js sort-dropdown    # 只跑 Sort Dropdown
+//      node scripts/verify.js category-dropdown
+//
+// 指定目標環境（預設 localhost:5173）：
+//   VERIFY_BASE=https://paytonwu90.github.io/DoraHandmade node scripts/verify.js
 
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';
 
-const BASE = 'http://localhost:5173';
+const BASE = process.env.VERIFY_BASE || 'http://localhost:5173';
 const OUT = 'scripts/screenshots';
 
 mkdirSync(OUT, { recursive: true });
