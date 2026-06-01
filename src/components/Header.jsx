@@ -88,20 +88,6 @@ const Header = () => {
     setOpenSubmenu((prev) => (prev === name ? null : name));
   };
 
-  // 自動判斷右側主選單（如使用者選單）展開方向
-  const handleUserMenuEnter = (e) => {
-    const button = e.currentTarget;
-    const rect = button.getBoundingClientRect();
-    const windowWidth = window.innerWidth;
-    const container = button.parentElement;
-
-    if (windowWidth - rect.right < 160) {
-      container.classList.add("user-menu-left");
-    } else {
-      container.classList.remove("user-menu-left");
-    }
-  };
-
   // 自動判斷子選單展開方向
   const handleSubmenuEnter = (e) => {
     const item = e.currentTarget;
@@ -120,6 +106,8 @@ const Header = () => {
   const userDropdownMenu = (
     <ul
       className={`dropdown-menu dropdown-menu-end text-center${isUserMenuOpen ? " show" : ""}`}
+      // 移除 data-bs-toggle 後 Bootstrap JS 不再初始化此 dropdown，
+      // 需手動設定讓 Bootstrap CSS 的 dropdown-menu[data-bs-popper] 定位規則生效
       data-bs-popper="static"
       onClick={() => setIsUserMenuOpen(false)}
     >
@@ -204,10 +192,7 @@ const Header = () => {
               <button
                 className="btn-icon"
                 aria-expanded={isUserMenuOpen}
-                onClick={(e) => {
-                  handleUserMenuEnter(e);
-                  setIsUserMenuOpen((prev) => !prev);
-                }}
+                onClick={() => setIsUserMenuOpen((prev) => !prev)}
               >
                 <User size={20} />
               </button>
@@ -361,10 +346,7 @@ const Header = () => {
                   type="button"
                   className="nav-link nav-link-custom"
                   aria-expanded={isUserMenuOpen}
-                  onClick={(e) => {
-                    handleUserMenuEnter(e);
-                    setIsUserMenuOpen((prev) => !prev);
-                  }}
+                  onClick={() => setIsUserMenuOpen((prev) => !prev)}
                 >
                   <User size={20} />
                 </button>

@@ -176,16 +176,6 @@
   // border: 2px solid red !important;
 }
 
-// 動態調整選單向左展開（針對靠右邊緣的元素，如使用者選單）
-.user-menu-left {
-  >.dropdown-menu {
-    left: auto !important;
-    right: 0 !important;
-    top: 100% !important;
-    transform: none !important;
-    margin-top: 0.5rem;
-  }
-}
 
 .dropdown-submenu {
   position: relative;
