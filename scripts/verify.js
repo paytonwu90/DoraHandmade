@@ -191,7 +191,7 @@ async function verifySortDropdown() {
 
 async function assertSubmenuInViewport(page, viewportWidth) {
   // 點擊開啟商品分類 dropdown
-  await page.click('li.category-dropdown > a.nav-link-custom');
+  await page.click('li.category-dropdown > a.nav-link');
   await page.waitForTimeout(300);
 
   // Hover 材料 → 觸發 handleSubmenuEnter（方向判斷）+ CSS hover（顯示 submenu）
@@ -260,7 +260,7 @@ async function verifyCategoryDropdown() {
     await page.waitForTimeout(300);
 
     // 開啟商品分類 dropdown
-    await page.click('a.nav-link-custom:has-text("商品分類")');
+    await page.click('a.nav-link:has-text("商品分類")');
     await page.waitForTimeout(300);
     await shoot(page, 'mobile-category-dropdown-open');
 
