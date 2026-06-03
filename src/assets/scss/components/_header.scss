@@ -70,9 +70,15 @@
 
 // Navbar Toggler
 .navbar-toggler-custom {
+  // 滑鼠點擊後不留 focus ring（覆蓋 Bootstrap .navbar-toggler:focus 的 box-shadow）
   &:focus {
-    // Bootstrap $navbar-toggler-focus-width 無顏色變數，box-shadow 預設用 currentColor（深色）
-    // 手動指定與 .nav-link 相同的 $focus-ring-box-shadow 保持一致
+    box-shadow: none;
+  }
+
+  // 鍵盤導航時才顯示，與 .nav-link:focus-visible 一致
+  // Bootstrap $navbar-toggler-focus-width 無顏色變數，box-shadow 預設用 currentColor（深色）
+  // 手動指定與 .nav-link 相同的 $focus-ring-box-shadow 保持一致
+  &:focus-visible {
     box-shadow: $focus-ring-box-shadow;
   }
 }
@@ -90,10 +96,14 @@
   .dropdown-item,
   .dropdown-item-toggle {
     font-weight: 700;
-    text-align: center;
+    text-align: left; // 手機版靠左，配合 submenu 展開後的左側 accent border
     display: block;
     padding: 8px 16px;
     white-space: nowrap;
+
+    @include media-breakpoint-up(lg) {
+      text-align: center;
+    }
   }
 
   // 子選單標籤 (成品/材料)，使用 button 元素故需重置預設樣式
@@ -178,21 +188,5 @@
     .dropdown-item-toggle svg {
       transform: none;
     }
-  }
-}
-
-@include media-breakpoint-down(lg) {
-  .category-dropdown {
-    .dropdown-item {
-      // 靠左對齊，配合 submenu 展開後的左側 accent border
-      // .dropdown-item-toggle 靠 justify-content 控制
-      text-align: left;
-    }
-  }
-
-  .navbar-collapse {
-    background-color: $white;
-    border-radius: 0.5rem;
-    // border: 3px solid blue !important; // Debug
   }
 }
