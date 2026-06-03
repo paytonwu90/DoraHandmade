@@ -185,7 +185,7 @@ const Header = () => {
           {/* Mobile Icons */}
           <div className="d-lg-none navbar-icons ms-auto">
             <Link className="btn-icon" to="/cart">
-              <ShoppingCart size={20} />
+              <ShoppingCart size={20} strokeWidth={2.5} />
             </Link>
 
             <div className="dropdown user-dropdown" ref={mobileUserMenuRef}>
@@ -194,13 +194,13 @@ const Header = () => {
                 aria-expanded={isUserMenuOpen}
                 onClick={() => setIsUserMenuOpen((prev) => !prev)}
               >
-                <User size={20} />
+                <User size={20} strokeWidth={2.5} />
               </button>
               {userDropdownMenu}
             </div>
 
             <button
-              className="navbar-toggler navbar-toggler-custom"
+              className="navbar-toggler navbar-toggler-custom border-0"
               type="button"
               onClick={toggleMobileMenu}
             >

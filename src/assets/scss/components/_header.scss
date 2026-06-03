@@ -51,20 +51,16 @@
 .btn-icon {
   padding: 12px;
   border: none;
+  color: $secondary-700;
   background: transparent;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: color 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  svg {
-    color: $gray-600;
-    transition: 0.3s ease;
-  }
-
-  &:hover svg {
-    color: $primary !important;
+  &:hover {
+    color: $primary;
   }
 
   &:focus {
@@ -75,19 +71,10 @@
 
 // Navbar Toggler
 .navbar-toggler-custom {
-  border: none !important;
-  box-shadow: none !important;
-  font-size: 16px;
-  padding: 12px !important;
-
-  &:hover {
-    color: $primary !important;
-  }
-
   &:focus {
-    box-shadow: none !important;
-    outline: none !important;
-    color: $primary !important;
+    // Bootstrap $navbar-toggler-focus-width 無顏色變數，box-shadow 預設用 currentColor（深色）
+    // 手動指定與 .nav-link 相同的 $focus-ring-box-shadow 保持一致
+    box-shadow: $focus-ring-box-shadow;
   }
 }
 
@@ -196,10 +183,6 @@
 }
 
 @include media-breakpoint-down(lg) {
-  .navbar-icons .btn-icon:hover svg {
-    color: $primary !important;
-  }
-
   .category-dropdown {
     .dropdown-item {
       // 靠左對齊，配合 submenu 展開後的左側 accent border
