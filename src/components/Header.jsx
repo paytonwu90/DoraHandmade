@@ -216,7 +216,7 @@ const Header = () => {
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
               <li className="nav-item me-lg-3 text-p-16-b">
                 <Link
-                  className="nav-link nav-link-custom "
+                  className="nav-link"
                   to="/workshop"
                   onClick={closeMobileMenu}
                 >
@@ -226,7 +226,7 @@ const Header = () => {
 
               <li className="nav-item me-lg-3 text-p-16-b">
                 <Link
-                  className="nav-link nav-link-custom"
+                  className="nav-link"
                   to="/custom-form"
                   onClick={closeMobileMenu}
                 >
@@ -240,7 +240,7 @@ const Header = () => {
               >
                 {/* 商品分類：完全使用 React state 控制，不依賴 Bootstrap Dropdown JS */}
                 <a
-                  className={`nav-link nav-link-custom d-flex align-items-center text-p-16-b ${isSubmenuOpen ? "show" : ""}`}
+                  className={`nav-link d-flex align-items-center text-p-16-b ${isSubmenuOpen ? "show" : ""}`}
                   href="#"
                   onClick={toggleSubmenu}
                 >
@@ -336,19 +336,19 @@ const Header = () => {
               </li>
 
               <li className="nav-item me-lg-2 d-none d-lg-block">
-                <Link className="nav-link nav-link-custom" to="/cart">
-                  <ShoppingCart size={20} />
+                <Link className="nav-link d-flex align-items-center" to="/cart">
+                  <ShoppingCart size={20} strokeWidth={2.5} />
                 </Link>
               </li>
 
               <li className="nav-item dropdown user-dropdown d-none d-lg-block" ref={desktopUserMenuRef}>
                 <button
                   type="button"
-                  className="nav-link nav-link-custom"
+                  className="nav-link d-flex align-items-center"
                   aria-expanded={isUserMenuOpen}
                   onClick={() => setIsUserMenuOpen((prev) => !prev)}
                 >
-                  <User size={20} />
+                  <User size={20} strokeWidth={2.5} />
                 </button>
                 {userDropdownMenu}
               </li>

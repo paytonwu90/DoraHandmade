@@ -91,48 +91,6 @@
   }
 }
 
-// Navigation Links
-.nav-link-custom {
-  // transition: 0.3s ease;
-  // 1. 預設顏色
-  // color: $gray-600 !important;
-
-  svg {
-    // color: $gray-600;
-  }
-
-  // 2. 核心修正：僅在選單「展開中」或是「明確處於 Active」時才強制橘色
-  // Hover 狀態下，如果選單是收合的，我們給予較淡的橘色或維持灰色，直到開啟
-  &:hover:not(.show) {
-    // color: $primary-400 !important; // 懸停但未開啟時，使用較淡的品牌色或不變
-
-    svg {
-      // color: $primary-400;
-    }
-  }
-
-  &.show,
-  &.show svg,
-  &.active,
-  &.active svg {
-    // color: $primary !important;
-  }
-
-  // 3. 焦點重置：移除所有點擊後產生的外框
-  &:focus {
-    outline: none !important;
-    box-shadow: none !important;
-  }
-
-  // 4. 暴力保護：只要沒展開且滑鼠移開，絕對變灰色
-  // &:not(.show):not(:hover) {
-  //   color: $gray-600 !important;
-
-  //   svg {
-  //     color: $gray-600 !important;
-  //   }
-  // }
-}
 
 // Dropdown
 .user-dropdown {
@@ -167,10 +125,6 @@
     }
   }
 
-  &.show>.nav-link-custom,
-  &.show>.nav-link-custom svg {
-    // color: $primary !important;
-  }
 
   // Debug
   // border: 2px solid red !important;
