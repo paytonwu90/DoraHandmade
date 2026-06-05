@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { ShoppingCart, Heart, Minus, Plus } from "lucide-react";
+import { ShoppingCart, Heart, Minus, Plus, ChevronRight } from "lucide-react";
 import axios from "axios";
 import { useCartActionContext } from "@contexts/CartAction";
 import { useFavoriteProductsContext } from "@contexts/FavoriteProducts";
@@ -12,6 +12,14 @@ import product4 from "@images/product-4.png";
 // API 設定
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
+
+// 商品 category 欄位（中文）對應路由路徑
+const CATEGORY_PATH_MAP = {
+  蝴蝶結: "handmade/bow",
+  帶子: "material/ribbon",
+  夾子: "material/clip",
+  貼片: "material/patch",
+};
 
 function SingleProduct() {
   const [qty, setQty] = useState(1);
@@ -120,30 +128,16 @@ function SingleProduct() {
 
   return (
     <div className="container pt-6 pt-lg-12 pb-4 pb-lg-12">
-      <nav
-        className="mb-6"
-        style={{ "--bs-breadcrumb-divider": "'>'" }}
-        aria-label="breadcrumb"
-      >
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item">
-            <a href="#">首頁</a>
-          </li>
-          <li className="breadcrumb-item">
-            <a href="#/product">全部商品</a>
-          </li>
-          <li className="breadcrumb-item">
-            <a href={`#/category/${product.category}`}>
-              {product.category}
-            </a>
-          </li>
-          <li
-            className="breadcrumb-item active text-primary"
-            aria-current="page"
-          >
-            {product.title}
-          </li>
-        </ol>
+      <nav className="mb-6" aria-label="breadcrumb">
+        <div className="breadcrumb-custom">
+          <a href="#">首頁</a>
+          <ChevronRight size={16} />
+          <a href="#/product">全部商品</a>
+          <ChevronRight size={16} />
+          <a href={`#/category/${CATEGORY_PATH_MAP[product.category]}`}>{product.category}</a>
+          <ChevronRight size={16} />
+          <span className="active" aria-current="page">{product.title}</span>
+        </div>
       </nav>
 
       <div className="row mt-4 pb-5">

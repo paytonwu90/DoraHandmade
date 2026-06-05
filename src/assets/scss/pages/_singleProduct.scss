@@ -1,4 +1,28 @@
+// Breadcrumb
+.breadcrumb-custom {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  font-size: 0.875rem;
 
+  a {
+    font-weight: inherit;
+    color: $gray-400;
+
+    &:hover {
+      color: $gray-600;
+    }
+  }
+
+  svg {
+    color: $gray-400;
+  }
+
+  .active {
+    color: $primary;
+  }
+}
 
 // 按鈕
 .btn,
