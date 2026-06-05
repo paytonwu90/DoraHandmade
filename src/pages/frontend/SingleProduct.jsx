@@ -136,8 +136,7 @@ function SingleProduct() {
           <img
             src={product.imageUrl}
             alt={product.title}
-            className="img-fluid image-hover"
-            style={{ width: "636px" }}
+            className="img-fluid product-img"
           />
         </div>
         <div className="col-md-6">

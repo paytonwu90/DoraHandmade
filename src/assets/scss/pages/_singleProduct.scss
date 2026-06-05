@@ -79,16 +79,15 @@ button {
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-// 移到後圖片放大
-.image-hover {
-  transition: transform 0.3s ease; /* 平滑過渡效果，0.3秒 */
-  cursor: pointer; /* 滑鼠變成手型 */
-  object-fit: cover; /* 圖片填滿容器 */
-  border-radius: 16px; /* 可選：圓角 */
-}
+.product-img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 16px;
 
-.image-hover:hover {
-  transform: scale(1.05); /* 放大  */
+  @include media-breakpoint-up(md) {
+    aspect-ratio: 5/3;
+  }
 }
 
 
