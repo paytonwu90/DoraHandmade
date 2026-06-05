@@ -4,6 +4,7 @@ import { ShoppingCart, Heart, Minus, Plus, ChevronRight } from "lucide-react";
 import axios from "axios";
 import { useCartActionContext } from "@contexts/CartAction";
 import { useFavoriteProductsContext } from "@contexts/FavoriteProducts";
+import ProductCard from "@components/ProductCard";
 import product1 from "@images/product-1.png";
 import product2 from "@images/product-2.png";
 import product3 from "@images/product-3.png";
@@ -37,16 +38,6 @@ function SingleProduct() {
   // 單一商品收藏
   const handleToggleFavoriteProduct = () => {
     const result = toggleFavoriteProduct(product);
-    if (result) {
-      showToast("已加入收藏");
-    } else {
-      showToast("已取消收藏");
-    }
-  };
-
-  // 相關商品收藏
-  const handleToggleFavoriteRelated = (item) => {
-    const result = toggleFavoriteProduct(item);
     if (result) {
       showToast("已加入收藏");
     } else {
@@ -127,7 +118,7 @@ function SingleProduct() {
   const isCurrentFavorite = isProductFavorite(product);
 
   return (
-    <div className="container pt-6 pt-lg-12 pb-4 pb-lg-12">
+    <div className="container pt-6 pt-lg-12">
       <nav className="mb-6" aria-label="breadcrumb">
         <div className="breadcrumb-custom">
           <a href="#">首頁</a>
@@ -289,60 +280,15 @@ function SingleProduct() {
       </main>
 
       {/* 相關商品 */}
-      <section className="py-7">
+      <section className="pb-10 py-lg-12">
         <h6 className="fw-bold mb-4">相關商品</h6>
-        <div className="row">
-          {relatedProducts?.map((item) => {
-            const isRelatedFavorite = isProductFavorite(item);
-
-            return (
-              <div className="col-md-3 col-12 mb-4" key={item.id}>
-                <div className="card w-100 h-100 border-0 shadow-sm position-relative">
-                  {/* 收藏按鈕 */}
-                  <button
-                    className="btn btn-light shadow-sm rounded-circle position-absolute wishlist-btn"
-                    style={{
-                      top: "30px",
-                      right: "30px",
-                      zIndex: 10,
-                      padding: "12px 12px",
-                    }}
-                    onClick={() => handleToggleFavoriteRelated(item)}
-                  >
-                    <Heart
-                      className={isRelatedFavorite ? "is-favorite" : ""}
-                    />
-                  </button>
-
-                  {/* 圖片 */}
-                  <img
-                    src={item.imageUrl}
-                    className="card-img-top image-hover p-4"
-                    alt={item.title}
-                    style={{ objectFit: "cover" }}
-                  />
-
-                  {/* 文字與購物車 */}
-                  <div className="card-body p-2 d-flex flex-column px-4">
-                    <p className="card-title text-truncate small mb-2 fw-bold text-gray-600">
-                      {item.title}
-                    </p>
-
-                    <div className="d-flex justify-content-between align-items-center mt-auto">
-                      <span className="fw-bold">NT${item.price}</span>
-                      <button
-                        className="btn btn-sm p-1 btn-add-cart-icon"
-                        onClick={() => handleAddToCartClick(product)}
-                      >
-                        <ShoppingCart />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <ul className="row row-cols-1 row-cols-md-2 row-cols-lg-4 row-gap-6 ps-0">
+          {relatedProducts.map((item) => (
+            <li className="col list-unstyled" key={item.id}>
+              <ProductCard product={item} />
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );
