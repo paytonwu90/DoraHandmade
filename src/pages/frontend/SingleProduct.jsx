@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { useNavigate } from "react-router";
-import { ShoppingCart } from "lucide-react";
-import { Heart } from "lucide-react";
-import { Minus } from "lucide-react";
-import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
+import { ShoppingCart, Heart, Minus, Plus } from "lucide-react";
 import axios from "axios";
 import { useCartActionContext } from "@contexts/CartAction";
-import { useFavoriteProductsContext } from "../../contexts/FavoriteProducts/FavoriteProductsContext";
+import { useFavoriteProductsContext } from "@contexts/FavoriteProducts";
 import product1 from "@images/product-1.png";
 import product2 from "@images/product-2.png";
 import product3 from "@images/product-3.png";
@@ -19,8 +15,8 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 
 function SingleProduct() {
   const [qty, setQty] = useState(1);
-  const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const { id } = useParams();
   const navigate = useNavigate();
 
   // 共用加入購物車 + toast（從 CartActionContext 拿）
