@@ -131,7 +131,7 @@ function SingleProduct() {
         </div>
       </nav>
 
-      <div className="row mt-4 pb-5">
+      <div className="row row-gap-6 pb-10 pb-lg-12">
         <div className="col-md-6">
           <img
             src={product.imageUrl}
@@ -140,14 +140,14 @@ function SingleProduct() {
           />
         </div>
         <div className="col-md-6">
-          <h3>{product.title}</h3>
-          <p>{product.description}</p>
+          <h3 className="mb-2">{product.title}</h3>
+          <p className="text-p-20 mb-2">{product.description}</p>
           <div className="d-flex justify-content-between align-items-center">
-            <span className="fs-3 fw-bold text-pink">${product.price}</span>
+            <span className="text-p-6-b">${product.price}</span>
             {/* 手機版收藏按鈕 */}
             <button
               type="button"
-              className="ms-auto btn p-1 border-0 bg-transparent d-block d-md-none"
+              className="d-flex d-md-none border-0 bg-transparent p-3"
               onClick={handleToggleFavoriteProduct}
             >
               <Heart className={isCurrentFavorite ? "is-favorite" : ""} />
