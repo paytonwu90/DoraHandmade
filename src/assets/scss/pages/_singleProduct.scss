@@ -51,36 +51,11 @@
     font-weight: 700;
     
 }
-.btn-add-cart-icon{
-  background: #ffff;
-  color: #333333;
-  border: none;
-}
-.btn-add-cart-icon:hover {
-    background: white;
-    color: #E3879F;
-    border: none;
-    border-radius: none;  
-      
-}
-
 /* 收藏狀態：粉紅愛心 */
 .is-favorite {
   color: #D75E7E !important;
   fill: #D75E7E !important; /* 填滿顏色 */
   transition: all 0.3s ease; /* 讓變色過程平滑一點 */
-}
-
-
-/* 相關商品卡片容器 */
-.product-card-sm {
-  transition: transform 0.2s;
-  border: 1px solid #eee;
-}
-
-.product-card-sm:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .product-img {
@@ -92,47 +67,4 @@
   @include media-breakpoint-up(md) {
     aspect-ratio: 5/3;
   }
-}
-
-
-/* 愛心按鈕 Hover 效果 */
-.wishlist-btn {
-  position: absolute;
-  top: 32px;
-  right: 32px;
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #1d0202;
-  font-size: 20px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
-.wishlist-btn:hover {
-  /* 放大 + 旋轉 + 顏色變化 */
-  // transform: scale(1.15) rotate(10deg);
-  background: linear-gradient(135deg, #ffff);
-  box-shadow: 0 8px 32px rgba(255, 77, 79, 0.4);
-  color: #D75E7E !important;
-}
-
-
-
-
-
-
-
-/* 限制標題行數，避免撐開卡片 */
-.card-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
