@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { ShoppingCart, Heart, Minus, Plus, ChevronRight } from "lucide-react";
+import { HeartFill } from "@components/icons";
 import axios from "axios";
 import { useCartActionContext } from "@contexts/CartAction";
 import { useFavoriteProductsContext } from "@contexts/FavoriteProducts";
@@ -32,8 +33,7 @@ function SingleProduct() {
   const { handleAddToCart, showToast } = useCartActionContext();
 
   // 收藏 Context
-  const { toggleFavoriteProduct, isProductFavorite } =
-    useFavoriteProductsContext();
+  const { toggleFavoriteProduct, isProductFavorite } = useFavoriteProductsContext();
 
   // 單一商品收藏
   const handleToggleFavoriteProduct = () => {
@@ -150,7 +150,7 @@ function SingleProduct() {
               className="d-flex d-md-none border-0 bg-transparent p-3"
               onClick={handleToggleFavoriteProduct}
             >
-              <Heart className={isCurrentFavorite ? "is-favorite" : ""} />
+              {isCurrentFavorite ? <HeartFill color="#D75E7E" /> : <Heart />}
             </button>
           </div>
 
@@ -194,10 +194,10 @@ function SingleProduct() {
 
             {/* 桌機版收藏按鈕 */}
             <button
-              className="btn-favorite btn d-none d-md-flex align-items-center px-0 py-3"
+              className="btn-favorite btn d-none d-md-flex align-items-center gap-2 px-0 py-3"
               onClick={handleToggleFavoriteProduct}
             >
-              <Heart className={`me-2 ${isCurrentFavorite ? "is-favorite" : ""}`} />
+              {isCurrentFavorite ? <HeartFill color="#D75E7E" /> : <Heart />}
               <span>{isCurrentFavorite ? "取消收藏" : "加入收藏"}</span>
             </button>
           </div>
