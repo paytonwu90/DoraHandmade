@@ -194,7 +194,7 @@ function SingleProduct() {
 
             {/* 桌機版收藏按鈕 */}
             <button
-              className="btn-favorite btn d-none d-md-flex align-items-center gap-2 px-0 py-3"
+              className={`btn-favorite btn d-none d-md-flex align-items-center gap-2 px-0 py-3${isCurrentFavorite ? " is-favorited" : ""}`}
               onClick={handleToggleFavoriteProduct}
             >
               {isCurrentFavorite ? <HeartFill color="#D75E7E" /> : <Heart />}
