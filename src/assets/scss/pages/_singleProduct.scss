@@ -24,11 +24,15 @@
   }
 }
 
-// 按鈕
-.btn,
-button {
-  border-radius: 0;
+// 手機版縮小水平 padding，md 以上自動回復 .btn 全域設定
+.btn-compact-mobile {
+  @include media-breakpoint-down(md) {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
 }
+
+// 按鈕
 .btn-add-cart {
     background: #ffff;
     color: #333333;

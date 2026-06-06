@@ -132,17 +132,17 @@ function SingleProduct() {
       </nav>
 
       <div className="row row-gap-6 pb-10 pb-lg-12">
-        <div className="col-md-6">
+        <div className="col-lg-6">
           <img
             src={product.imageUrl}
             alt={product.title}
-            className="img-fluid product-img"
+            className="product-img"
           />
         </div>
-        <div className="col-md-6">
+        <div className="col-lg-6">
           <h3 className="mb-2">{product.title}</h3>
           <p className="text-p-20 mb-2">{product.description}</p>
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center mb-6">
             <span className="text-p-6-b">${product.price}</span>
             {/* 手機版收藏按鈕 */}
             <button
@@ -154,7 +154,7 @@ function SingleProduct() {
             </button>
           </div>
 
-          <div className="input-group" style={{ width: "192px" }}>
+          <div className="input-group mb-6" style={{ width: "192px" }}>
             <button
               className="btn btn-minus btn-sm p-3"
               type="button"
@@ -177,24 +177,24 @@ function SingleProduct() {
             </button>
           </div>
 
-          <div className="d-flex flex-row gap-3 mb-3 mt-4">
+          <div className="d-flex gap-4 gap-md-6">
             <button
-              className="btn btn-sm btn-dora-outline flex-grow-1 text-nowrap d-flex align-items-center justify-content-center"
+              className="btn btn-dora-outline btn-compact-mobile flex-grow-1 flex-md-grow-0"
               onClick={() => handleAddToCartClick(product)}
             >
               加入購物車
             </button>
 
             <button
-              className="btn btn-sm btn-dora flex-grow-1 text-nowrap d-flex align-items-center justify-content-center text-white"
+              className="btn btn-dora btn-compact-mobile d-flex align-items-center justify-content-center flex-grow-1 flex-md-grow-0"
               onClick={handleBuyNow}
             >
-              <span className="mr-2">立即購買</span> <ShoppingCart />
+              <span className="me-2">立即購買</span> <ShoppingCart />
             </button>
 
             {/* 桌機版收藏按鈕 */}
             <button
-              className="btn btn-sm flex-grow-1 text-nowrap d-flex align-items-center justify-content-center d-none d-md-block btn-add-cart"
+              className="btn btn-sm text-nowrap d-flex align-items-center justify-content-center d-none d-md-block btn-add-cart"
               onClick={handleToggleFavoriteProduct}
             >
               <span className="mr-2">
