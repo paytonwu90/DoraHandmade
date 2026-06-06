@@ -194,12 +194,10 @@ function SingleProduct() {
 
             {/* 桌機版收藏按鈕 */}
             <button
-              className="btn btn-sm text-nowrap d-flex align-items-center justify-content-center d-none d-md-block btn-add-cart"
+              className="btn-favorite btn d-none d-md-flex align-items-center px-0 py-3"
               onClick={handleToggleFavoriteProduct}
             >
-              <span className="mr-2">
-                <Heart className={isCurrentFavorite ? "is-favorite" : ""} />
-              </span>
+              <Heart className={`me-2 ${isCurrentFavorite ? "is-favorite" : ""}`} />
               <span>{isCurrentFavorite ? "取消收藏" : "加入收藏"}</span>
             </button>
           </div>

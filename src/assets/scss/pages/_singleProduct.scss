@@ -33,23 +33,12 @@
 }
 
 // 按鈕
-.btn-add-cart {
-    background: #ffff;
-    color: #333333;
-    border: none;
-    border-radius: none;
-    
-    font-weight: 700;
-    
-}
-.btn-add-cart:hover {
-    background: white;
-    color: #E3879F;
-    border: 2px solid #E3879F;
-    border-radius: none;
-    
-    font-weight: 700;
-    
+.btn-favorite {
+  border: none;
+
+  &:hover {
+    color: $primary-700;
+  }
 }
 /* 收藏狀態：粉紅愛心 */
 .is-favorite {
