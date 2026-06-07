@@ -25,6 +25,7 @@ const CATEGORY_PATH_MAP = {
 
 function SingleProduct() {
   const [qty, setQty] = useState(1);
+  const [qtyDisplay, setQtyDisplay] = useState("1");
   const [product, setProduct] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -71,7 +72,41 @@ function SingleProduct() {
   ];
 
   const handleQtyChange = (delta) => {
-    setQty((prev) => Math.max(1, Math.min(99, prev + delta)));
+    const newQty = Math.max(1, Math.min(99, qty + delta));
+    setQty(newQty);
+    setQtyDisplay(String(newQty));
+  };
+
+  const handleQtyInput = (e) => {
+    setQtyDisplay(e.target.value);
+    const val = parseInt(e.target.value, 10);
+    if (!isNaN(val)) {
+      setQty(Math.max(1, Math.min(99, val)));
+    }
+  };
+
+  const handleQtyBlur = () => {
+    if (qtyDisplay === "" || isNaN(parseInt(qtyDisplay, 10))) {
+      setQty(1);
+      setQtyDisplay("1");
+    } else {
+      setQtyDisplay(String(qty));
+    }
+  };
+
+  const handleQtyKeyDown = (e) => {
+    // Ctrl / Meta（Mac Cmd）/ Alt 組合鍵一律放行，避免攔截到瀏覽器快捷鍵（如 Ctrl+R、Ctrl+A）
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    
+    // Function key（F1–F12）放行，避免攔截 F5 重新整理、F12 開發者工具等
+    if (/^F\d+$/.test(e.key)) return;
+    
+    // 允許數字（0–9）以及編輯與導覽用的控制鍵
+    const controlKeys = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Tab", "Home", "End"];
+    if (controlKeys.includes(e.key) || /^\d$/.test(e.key)) return;
+    
+    // 其餘直接攔截（字母、符號等）；IME 輸入（如注音）無法在此攔截，由 onBlur 重設處理
+    e.preventDefault();
   };
 
   const handleAddToCartClick = async (productItem) => {
@@ -166,8 +201,12 @@ function SingleProduct() {
               type="number"
               className="qty-input form-control w-auto fw-bold fs-24 text-center border-0"
               size="2"
-              value={qty}
-              readOnly
+              min="1"
+              max="99"
+              value={qtyDisplay}
+              onChange={handleQtyInput}
+              onBlur={handleQtyBlur}
+              onKeyDown={handleQtyKeyDown}
             />
             <button
               className="btn btn-qty d-flex align-items-center justify-content-center p-3"
