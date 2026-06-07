@@ -205,8 +205,8 @@ function SingleProduct() {
       </div>
 
       <main>
-        <div className="mb-5 border-bottom border-primary-200 pb-4">
-          <h6 className="fw-bold mb-3">商品介紹</h6>
+        <div className="border-bottom border-primary-200 pb-4 mb-6 mb-md-8">
+          <h6 className="fw-bold mb-4">商品介紹</h6>
           {product.content?.split("\n").map(
             (line, index) =>
               line.trim() && (
@@ -217,8 +217,8 @@ function SingleProduct() {
           )}
         </div>
 
-        <div className="mb-5 border-bottom border-primary-200 pb-4">
-          <h6 className="fw-bold mb-3">商品特色</h6>
+        <div className="border-bottom border-primary-200 pb-4 mb-6 mb-md-8">
+          <h6 className="fw-bold mb-4">商品特色</h6>
           <ul className="mb-0">
             {product.features?.split("\n").map(
               (feature, index) =>
@@ -231,8 +231,8 @@ function SingleProduct() {
           </ul>
         </div>
 
-        <div className="mb-5 border-bottom border-primary-200 pb-4">
-          <h6 className="fw-bold mb-3">商品規格</h6>
+        <div className="border-bottom border-primary-200 pb-4 mb-6 mb-md-8">
+          <h6 className="fw-bold mb-4">商品規格</h6>
           {product.specifications?.split("\n").map((line, index) => {
             const [label, ...valueParts] = line.split("：");
             const value = valueParts.join("：");
@@ -248,8 +248,8 @@ function SingleProduct() {
           })}
         </div>
 
-        <div className="mb-5 border-bottom border-primary-200 pb-4">
-          <h6 className="fw-bold mb-3">保養與注意事項</h6>
+        <div className="border-bottom border-primary-200 pb-4 mb-6 mb-md-8">
+          <h6 className="fw-bold mb-4">保養與注意事項</h6>
           <ul className="mb-0">
             <li>建議避免長時間受潮或浸水</li>
             <li>若有灰塵可輕拍或使用柔軟刷具清理</li>
@@ -258,8 +258,8 @@ function SingleProduct() {
           </ul>
         </div>
 
-        <div className="mb-5 border-bottom border-primary-200 pb-4">
-          <h6 className="fw-bold mb-3">貼心提醒</h6>
+        <div className="border-bottom border-primary-200 pb-4">
+          <h6 className="fw-bold mb-4">貼心提醒</h6>
           <ul className="mb-0">
             <li className="mb-4">螢幕顯示顏色可能與實品略有差異</li>
             <li>
