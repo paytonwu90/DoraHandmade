@@ -35,16 +35,6 @@ function SingleProduct() {
   // 收藏 Context
   const { toggleFavoriteProduct, isProductFavorite } = useFavoriteProductsContext();
 
-  // 單一商品收藏
-  const handleToggleFavoriteProduct = () => {
-    const result = toggleFavoriteProduct(product);
-    if (result) {
-      showToast("已加入收藏");
-    } else {
-      showToast("已取消收藏");
-    }
-  };
-
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -173,7 +163,7 @@ function SingleProduct() {
             <button
               type="button"
               className="d-flex d-md-none border-0 bg-transparent p-3"
-              onClick={handleToggleFavoriteProduct}
+              onClick={() => toggleFavoriteProduct(product)}
             >
               {isCurrentFavorite ? <HeartFill color="#D75E7E" /> : <Heart />}
             </button>
@@ -225,7 +215,7 @@ function SingleProduct() {
             {/* 桌機版收藏按鈕 */}
             <button
               className={`btn-favorite btn d-none d-md-flex align-items-center gap-2 px-0 py-3${isCurrentFavorite ? " is-favorited" : ""}`}
-              onClick={handleToggleFavoriteProduct}
+              onClick={() => toggleFavoriteProduct(product)}
             >
               {isCurrentFavorite ? <HeartFill color="#D75E7E" /> : <Heart />}
               <span>{isCurrentFavorite ? "取消收藏" : "加入收藏"}</span>
