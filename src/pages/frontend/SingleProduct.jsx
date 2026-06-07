@@ -154,26 +154,27 @@ function SingleProduct() {
             </button>
           </div>
 
-          <div className="input-group mb-6" style={{ width: "192px" }}>
+          <div className="d-flex align-items-center mb-6">
             <button
-              className="btn btn-minus btn-sm p-3"
+              className="btn btn-qty d-flex align-items-center justify-content-center p-3"
               type="button"
               onClick={() => handleQtyChange(-1)}
             >
-              <Minus />
+              <Minus strokeWidth={2.5} />
             </button>
             <input
               type="number"
-              className="form-control text-center bg-white border-0"
+              className="qty-input form-control w-auto fw-bold fs-24 text-center border-0"
+              size="2"
               value={qty}
               readOnly
             />
             <button
-              className="btn btn-plus btn-sm p-3"
+              className="btn btn-qty d-flex align-items-center justify-content-center p-3"
               type="button"
               onClick={() => handleQtyChange(+1)}
             >
-              <Plus />
+              <Plus strokeWidth={2.5} />
             </button>
           </div>
 

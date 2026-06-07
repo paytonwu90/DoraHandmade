@@ -51,6 +51,29 @@
   }
 }
 
+// 數量加減按鈕：移除 active 時的黑框，按下時以 opacity 表示按壓感
+.btn-qty {
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-active-bg: transparent;
+  border: none;
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+// 隱藏數量 input 的瀏覽器原生上下箭頭
+.qty-input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  padding: 10px;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+}
+
 .product-img {
   width: 100%;
   aspect-ratio: 1/1;
