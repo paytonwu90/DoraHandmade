@@ -30,8 +30,7 @@ function SingleProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // 共用加入購物車 + toast（從 CartActionContext 拿）
-  const { handleAddToCart, showToast } = useCartActionContext();
+  const { handleAddToCart } = useCartActionContext();
 
   // 收藏 Context
   const { toggleFavoriteProduct, isProductFavorite } = useFavoriteProductsContext();
@@ -107,15 +106,6 @@ function SingleProduct() {
     
     // 其餘直接攔截（字母、符號等）；IME 輸入（如注音）無法在此攔截，由 onBlur 重設處理
     e.preventDefault();
-  };
-
-  const handleAddToCartClick = async (productItem) => {
-    try {
-      await handleAddToCart(productItem);
-    } catch (error) {
-      console.error("加入購物車錯誤：", error);
-      alert("加入購物車失敗，請稍後再試");
-    }
   };
 
   const handleBuyNow = async () => {
@@ -220,7 +210,7 @@ function SingleProduct() {
           <div className="d-flex gap-4 gap-md-6">
             <button
               className="btn btn-dora-outline btn-compact-mobile flex-grow-1 flex-md-grow-0"
-              onClick={() => handleAddToCartClick(product)}
+              onClick={() => handleAddToCart(product)}
             >
               加入購物車
             </button>
