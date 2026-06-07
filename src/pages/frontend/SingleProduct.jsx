@@ -6,10 +6,6 @@ import axios from "axios";
 import { useCartActionContext } from "@contexts/CartAction";
 import { useFavoriteProductsContext } from "@contexts/FavoriteProducts";
 import ProductCard from "@components/ProductCard";
-import product1 from "@images/product-1.png";
-import product2 from "@images/product-2.png";
-import product3 from "@images/product-3.png";
-import product4 from "@images/product-4.png";
 
 // API 設定
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -27,6 +23,7 @@ function SingleProduct() {
   const [qty, setQty] = useState(1);
   const [qtyDisplay, setQtyDisplay] = useState("1");
   const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -36,29 +33,36 @@ function SingleProduct() {
   const { toggleFavoriteProduct, isProductFavorite } = useFavoriteProductsContext();
 
   useEffect(() => {
-    const getProduct = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `${API_BASE}/api/${API_PATH}/product/${id}`,
+        const [productRes, allProductsRes] = await Promise.all([
+          axios.get(`${API_BASE}/api/${API_PATH}/product/${id}`),
+          axios.get(`${API_BASE}/api/${API_PATH}/products/all`),
+        ]);
+
+        const currentProduct = productRes.data.product;
+        setProduct(currentProduct);
+
+        // 相關商品：同類別優先，不足 4 筆再從其他類別補
+        const allProducts = allProductsRes.data.products?.filter(
+          (p) => p.is_enabled && !p.is_placeholder
+        ) || [];
+        const sameCategory = allProducts.filter(
+          (p) => p.category === currentProduct.category && p.id !== currentProduct.id
         );
-        setProduct(res.data.product);
+        const others = allProducts.filter(
+          (p) => p.category !== currentProduct.category
+        );
+        setRelatedProducts([...sameCategory, ...others].slice(0, 4));
       } catch (error) {
         console.error("取得商品失敗：", error);
         alert("商品載入失敗，請稍後再試");
       }
     };
     if (id) {
-      getProduct();
+      fetchData();
     }
   }, [id]);
-
-  // 假資料相關商品（只負責顯示 UI）
-  const relatedProducts = [
-    { id: 1, title: "銀白冬夜亮片蝴蝶結", price: 777, imageUrl: product1 },
-    { id: 2, title: "聖誕紅緞帶雙層蝴蝶結", price: 777, imageUrl: product2 },
-    { id: 3, title: "聖誕雪花點點蝴蝶結", price: 777, imageUrl: product3 },
-    { id: 4, title: "銀白冬夜亮片蝴蝶結", price: 777, imageUrl: product4 },
-  ];
 
   const handleQtyChange = (delta) => {
     const newQty = Math.max(1, Math.min(99, qty + delta));
