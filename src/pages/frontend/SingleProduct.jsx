@@ -103,25 +103,8 @@ function SingleProduct() {
   };
 
   const handleBuyNow = async () => {
-    try {
-      const cartData = {
-        data: {
-          product_id: product.id,
-          qty: Number(qty),
-        },
-      };
-      const res = await axios.post(
-        `${API_BASE}/api/${API_PATH}/cart`,
-        cartData,
-      );
-      if (res.data.success) {
-        navigate("/cart");
-      } else {
-        alert("系統忙碌中，請稍後再試");
-      }
-    } catch (error) {
-      alert(error.message || "系統忙碌中，請稍後再試");
-    }
+    const success = await handleAddToCart(product, qty);
+    if (success) navigate("/cart");
   };
 
   if (!product) {
