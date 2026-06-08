@@ -27,7 +27,7 @@ function SingleProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { handleAddToCart } = useCartActionContext();
+  const { handleAddToCart, addingProductId } = useCartActionContext();
 
   // 收藏 Context
   const { toggleFavoriteProduct, isProductFavorite } = useFavoriteProductsContext();
@@ -188,15 +188,21 @@ function SingleProduct() {
             <button
               className="btn btn-dora-outline btn-compact-mobile flex-grow-1 flex-md-grow-0"
               onClick={() => handleAddToCart(product)}
+              disabled={addingProductId != null}
             >
-              加入購物車
+              {addingProductId === product.id ? "加入中…" : "加入購物車"}
             </button>
 
             <button
               className="btn btn-dora btn-compact-mobile d-flex align-items-center justify-content-center flex-grow-1 flex-md-grow-0"
               onClick={handleBuyNow}
+              disabled={addingProductId != null}
             >
-              <span className="me-2">立即購買</span> <ShoppingCart />
+              {addingProductId === product.id ? (
+                <span>處理中…</span>
+              ) : (
+                <><span className="me-2">立即購買</span><ShoppingCart /></>
+              )}
             </button>
 
             {/* 桌機版收藏按鈕 */}
