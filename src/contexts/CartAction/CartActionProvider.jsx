@@ -75,26 +75,29 @@ export function CartActionProvider({ children }) {
     }
   }
 
-  async function handleAddToCart(product) {
-    if (addingProductId) return; // 防止重複點擊
+  async function handleAddToCart(product, qty = 1) {
+    if (addingProductId) return false; // 防止重複點擊
     setAddingProductId(product.id);
 
     try {
       const response = await axios.post(`${API_BASE}/api/${API_PATH}/cart`, {
         data: {
           product_id: product.id,
-          qty: 1  // 後端會自行判斷若商品已存在在購物車，則自動累加
+          qty, // 後端會自行判斷若商品已存在在購物車，則自動累加
         }
       });
 
       if (response.data.success) {
         showCartToast('商品已加入購物車！', true);
+        return true;
       } else {
         showCartToast("商品加入失敗，請稍後再試！", false);
+        return false;
       }
     } catch (error) {
       console.log(error);
       showCartToast("商品加入失敗，請稍後再試！", false);
+      return false;
     } finally {
       setAddingProductId(null);
     }

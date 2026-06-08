@@ -1,14 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router";
 import axios from "axios";
+import Pagination from "@/components/Pagination";
 import ProductCard from "@components/ProductCard";
 import Loading from "@components/Loading";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -43,6 +39,20 @@ function Products() {
   // 載入中
   const [isLoading, setIsLoading] = useState(false);
 
+  const sortDropdownRef = useRef(null);
+
+  // main.jsx 的全域 handler 只操作 DOM class，無法同步 React state（sortOpen）
+  // 這裡用 mousedown 監聽確保點外部時 sortOpen 也一併重置
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
+        setSortOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   // API 取得商品
   useEffect(() => {
     async function fetchProducts() {
@@ -55,9 +65,9 @@ function Products() {
         setSortedProducts(enabledProducts);
       } catch (err) {
         console.error("取得商品失敗", err);
-      }finally {
-      setIsLoading(false);
-    }
+      } finally {
+        setIsLoading(false);
+      }
     }
     fetchProducts();
   }, []);
@@ -86,7 +96,7 @@ function Products() {
     setSortOpen(false);
   };
 
-  // 側邊欄點擊分類：透過路由跳轉來應用分類（这樣类別狀態全部由路由驅動）
+  // 側邊欄點擊分類：透過路由跳轉來應用分類（這樣類別狀態全部由路由驅動）
   const handleCategoryChange = (newSubCat) => {
     setCurrentPage(1);
     setMaterialOpen(false);
@@ -112,6 +122,15 @@ function Products() {
     effectivePage * itemsPerPage,
   );
 
+  // 創建 pagination 物件供 Pagination 元件使用
+  // 模仿六角 /admin/products api 回傳的 pagination 格式
+  const pagination = {
+    current_page: effectivePage,
+    total_pages: totalPages,
+    has_pre: effectivePage > 1,
+    has_next: effectivePage < totalPages,
+  };
+
   // 分頁切換時滾動到頂部
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -121,10 +140,10 @@ function Products() {
     <div className="container pt-5">
       <div className="row">
         {/* 左側選單 */}
-        <nav className="d-none d-md-block col-md-3 bg-white p-4">
-          <div className="nav flex-column sticky-top" style={{ top: "20px" }}>
+        <nav className="nav sidebar-nav d-none d-md-block col-md-3 bg-white p-4" aria-label="商品分類">
+          <div className="flex-column sticky-top">
             <a
-              className="nav-link ps-4 py-2 fw-bold text-secondary-700"
+              className="nav-link ps-4 py-2 fw-bold"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -134,7 +153,7 @@ function Products() {
               全部商品
             </a>
             <a
-              className="nav-link ps-4 py-2 fw-bold text-secondary-700"
+              className="nav-link ps-4 py-2 fw-bold"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -144,28 +163,22 @@ function Products() {
               蝴蝶結
             </a>
 
-            <div className="dropdown material-dropdown">
-              <a
-                className="nav-link d-flex justify-content-between align-items-center fw-bold ps-4 py-2 text-secondary-700"
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMaterialOpen(!materialOpen);
-                }}
+            <div className="sidebar-accordion">
+              <button
+                className="sidebar-accordion__toggle px-4 w-100 d-flex justify-content-between align-items-center fw-bold py-2"
+                type="button"
+                aria-expanded={materialOpen}
+                onClick={() => setMaterialOpen(!materialOpen)}
               >
-                材料{" "}
-                {materialOpen ? (
-                  <ChevronUp size={16} />
-                ) : (
-                  <ChevronDown size={16} />
-                )}
-              </a>
+                材料
+                {materialOpen ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+              </button>
 
               {materialOpen && (
-                <ul className="dropdown-menu show">
+                <ul className="sidebar-accordion__items">
                   <li>
                     <a
-                      className="dropdown-item fw-bold"
+                      className="sidebar-accordion__link"
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
@@ -177,7 +190,7 @@ function Products() {
                   </li>
                   <li>
                     <a
-                      className="dropdown-item fw-bold"
+                      className="sidebar-accordion__link"
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
@@ -189,7 +202,7 @@ function Products() {
                   </li>
                   <li>
                     <a
-                      className="dropdown-item fw-bold"
+                      className="sidebar-accordion__link"
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
@@ -207,34 +220,32 @@ function Products() {
 
         {/* 主要內容 */}
         <main className="col-12 col-md-9 col-lg-9 p-4">
-          <Loading isLoading={isLoading} text="商品載入中..." />
+          <Loading isLoading={isLoading} text="商品載入中" />
           <header className="mb-4">
-            <ul className="list-unstyled mb-4 d-flex align-items-center main-content-title">
-              <li>
-                <h2 className="fs-2 fw-bold">
-                  {currentCategory === "all" ? "全部商品" : currentCategory}
-                </h2>
-              </li>
-            </ul>
+            <div className="d-flex align-items-center gap-3 mb-6 mb-lg-4 main-content-title">
+              <h2 className="fs-4 fw-bold text-primary-700 mb-0">
+                {currentCategory === "all" ? "全部商品" : currentCategory}
+              </h2>
+            </div>
 
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-between align-items-end mb-6">
               {/* 排序下拉 */}
-              <div className="dropdown app-dropdown ms-4 mt-2 mb-4">
+              <div className="dropdown sort-dropdown" ref={sortDropdownRef}>
                 <button
-                  className="btn dropdown-toggle border-0 p-0 fw-bold d-flex align-items-center gap-1 text-secondary-700"
+                  className="btn dropdown-toggle border-0 px-6 py-3 fw-bold d-flex align-items-center gap-1 text-secondary-700"
                   type="button"
                   onClick={() => setSortOpen(!sortOpen)}
                 >
                   {sortLabel}{" "}
                   {sortOpen ? (
-                    <ChevronUp size={16} />
+                    <ChevronUp size={24} />
                   ) : (
-                    <ChevronDown size={16} />
+                    <ChevronDown size={24} />
                   )}
                 </button>
 
                 {sortOpen && (
-                  <ul className="dropdown-menu show">
+                  <ul className="dropdown-menu show text-center">
                     <li>
                       <button
                         className="dropdown-item fw-bold"
@@ -267,20 +278,20 @@ function Products() {
                       <button
                         className="dropdown-item fw-bold"
                         onClick={() =>
-                          handleSortChange("dateNew", "上架日期由新到舊")
+                          handleSortChange("dateOld", "上架日期由舊到新")
                         }
                       >
-                        上架日期由新到舊
+                        上架日期由舊到新
                       </button>
                     </li>
                     <li>
                       <button
                         className="dropdown-item fw-bold"
                         onClick={() =>
-                          handleSortChange("dateOld", "上架日期由舊到新")
+                          handleSortChange("dateNew", "上架日期由新到舊")
                         }
                       >
-                        上架日期由舊到新
+                        上架日期由新到舊
                       </button>
                     </li>
                     <li>
@@ -316,58 +327,7 @@ function Products() {
 
           {/* 分頁 */}
           {totalPages > 1 && (
-            <nav className="mt-5">
-              <ul className="pagination justify-content-center align-items-center">
-                <li
-                  className={`page-item ${effectivePage === 1 ? "disabled" : ""}`}
-                >
-                  <a
-                    className="page-link"
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (effectivePage > 1) setCurrentPage(effectivePage - 1);
-                    }}
-                  >
-                    <ChevronLeft size={20} className="text-secondary-700" />
-                  </a>
-                </li>
-
-                {[...Array(totalPages).keys()].map((pageNum) => (
-                  <li
-                    className={`page-item ${pageNum + 1 === effectivePage ? "active" : ""}`}
-                    key={pageNum}
-                  >
-                    <a
-                      className="page-link"
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCurrentPage(pageNum + 1);
-                      }}
-                    >
-                      {pageNum + 1}
-                    </a>
-                  </li>
-                ))}
-
-                <li
-                  className={`page-item ${effectivePage === totalPages ? "disabled" : ""}`}
-                >
-                  <a
-                    className="page-link"
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (effectivePage < totalPages)
-                        setCurrentPage(effectivePage + 1);
-                    }}
-                  >
-                    <ChevronRight size={20} className="text-secondary-700" />
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            <Pagination pagination={pagination} onPageChange={setCurrentPage} />
           )}
         </main>
       </div>

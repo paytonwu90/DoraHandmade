@@ -12,12 +12,14 @@ const Header = () => {
   const userName = user?.name || "使用者";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
-  const [openHandmade, setOpenHandmade] = useState(false);
-  const [openMaterial, setOpenMaterial] = useState(false);
+  const [openSubmenu, setOpenSubmenu] = useState(null); // null | 'handmade' | 'material'
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const headerSubmenuRef = useRef(null);
+  const mobileUserMenuRef = useRef(null);
+  const desktopUserMenuRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -26,8 +28,12 @@ const Header = () => {
         !headerSubmenuRef.current.contains(event.target)
       ) {
         setIsSubmenuOpen(false);
-        setOpenHandmade(false);
-        setOpenMaterial(false);
+        setOpenSubmenu(null);
+      }
+      const isOutsideMobile = !mobileUserMenuRef.current?.contains(event.target);
+      const isOutsideDesktop = !desktopUserMenuRef.current?.contains(event.target);
+      if (isOutsideMobile && isOutsideDesktop) {
+        setIsUserMenuOpen(false);
       }
     };
 
@@ -52,16 +58,14 @@ const Header = () => {
   const closeMobileMenu = () => {
     setIsMenuOpen(false);
     setIsSubmenuOpen(false); // 關閉選單時也重置子選單
-    setOpenHandmade(false);
-    setOpenMaterial(false);
+    setOpenSubmenu(null);
   };
 
   const toggleMobileMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     if (isMenuOpen) {
       setIsSubmenuOpen(false); // 關閉選單時也重置子選單
-      setOpenHandmade(false);
-      setOpenMaterial(false);
+      setOpenSubmenu(null);
     }
   };
 
@@ -77,36 +81,11 @@ const Header = () => {
     setIsSubmenuOpen((prev) => !prev);
   };
 
-  const toggleHandmade = (e) => {
-    e.preventDefault();
+  // 電腦版由 CSS hover 控制，點擊只在手機版觸發（互斥：點一個會關閉另一個）
+  const toggleMobileSubmenu = (name) => (e) => {
     e.stopPropagation();
-    if (e.nativeEvent) e.nativeEvent.stopImmediatePropagation();
-    // 電腦版不觸發點擊 Toggle，僅由 Hover 控制
     if (window.innerWidth >= 992) return;
-    setOpenHandmade(!openHandmade);
-  };
-
-  const toggleMaterial = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.nativeEvent) e.nativeEvent.stopImmediatePropagation();
-    // 電腦版不觸發點擊 Toggle，僅由 Hover 控制
-    if (window.innerWidth >= 992) return;
-    setOpenMaterial(!openMaterial);
-  };
-
-  // 自動判斷右側主選單（如使用者選單）展開方向
-  const handleUserMenuEnter = (e) => {
-    const button = e.currentTarget;
-    const rect = button.getBoundingClientRect();
-    const windowWidth = window.innerWidth;
-    const container = button.parentElement;
-
-    if (windowWidth - rect.right < 160) {
-      container.classList.add("user-menu-left");
-    } else {
-      container.classList.remove("user-menu-left");
-    }
+    setOpenSubmenu((prev) => (prev === name ? null : name));
   };
 
   // 自動判斷子選單展開方向
@@ -121,6 +100,66 @@ const Header = () => {
       item.classList.remove("submenu-left");
     }
   };
+
+  // mobile（btn-icon）與 desktop（nav-link）的 toggle 樣式不同，無法合併成單一元素，
+  // 但選單內容完全相同，提取為變數避免重複維護兩份
+  const userDropdownMenu = (
+    <ul
+      className={`dropdown-menu dropdown-menu-end text-center${isUserMenuOpen ? " show" : ""}`}
+      // 移除 data-bs-toggle 後 Bootstrap JS 不再初始化此 dropdown，
+      // 需手動設定讓 Bootstrap CSS 的 dropdown-menu[data-bs-popper] 定位規則生效
+      data-bs-popper="static"
+      onClick={() => setIsUserMenuOpen(false)}
+    >
+      {!isLoggedIn ? (
+        <>
+          <li>
+            <Link className="dropdown-item" to="/login?mode=register">
+              會員註冊
+            </Link>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/login">
+              會員登入
+            </Link>
+          </li>
+        </>
+      ) : (
+        <>
+          <li>
+            <span className="dropdown-item-text fw-bold text-primary-700">
+              {userName}, 您好！
+            </span>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/account">
+              我的帳戶
+            </Link>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/order">
+              訂單查詢
+            </Link>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/favorites">
+              我的收藏
+            </Link>
+          </li>
+          <li>
+            <Link className="dropdown-item" to="/admin">
+              後台管理
+            </Link>
+          </li>
+          <li>
+            <a className="dropdown-item" href="#" onClick={handleLogout}>
+              登出
+            </a>
+          </li>
+        </>
+      )}
+    </ul>
+  );
 
   return (
     <header className="header sticky-top">
@@ -146,76 +185,22 @@ const Header = () => {
           {/* Mobile Icons */}
           <div className="d-lg-none navbar-icons ms-auto">
             <Link className="btn-icon" to="/cart">
-              <ShoppingCart size={20} />
+              <ShoppingCart size={20} strokeWidth={2.5} />
             </Link>
 
-            <div className="dropdown">
+            <div className="dropdown user-dropdown" ref={mobileUserMenuRef}>
               <button
                 className="btn-icon"
-                data-bs-toggle="dropdown"
-                data-bs-display="static"
-                aria-expanded="false"
-                onClick={handleUserMenuEnter}
+                aria-expanded={isUserMenuOpen}
+                onClick={() => setIsUserMenuOpen((prev) => !prev)}
               >
-                <User size={20} />
+                <User size={20} strokeWidth={2.5} />
               </button>
-              <ul className="dropdown-menu dropdown-menu-end dropdown-custom">
-                {!isLoggedIn ? (
-                  <>
-                    <li>
-                      <Link className="dropdown-item" to="/login?mode=register">
-                        會員註冊
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/login">
-                        會員登入
-                      </Link>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li>
-                      <span className="dropdown-item-text fw-bold text-center user-greeting">
-                        {userName}, 您好！
-                      </span>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/account">
-                        我的帳戶
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/order">
-                        訂單查詢
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/favorites">
-                        我的收藏
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/admin">
-                        後台管理
-                      </Link>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item"
-                        href="#"
-                        onClick={handleLogout}
-                      >
-                        登出
-                      </a>
-                    </li>
-                  </>
-                )}
-              </ul>
+              {userDropdownMenu}
             </div>
 
             <button
-              className="navbar-toggler navbar-toggler-custom"
+              className="navbar-toggler navbar-toggler-custom border-0"
               type="button"
               onClick={toggleMobileMenu}
             >
@@ -231,7 +216,7 @@ const Header = () => {
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
               <li className="nav-item me-lg-3 text-p-16-b">
                 <Link
-                  className="nav-link nav-link-custom "
+                  className="nav-link"
                   to="/workshop"
                   onClick={closeMobileMenu}
                 >
@@ -241,7 +226,7 @@ const Header = () => {
 
               <li className="nav-item me-lg-3 text-p-16-b">
                 <Link
-                  className="nav-link nav-link-custom"
+                  className="nav-link"
                   to="/custom-form"
                   onClick={closeMobileMenu}
                 >
@@ -251,11 +236,11 @@ const Header = () => {
 
               <li
                 ref={headerSubmenuRef}
-                className="nav-item dropdown dropdown-custom me-lg-4 text-p-16-b"
+                className="nav-item dropdown category-dropdown me-lg-4 text-p-16-b"
               >
                 {/* 商品分類：完全使用 React state 控制，不依賴 Bootstrap Dropdown JS */}
                 <a
-                  className={`nav-link nav-link-custom d-flex align-items-center text-p-16-b ${isSubmenuOpen ? "show" : ""}`}
+                  className={`nav-link d-flex align-items-center text-p-16-b ${isSubmenuOpen ? "show" : ""}`}
                   href="#"
                   onClick={toggleSubmenu}
                 >
@@ -263,7 +248,7 @@ const Header = () => {
                   <ChevronDown size={16} className="ms-1" />
                 </a>
                 <ul
-                  className={`dropdown-menu ${isSubmenuOpen ? "show force-show" : ""}`}
+                  className={`dropdown-menu ${isSubmenuOpen ? "show" : ""}`}
                 >
                   <li>
                     <Link
@@ -276,19 +261,19 @@ const Header = () => {
                   </li>
                   {/* 成品 Submenu */}
                   <li
-                    className={`dropdown-submenu dropdown ${openHandmade ? "show" : ""}`}
+                    className={`dropdown-submenu dropdown ${openSubmenu === 'handmade' ? "show" : ""}`}
                     onMouseEnter={handleSubmenuEnter}
                   >
-                    <a
-                      className="dropdown-item-toggle d-flex justify-content-center align-items-center"
-                      href="#"
-                      onClick={toggleHandmade}
+                    <button
+                      type="button"
+                      className="dropdown-item-toggle d-flex justify-content-lg-center align-items-center"
+                      onClick={toggleMobileSubmenu('handmade')}
                     >
                       成品
                       <ChevronRight size={16} className="ms-2" />
-                    </a>
+                    </button>
                     <ul
-                      className={`dropdown-menu ${openHandmade ? "show force-show" : ""}`}
+                      className={`dropdown-menu ${openSubmenu === 'handmade' ? "show" : ""}`}
                     >
                       <li>
                         <Link
@@ -304,19 +289,19 @@ const Header = () => {
 
                   {/* 材料 Submenu */}
                   <li
-                    className={`dropdown-submenu dropdown ${openMaterial ? "show" : ""}`}
+                    className={`dropdown-submenu dropdown ${openSubmenu === 'material' ? "show" : ""}`}
                     onMouseEnter={handleSubmenuEnter}
                   >
-                    <a
-                      className="dropdown-item-toggle d-flex justify-content-center align-items-center"
-                      href="#"
-                      onClick={toggleMaterial}
+                    <button
+                      type="button"
+                      className="dropdown-item-toggle d-flex justify-content-lg-center align-items-center"
+                      onClick={toggleMobileSubmenu('material')}
                     >
                       材料
                       <ChevronRight size={16} className="ms-2" />
-                    </a>
+                    </button>
                     <ul
-                      className={`dropdown-menu ${openMaterial ? "show force-show" : ""}`}
+                      className={`dropdown-menu ${openSubmenu === 'material' ? "show" : ""}`}
                     >
                       <li>
                         <Link
@@ -351,77 +336,21 @@ const Header = () => {
               </li>
 
               <li className="nav-item me-lg-2 d-none d-lg-block">
-                <Link className="nav-link nav-link-custom" to="/cart">
-                  <ShoppingCart size={20} />
+                <Link className="nav-link d-flex align-items-center" to="/cart">
+                  <ShoppingCart size={20} strokeWidth={2.5} />
                 </Link>
               </li>
 
-              <li className="nav-item dropdown dropdown-custom d-none d-lg-block">
-                <a
-                  className="nav-link nav-link-custom"
-                  href="#"
-                  data-bs-toggle="dropdown"
-                  data-bs-display="static"
-                  onClick={handleUserMenuEnter}
+              <li className="nav-item dropdown user-dropdown d-none d-lg-block" ref={desktopUserMenuRef}>
+                <button
+                  type="button"
+                  className="nav-link d-flex align-items-center"
+                  aria-expanded={isUserMenuOpen}
+                  onClick={() => setIsUserMenuOpen((prev) => !prev)}
                 >
-                  <User size={20} />
-                </a>
-                <ul className="dropdown-menu dropdown-menu-end">
-                  {!isLoggedIn ? (
-                    <>
-                      <li>
-                        <Link
-                          className="dropdown-item"
-                          to="/login?mode=register"
-                        >
-                          會員註冊
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/login">
-                          會員登入
-                        </Link>
-                      </li>
-                    </>
-                  ) : (
-                    <>
-                      <li>
-                        <span className="dropdown-item-text fw-bold text-center user-greeting">
-                          {userName}, 您好！
-                        </span>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/account">
-                          我的帳戶
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/order">
-                          訂單查詢
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/favorites">
-                          我的收藏
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/admin">
-                          後台管理
-                        </Link>
-                      </li>
-                      <li>
-                        <a
-                          className="dropdown-item"
-                          href="#"
-                          onClick={handleLogout}
-                        >
-                          登出
-                        </a>
-                      </li>
-                    </>
-                  )}
-                </ul>
+                  <User size={20} strokeWidth={2.5} />
+                </button>
+                {userDropdownMenu}
               </li>
             </ul>
           </div>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef , useCallback } from "react";
 import axios from 'axios'
 import * as bootstrap from 'bootstrap';
 import ProductModal from '@components/backend/ProductModal';
-import Pagination from '@components/backend/Pagination';
+import Pagination from '@components/Pagination';
 import useMessage from "@hooks/useMessage.jsx";
 const VITE_API_BASE = import.meta.env.VITE_API_BASE;
 const VITE_API_PATH = import.meta.env.VITE_API_PATH;

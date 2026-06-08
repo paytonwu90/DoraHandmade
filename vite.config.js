@@ -1,6 +1,7 @@
 import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { qrcode } from "vite-plugin-qrcode";
 import path from "path";
 
 // 取得 __dirname 替代
@@ -11,7 +12,13 @@ const __dirname = path.dirname(__filename);
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   base: mode === "production" ? "/DoraHandmade/" : "/",
-  plugins: [react()],
+  plugins: [
+    react(),
+    qrcode()
+  ],
+  server: {
+    host: true, // 讓手機也能訪問
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

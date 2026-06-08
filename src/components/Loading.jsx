@@ -26,96 +26,43 @@ function Loading({ isLoading = true, text = "資料載入中", fullPage = false 
 
   if (!isLoading) return null;
 
-  const overlayStyle = {
-    position: fullPage ? "fixed" : "absolute",
-    inset: 0,
-    zIndex: 999,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "rgba(255, 252, 250, 0.88)",
-    backdropFilter: "blur(4px)",
-    WebkitBackdropFilter: "blur(4px)",
-  };
-
   return (
-    <div style={overlayStyle} role="status" aria-live="polite">
+    <div className={`loading-overlay ${fullPage ? 'full-page' : ''}`} role="status" aria-live="polite">
       {/* 旋轉圖示 */}
-      <div style={{ position: "relative", width: 64, height: 64, marginBottom: 20 }}>
+      <div className="loading-spinner">
         {/* 外圈旋轉環 */}
         <svg
           width="64"
           height="64"
           viewBox="0 0 64 64"
-          style={{ position: "absolute", inset: 0, animation: "spin 1.4s linear infinite" }}
+          style={{ position: "absolute", inset: 0 }}
         >
           <circle
             cx="32"
             cy="32"
             r="28"
-            fill="none"
-            stroke="#e8d5c4"
-            strokeWidth="4"
+            className="spinner-circle-bg"
           />
           <circle
             cx="32"
             cy="32"
             r="28"
-            fill="none"
-            stroke="#9b6a4a"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeDasharray="44 132"
-            strokeDashoffset="0"
+            className="spinner-circle"
           />
         </svg>
 
         {/* 旋轉圖示 */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "1.6rem",
-            animation: "sway 2.8s ease-in-out infinite",
-          }}
-        >
-          <Loader2 size={32} color="#9b6a4a" style={{ animation: "spin 1s linear infinite" }} />
+        <div className="spinner-icon-wrapper">
+          <Loader2 size={32} className="spinner-icon" />
         </div>
       </div>
 
       {/* 提示文字 */}
-      <p
-        style={{
-          fontFamily: "'Noto Serif TC', 'PingFang TC', serif",
-          fontSize: "0.95rem",
-          color: "#7a5c44",
-          letterSpacing: "0.08em",
-          margin: 0,
-          minWidth: 110,
-          textAlign: "center",
-        }}
-      >
+      <p className="loading-text">
         {text}
-        <span style={{ display: "inline-block", minWidth: "2em", textAlign: "left" }}>
-          {dots}
-        </span>
+        <span className="loading-dots">{dots}</span>
       </p>
 
-      {/* CSS 動畫 */}
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
-        @keyframes sway {
-          0%, 100% { transform: rotate(-6deg); }
-          50%       { transform: rotate(6deg); }
-        }
-      `}</style>
     </div>
   );
 }

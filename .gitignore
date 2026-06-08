@@ -26,3 +26,6 @@ dist-ssr
 # env files
 .env
 .env.*.local
+
+# Playwright 驗證截圖（本機暫存，不需 commit）
+scripts/screenshots/

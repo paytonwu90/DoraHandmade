@@ -1,158 +1,67 @@
 .main-content-title {
-  display: flex;
-  align-items: center;
-
-  li {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    &::before {
-      content: "";
-      display: inline-block;
-      width: 6px;
-      height: 43px;
-      background-color: $primary-700;
-    }
-  }
-
-  h2 {
-    color: $primary-700;
-    margin-bottom: 0;
-    line-height: 1;
-  }
-}
-
-// 分頁樣式自定義
-.pagination {
-  gap: 8px;
-
-  .page-item {
-    .page-link {
-      background-color: transparent;
-      border: none;
-      color: $secondary-700;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.3s ease, color 0.3s ease;
-
-      &:hover {
-        background-color: $primary-100;
-      }
-
-      &:focus {
-        box-shadow: none;
-      }
-    }
-
-    &.active .page-link {
-      background-color: $primary-700;
-      color: #fff; // 文字白色
-    }
-
-    &.disabled .page-link {
-      background-color: transparent;
-      opacity: 0.3;
-      pointer-events: none;
-    }
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    align-self: stretch; // 填滿父元素高度
+    background-color: $primary-700;
   }
 }
 
 // 移除 Bootstrap 預設小箭頭
 .dropdown-toggle::after {
-    display: none;
+  display: none;
 }
 
-// 導覽連結、下拉選項Hover
-.app-dropdown,
-.material-dropdown,
-nav .nav-link,
-.sort-dropdown-btn {
-  transition: color 0.2s ease;
+// 排序下拉選單
+.sort-dropdown {
 
   // 按鈕
-  .dropdown-toggle,
-  &.nav-link {
-    &:hover,
-    &.show {
+  .dropdown-toggle {
+    &:hover {
       color: $primary-700 !important;
-      background-color: transparent;
     }
   }
 
   // 下拉選項文字
   .dropdown-item {
-    font-weight: 600;
-    &:hover {
+    font-size: 14px;
+  }
+}
+
+// sidebar-nav 內的 sticky 元素需貼在 header 正下方（header 實測高度 69px）
+.sidebar-nav > .sticky-top {
+  top: 73px;
+}
+
+// Sidebar 手風琴 (目前只有材料下拉區塊)
+.sidebar-accordion {
+  &__toggle {
+    border: none;
+    background: transparent;
+    color: $secondary-700;
+
+    &:hover,
+    &:focus {
+      color: $primary-700;
       background-color: transparent;
+    }
+  }
+
+  &__items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__link {
+    display: block;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.5rem 0.5rem 0.5rem 40px;
+
+    &:hover {
       color: $primary-700;
     }
-  }
-}
-
-// 預設排序
-.app-dropdown {
-  .dropdown-menu {
-    border: 1px solid $primary-100 !important;
-    box-shadow: none;
-    padding: 8px 0;
-  }
-
-  .btn {
-    font-weight: 700;
-    &:focus { box-shadow: none; }
-  }
-}
-
-//材料下拉選單
-.material-dropdown {
-  .dropdown-menu {
-    border: none;
-    box-shadow: none;
-
-  a.dropdown-item {
-      padding-left: 48px;
-    }
-  }
-
-  .nav-link.dropdown-toggle {
-    border: none;
-  }
-}
-
-// 主要內容標題區
-.main-content-title {
-    color: $primary-700;
-    
-    h2 {
-        color: $primary-700;
-    }
-}
-
-//左側選單文字
-nav .nav-link,
-.sort-dropdown-btn {
-  color: $secondary-700;
-  font-weight: 700;
-  transition: color 0.2s ease;
-
-  &:hover,
-  &:focus {
-    color: $primary-700;
-    text-decoration: none;
-  }
-}
-
-//材料下拉標題
-.material-dropdown .nav-link.dropdown-toggle {
-  color: $secondary-700;
-
-  &:hover,
-  &:focus {
-    color: $primary-700;
   }
 }

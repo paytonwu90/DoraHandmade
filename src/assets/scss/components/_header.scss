@@ -1,9 +1,4 @@
-body {
-  overflow-x: hidden;
-}
-
 .header {
-  background-color: $primary-50;
   z-index: 1050;
 }
 
@@ -55,20 +50,16 @@ body {
 .btn-icon {
   padding: 12px;
   border: none;
+  color: $secondary-700;
   background: transparent;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: color 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  svg {
-    color: $gray-600;
-    transition: 0.3s ease;
-  }
-
-  &:hover svg {
-    color: $primary !important;
+  &:hover {
+    color: $primary;
   }
 
   &:focus {
@@ -77,227 +68,125 @@ body {
   }
 }
 
-// Navigation Links
-.nav-link-custom {
-  transition: 0.3s ease;
-  // 1. 預設顏色
-  color: $gray-600 !important;
-
-  svg {
-    color: $gray-600;
-  }
-
-  // 2. 核心修正：僅在選單「展開中」或是「明確處於 Active」時才強制橘色
-  // Hover 狀態下，如果選單是收合的，我們給予較淡的橘色或維持灰色，直到開啟
-  &:hover:not(.show) {
-    color: $primary-400 !important; // 懸停但未開啟時，使用較淡的品牌色或不變
-
-    svg {
-      color: $primary-400;
-    }
-  }
-
-  &.show,
-  &.show svg,
-  &.active,
-  &.active svg {
-    color: $primary !important;
-  }
-
-  // 3. 焦點重置：移除所有點擊後產生的外框
+// Navbar Toggler
+.navbar-toggler-custom {
+  // 滑鼠點擊後不留 focus ring（覆蓋 Bootstrap .navbar-toggler:focus 的 box-shadow）
   &:focus {
-    outline: none !important;
-    box-shadow: none !important;
+    box-shadow: none;
   }
 
-  // 4. 暴力保護：只要沒展開且滑鼠移開，絕對變灰色
-  &:not(.show):not(:hover) {
-    color: $gray-600 !important;
-
-    svg {
-      color: $gray-600 !important;
-    }
+  // 鍵盤導航時才顯示，與 .nav-link:focus-visible 一致
+  // Bootstrap $navbar-toggler-focus-width 無顏色變數，box-shadow 預設用 currentColor（深色）
+  // 手動指定與 .nav-link 相同的 $focus-ring-box-shadow 保持一致
+  &:focus-visible {
+    box-shadow: $focus-ring-box-shadow;
   }
 }
 
-// Dropdown
-.dropdown-custom {
 
-  .dropdown-menu,
-  &.dropdown-menu {
-    border-color: $primary-200;
+// Dropdown
+.user-dropdown {
+  .dropdown-item {
+    font-weight: 700;
   }
+}
+
+.category-dropdown {
 
   .dropdown-item,
   .dropdown-item-toggle {
-    font-weight: 600;
-    text-align: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 700;
+    text-align: left; // 手機版靠左，配合 submenu 展開後的左側 accent border
     display: block;
-    width: auto;
-    margin: 4px 8px;
-    padding: 6px 16px;
-    clear: both;
-    color: $gray-700;
-    text-decoration: none;
+    padding: 8px 16px;
     white-space: nowrap;
-    background-color: transparent;
-    border: 0;
-    border-radius: 12px; 
 
-    &:hover {
-      background-color: $primary-50 !important;
-      color: $primary-700 !important;
-      box-shadow: 0 2px 8px rgba($primary-700, 0.1);
+    @include media-breakpoint-up(lg) {
+      text-align: center;
     }
   }
 
-  // 子選單標籤 (成品/材料)
+  // 子選單標籤 (成品/材料)，使用 button 元素故需重置預設樣式
   .dropdown-item-toggle {
+    width: 100%;
+    border: none;
+    color: $dropdown-link-color;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
     cursor: default;
 
-    @media (min-width: 992px) {
-      // 電腦版徹底禁用交互，但保留 Hover 觸發
-      pointer-events: none;
-      // 為了安全，讓 pointer-events 只作用於點擊
-
-      // 用更精確的禁用點擊：
-      &:active {
-        pointer-events: none;
-      }
-
-      background-color: transparent;
-      border: 1px solid transparent;
-
-      &:hover {
-        background-color: $primary-50 !important;
-        border-color: $primary-100;
-      }
+    &:hover {
+      background-color: $primary-50;
     }
   }
 
-  // 真正的連結才顯式設回 pointer
-  .dropdown-item:not(.dropdown-item-toggle) {
-    cursor: pointer;
-  }
-
-  &.show>.nav-link-custom,
-  &.show>.nav-link-custom svg {
-    color: $primary !important;
-  }
 
   // Debug
   // border: 2px solid red !important;
 }
 
-// User Greeting
-.user-greeting {
-  color: $primary;
-}
-
-// Navbar Toggler
-.navbar-toggler-custom {
-  border: none !important;
-  box-shadow: none !important;
-  font-size: 16px;
-  padding: 12px !important;
-
-  &:hover {
-    color: $primary !important;
-  }
-
-  &:focus {
-    box-shadow: none !important;
-    outline: none !important;
-    color: $primary !important;
-  }
-}
-
-// 動態調整選單向左展開（針對靠右邊緣的元素，如使用者選單）
-.user-menu-left {
-  >.dropdown-menu {
-    left: auto !important;
-    right: 0 !important;
-    top: 100% !important;
-    transform: none !important;
-    margin-top: 0.5rem;
-  }
-}
 
 .dropdown-submenu {
   position: relative;
 
-  @media (min-width: 992px) {
-    >.dropdown-menu {
+  // Mobile: accordion 模式（display: block，在文件流內展開）
+  > .dropdown-menu {
+    display: none;
+    margin: 2px 8px 4px 12px;
+    border: none;
+    border-left: 3px solid $primary-200;
+    border-radius: 0;
+    padding: 2px 0;
+
+    .dropdown-item {
+      padding-left: 1rem;
+    }
+  }
+
+  // 行動版點擊展開（配合 Bootstrap 的 .show 類名，或我們手動加上的 .show）
+  &.show > .dropdown-menu {
+    display: block !important;
+  }
+
+  .dropdown-item-toggle svg {
+    transform: rotate(90deg);
+  }
+
+  // Mobile active 狀態：展開時 toggle 文字改色、chevron 翻轉朝上
+  &.show > .dropdown-item-toggle {
+    color: $primary;
+
+    svg {
+      transform: rotate(-90deg);
+    }
+  }
+
+  // Desktop: submenu 絕對定位浮出，CSS hover 控制
+  @include media-breakpoint-up(lg) {
+    > .dropdown-menu {
       position: absolute;
       top: 0;
       left: 100%;
+      margin: 0;
       margin-top: -1px;
-      display: none;
+      border: $dropdown-border-width solid $dropdown-border-color;
+      border-radius: $dropdown-border-radius;
+      padding: $dropdown-padding-y 0;
     }
 
     // 讓子選單向左展開的樣式
-    &.submenu-left>.dropdown-menu {
+    &.submenu-left > .dropdown-menu {
       left: auto;
       right: 100%;
     }
 
-    &:hover>.dropdown-menu {
-      display: block !important;
-    }
-  }
-}
-
-// Mobile
-@media (max-width: 991px) {
-  .navbar-icons .btn-icon:hover svg {
-    color: $primary !important;
-  }
-
-  .dropdown-submenu {
-    .dropdown-menu {
-      position: static !important;
-      left: 0 !important;
-      margin-left: 1rem;
-      box-shadow: none;
-      border: none;
-      background-color: transparent !important;
-      display: none; // 預設隱藏
-    }
-
-    // 行動版點擊展開（配合 Bootstrap 的 .show 類名，或我們手動加上的 .show）
-    &.show>.dropdown-menu {
+    &:hover > .dropdown-menu {
       display: block !important;
     }
 
-    // 移除原本 hover 時自動顯示子選單的設定
-    // &:hover > .dropdown-menu {
-    //   display: block !important;
-    // }
-
-    .dropdown-item,
-    .dropdown-item-toggle {
-      padding-left: 2rem;
-      background-color: transparent;
-
-      &:hover {
-        background-color: $primary-50 !important;
-      }
-
-      svg {
-        transform: rotate(90deg);
-      }
+    .dropdown-item-toggle svg {
+      transform: none;
     }
-  }
-
-  .navbar-collapse {
-    background-color: $white;
-    border-radius: 0.5rem;
-    // border: 3px solid blue !important; // Debug
-  }
-
-  // 強制顯示，防止 Bootstrap JS 干擾 React 狀態
-  .force-show {
-    display: block !important;
   }
 }

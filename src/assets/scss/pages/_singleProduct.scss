@@ -1,111 +1,86 @@
-
-
-// 按鈕
-.btn,
-button {
-  border-radius: 0;
-}
-.btn-add-cart {
-    background: #ffff;
-    color: #333333;
-    border: none;
-    border-radius: none;
-    
-    font-weight: 700;
-    
-}
-.btn-add-cart:hover {
-    background: white;
-    color: #E3879F;
-    border: 2px solid #E3879F;
-    border-radius: none;
-    
-    font-weight: 700;
-    
-}
-.btn-add-cart-icon{
-  background: #ffff;
-  color: #333333;
-  border: none;
-}
-.btn-add-cart-icon:hover {
-    background: white;
-    color: #E3879F;
-    border: none;
-    border-radius: none;  
-      
-}
-
-/* 收藏狀態：粉紅愛心 */
-.is-favorite {
-  color: #D75E7E !important;
-  fill: #D75E7E !important; /* 填滿顏色 */
-  transition: all 0.3s ease; /* 讓變色過程平滑一點 */
-}
-
-
-/* 相關商品卡片容器 */
-.product-card-sm {
-  transition: transform 0.2s;
-  border: 1px solid #eee;
-}
-
-.product-card-sm:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-// 移到後圖片放大
-.image-hover {
-  transition: transform 0.3s ease; /* 平滑過渡效果，0.3秒 */
-  cursor: pointer; /* 滑鼠變成手型 */
-  object-fit: cover; /* 圖片填滿容器 */
-  border-radius: 16px; /* 可選：圓角 */
-}
-
-.image-hover:hover {
-  transform: scale(1.05); /* 放大  */
-}
-
-
-/* 愛心按鈕 Hover 效果 */
-.wishlist-btn {
-  position: absolute;
-  top: 32px;
-  right: 32px;
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
+// Breadcrumb
+.breadcrumb-custom {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #1d0202;
-  font-size: 20px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  gap: 4px;
+  font-weight: 700;
+  font-size: 0.875rem;
+
+  a {
+    font-weight: inherit;
+    color: $gray-400;
+
+    &:hover {
+      color: $gray-600;
+    }
+  }
+
+  svg {
+    color: $gray-400;
+  }
+
+  .active {
+    color: $primary;
+  }
 }
 
-.wishlist-btn:hover {
-  /* 放大 + 旋轉 + 顏色變化 */
-  // transform: scale(1.15) rotate(10deg);
-  background: linear-gradient(135deg, #ffff);
-  box-shadow: 0 8px 32px rgba(255, 77, 79, 0.4);
-  color: #D75E7E !important;
+// 手機版縮小水平 padding，md 以上自動回復 .btn 全域設定
+.btn-compact-mobile {
+  @include media-breakpoint-down(md) {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
 }
 
+// 按鈕
+.btn-favorite {
+  --bs-btn-active-color: #{$primary-700}; // 覆蓋 Bootstrap mousedown 時的文字顏色
+  border: none;
 
+  &:hover {
+    color: $primary-700;
+  }
 
+  &.is-favorited {
+    --bs-btn-active-color: #{$gray-600};
+    color: $gray-400;
 
+    &:hover {
+      color: $gray-600;
+    }
+  }
+}
 
+// 數量加減按鈕：移除 active 時的黑框，按下時以 opacity 表示按壓感
+.btn-qty {
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-active-bg: transparent;
+  border: none;
 
+  &:active {
+    opacity: 0.5;
+  }
+}
 
-/* 限制標題行數，避免撐開卡片 */
-.card-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+// 隱藏數量 input 的瀏覽器原生上下箭頭
+.qty-input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  padding: 10px;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+}
+
+.product-img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 16px;
+
+  @include media-breakpoint-up(md) {
+    aspect-ratio: 5/3;
+  }
 }
