@@ -140,10 +140,10 @@ function Products() {
     <div className="container pt-5">
       <div className="row">
         {/* 左側選單 */}
-        <nav className="d-none d-md-block col-md-3 bg-white p-4">
-          <div className="nav flex-column sticky-top" style={{ top: "20px" }}>
+        <nav className="nav sidebar-nav d-none d-md-block col-md-3 bg-white p-4" aria-label="商品分類">
+          <div className="flex-column sticky-top">
             <a
-              className="nav-link ps-4 py-2 fw-bold text-secondary-700"
+              className="nav-link ps-4 py-2 fw-bold"
               href="#"
               onClick={(e) => {
                 e.preventDefault();
@@ -153,7 +153,7 @@ function Products() {
               全部商品
             </a>
             <a
-              className="nav-link ps-4 py-2 fw-bold text-secondary-700"
+              className="nav-link ps-4 py-2 fw-bold"
               href="#"
               onClick={(e) => {
                 e.preventDefault();

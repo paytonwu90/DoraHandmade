@@ -107,4 +107,12 @@ Bootstrap 5 透過 SCSS 變數覆寫方式客製化。自訂工具類別如 `.te
 
 **文章內容** — 文章資料為靜態資料，定義於 `src/data/articles.js`，非從 API 取得。
 
+**購物車按鈕防重複點擊** — 所有觸發加入購物車的按鈕，一律以 `disabled={addingProductId != null}` 停用（`addingProductId` 從 `useCartActionContext()` 取得）。視覺回饋依按鈕類型區分：
+- 文字按鈕：`addingProductId === product.id` 時顯示 loading 文字（如「加入中…」、「處理中…」），icon 一併隱藏
+- 圖示按鈕：`addingProductId === product.id` 時以 Bootstrap spinner 取代 icon（參考 `ProductCard.jsx`）
+
 **色彩與設計 Token** — 處理樣式相關任務前，先讀取 `src/assets/scss/abstract/_variables.scss` 確認主色、輔助色與間距等設計 token。
+
+**Typography** — 專案有兩套字體 class 系統，需要找字體相關 class 時直接查這兩個檔案：
+- `src/assets/scss/_fonts.scss` — 新系統，生成 `.t-{name}`（如 `.t-section-title`）、`.t-h-{1-6}`、`.t-p-{l/m/r/s}`
+- `src/assets/scss/abstract/_variables.scss`（約 L726）— 舊系統，生成 `.text-p-{size-key}` 與 `.text-p-{size-key}-{b/r}`；size-key 對應 `$font-sizes` map（1–6 對應 heading size、24、20、16、14）；weight suffix：`b` = 700、`r` = 400

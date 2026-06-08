@@ -1,113 +1,110 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { useNavigate } from "react-router";
-import { ShoppingCart } from "lucide-react";
-import { Heart } from "lucide-react";
-import { Minus } from "lucide-react";
-import { Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router";
+import { ShoppingCart, Heart, Minus, Plus, ChevronRight } from "lucide-react";
+import { HeartFill } from "@components/icons";
 import axios from "axios";
 import { useCartActionContext } from "@contexts/CartAction";
-import { useFavoriteProductsContext } from "../../contexts/FavoriteProducts/FavoriteProductsContext";
-import product1 from "@images/product-1.png";
-import product2 from "@images/product-2.png";
-import product3 from "@images/product-3.png";
-import product4 from "@images/product-4.png";
+import { useFavoriteProductsContext } from "@contexts/FavoriteProducts";
+import ProductCard from "@components/ProductCard";
 
 // API 設定
 const API_BASE = import.meta.env.VITE_API_BASE;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
+// 商品 category 欄位（中文）對應路由路徑
+const CATEGORY_PATH_MAP = {
+  蝴蝶結: "handmade/bow",
+  帶子: "material/ribbon",
+  夾子: "material/clip",
+  貼片: "material/patch",
+};
+
 function SingleProduct() {
   const [qty, setQty] = useState(1);
-  const { id } = useParams();
+  const [qtyDisplay, setQtyDisplay] = useState("1");
   const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // 共用加入購物車 + toast（從 CartActionContext 拿）
-  const { handleAddToCart, showToast } = useCartActionContext();
+  const { handleAddToCart, addingProductId } = useCartActionContext();
 
   // 收藏 Context
-  const { toggleFavoriteProduct, isProductFavorite } =
-    useFavoriteProductsContext();
-
-  // 單一商品收藏
-  const handleToggleFavoriteProduct = () => {
-    const result = toggleFavoriteProduct(product);
-    if (result) {
-      showToast("已加入收藏");
-    } else {
-      showToast("已取消收藏");
-    }
-  };
-
-  // 相關商品收藏
-  const handleToggleFavoriteRelated = (item) => {
-    const result = toggleFavoriteProduct(item);
-    if (result) {
-      showToast("已加入收藏");
-    } else {
-      showToast("已取消收藏");
-    }
-  };
+  const { toggleFavoriteProduct, isProductFavorite } = useFavoriteProductsContext();
 
   useEffect(() => {
-    const getProduct = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `${API_BASE}/api/${API_PATH}/product/${id}`,
+        const [productRes, allProductsRes] = await Promise.all([
+          axios.get(`${API_BASE}/api/${API_PATH}/product/${id}`),
+          axios.get(`${API_BASE}/api/${API_PATH}/products/all`),
+        ]);
+
+        const currentProduct = productRes.data.product;
+        setProduct(currentProduct);
+
+        // 相關商品：同類別優先，不足 4 筆再從其他類別補
+        const allProducts = allProductsRes.data.products?.filter(
+          (p) => p.is_enabled && !p.is_placeholder
+        ) || [];
+        const sameCategory = allProducts.filter(
+          (p) => p.category === currentProduct.category && p.id !== currentProduct.id
         );
-        setProduct(res.data.product);
+        const others = allProducts.filter(
+          (p) => p.category !== currentProduct.category
+        );
+        setRelatedProducts([...sameCategory, ...others].slice(0, 4));
       } catch (error) {
         console.error("取得商品失敗：", error);
         alert("商品載入失敗，請稍後再試");
       }
     };
     if (id) {
-      getProduct();
+      fetchData();
     }
   }, [id]);
 
-  // 假資料相關商品（只負責顯示 UI）
-  const relatedProducts = [
-    { id: 1, title: "銀白冬夜亮片蝴蝶結", price: 777, imageUrl: product1 },
-    { id: 2, title: "聖誕紅緞帶雙層蝴蝶結", price: 777, imageUrl: product2 },
-    { id: 3, title: "聖誕雪花點點蝴蝶結", price: 777, imageUrl: product3 },
-    { id: 4, title: "銀白冬夜亮片蝴蝶結", price: 777, imageUrl: product4 },
-  ];
-
   const handleQtyChange = (delta) => {
-    setQty((prev) => Math.max(1, Math.min(99, prev + delta)));
+    const newQty = Math.max(1, Math.min(99, qty + delta));
+    setQty(newQty);
+    setQtyDisplay(String(newQty));
   };
 
-  const handleAddToCartClick = async (productItem) => {
-    try {
-      await handleAddToCart(productItem);
-    } catch (error) {
-      console.error("加入購物車錯誤：", error);
-      alert("加入購物車失敗，請稍後再試");
+  const handleQtyInput = (e) => {
+    setQtyDisplay(e.target.value);
+    const val = parseInt(e.target.value, 10);
+    if (!isNaN(val)) {
+      setQty(Math.max(1, Math.min(99, val)));
     }
+  };
+
+  const handleQtyBlur = () => {
+    if (qtyDisplay === "" || isNaN(parseInt(qtyDisplay, 10))) {
+      setQty(1);
+      setQtyDisplay("1");
+    } else {
+      setQtyDisplay(String(qty));
+    }
+  };
+
+  const handleQtyKeyDown = (e) => {
+    // Ctrl / Meta（Mac Cmd）/ Alt 組合鍵一律放行，避免攔截到瀏覽器快捷鍵（如 Ctrl+R、Ctrl+A）
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    
+    // Function key（F1–F12）放行，避免攔截 F5 重新整理、F12 開發者工具等
+    if (/^F\d+$/.test(e.key)) return;
+    
+    // 允許數字（0–9）以及編輯與導覽用的控制鍵
+    const controlKeys = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Tab", "Home", "End"];
+    if (controlKeys.includes(e.key) || /^\d$/.test(e.key)) return;
+    
+    // 其餘直接攔截（字母、符號等）；IME 輸入（如注音）無法在此攔截，由 onBlur 重設處理
+    e.preventDefault();
   };
 
   const handleBuyNow = async () => {
-    try {
-      const cartData = {
-        data: {
-          product_id: product.id,
-          qty: Number(qty),
-        },
-      };
-      const res = await axios.post(
-        `${API_BASE}/api/${API_PATH}/cart`,
-        cartData,
-      );
-      if (res.data.success) {
-        navigate("/cart");
-      } else {
-        alert("系統忙碌中，請稍後再試");
-      }
-    } catch (error) {
-      alert(error.message || "系統忙碌中，請稍後再試");
-    }
+    const success = await handleAddToCart(product, qty);
+    if (success) navigate("/cart");
   };
 
   if (!product) {
@@ -123,245 +120,187 @@ function SingleProduct() {
   const isCurrentFavorite = isProductFavorite(product);
 
   return (
-    <>
-      <div className="single-product container mt-4">
-        <div className="container">
-          <nav
-            style={{ "--bs-breadcrumb-divider": "'>'" }}
-            aria-label="breadcrumb"
-          >
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <a href="#">首頁</a>
-              </li>
-              <li className="breadcrumb-item">
-                <a href="#/product">全部商品</a>
-              </li>
-              <li className="breadcrumb-item">
-                <a href={`#/category/${product.category}`}>
-                  {product.category}
-                </a>
-              </li>
-              <li
-                className="breadcrumb-item active text-primary"
-                aria-current="page"
-              >
-                {product.title}
-              </li>
-            </ol>
-          </nav>
+    <div className="container pt-6 pt-lg-12">
+      <nav className="mb-6" aria-label="breadcrumb">
+        <div className="breadcrumb-custom">
+          <a href="#">首頁</a>
+          <ChevronRight size={16} />
+          <a href="#/product">全部商品</a>
+          <ChevronRight size={16} />
+          <a href={`#/category/${CATEGORY_PATH_MAP[product.category]}`}>{product.category}</a>
+          <ChevronRight size={16} />
+          <span className="active" aria-current="page">{product.title}</span>
         </div>
+      </nav>
 
-        <div className="single-product container mt-4 pb-5">
-          <div className="row ">
-            <div className="col-md-6">
-              <img
-                src={product.imageUrl}
-                alt={product.title}
-                className="img-fluid image-hover"
-                style={{ width: "636px" }}
-              />
-            </div>
-            <div className="col-md-6">
-              <h3>{product.title}</h3>
-              <p>{product.description}</p>
-              <div className="d-flex justify-content-between align-items-center">
-                <span className="fs-3 fw-bold text-pink">${product.price}</span>
-                {/* 手機版收藏按鈕 */}
-                <button
-                  type="button"
-                  className="ms-auto btn p-1 border-0 bg-transparent d-block d-md-none"
-                  onClick={handleToggleFavoriteProduct}
-                >
-                  <Heart className={isCurrentFavorite ? "is-favorite" : ""} />
-                </button>
-              </div>
-
-              <div className="input-group" style={{ width: "192px" }}>
-                <button
-                  className="btn btn-minus btn-sm p-3"
-                  type="button"
-                  onClick={() => handleQtyChange(-1)}
-                >
-                  <Minus />
-                </button>
-                <input
-                  type="number"
-                  className="form-control text-center bg-white border-0"
-                  value={qty}
-                  readOnly
-                />
-                <button
-                  className="btn btn-plus btn-sm p-3"
-                  type="button"
-                  onClick={() => handleQtyChange(+1)}
-                >
-                  <Plus />
-                </button>
-              </div>
-
-              <div className="d-flex flex-row gap-3 mb-3 mt-4">
-                <button
-                  className="btn btn-sm btn-dora-outline flex-grow-1 text-nowrap d-flex align-items-center justify-content-center"
-                  onClick={() => handleAddToCartClick(product)}
-                >
-                  加入購物車
-                </button>
-
-                <button
-                  className="btn btn-sm btn-dora flex-grow-1 text-nowrap d-flex align-items-center justify-content-center text-white "
-                  onClick={handleBuyNow}
-                >
-                  <span className="mr-2">立即購買</span> <ShoppingCart />
-                </button>
-
-                {/* 桌機版收藏按鈕 */}
-                <button
-                  className="btn btn-sm flex-grow-1 text-nowrap d-flex align-items-center justify-content-center d-none d-md-block btn-add-cart"
-                  onClick={handleToggleFavoriteProduct}
-                >
-                  <span className="mr-2 ">
-                    <Heart className={isCurrentFavorite ? "is-favorite" : ""} />
-                  </span>
-                  <span>{isCurrentFavorite ? "取消收藏" : "加入收藏"}</span>
-                </button>
-              </div>
-            </div>
-          </div>
+      <div className="row row-gap-6 pb-10 pb-lg-12">
+        <div className="col-lg-6">
+          <img
+            src={product.imageUrl}
+            alt={product.title}
+            className="product-img"
+          />
         </div>
-
-        <main>
-          <div className="mb-5 border-bottom border-primary-200 pb-4">
-            <h6 className="fw-bold mb-3">商品介紹</h6>
-            {product.content?.split("\n").map(
-              (line, index) =>
-                line.trim() && (
-                  <p key={index} className="mb-2">
-                    {line}
-                  </p>
-                ),
-            )}
+        <div className="col-lg-6">
+          <h3 className="mb-2">{product.title}</h3>
+          <p className="text-p-20 mb-2">{product.description}</p>
+          <div className="d-flex justify-content-between align-items-center mb-6">
+            <span className="text-p-6-b">${product.price}</span>
+            {/* 手機版收藏按鈕 */}
+            <button
+              type="button"
+              className="d-flex d-md-none border-0 bg-transparent p-3"
+              onClick={() => toggleFavoriteProduct(product)}
+            >
+              {isCurrentFavorite ? <HeartFill color="#D75E7E" /> : <Heart />}
+            </button>
           </div>
 
-          <div className="mb-5 border-bottom border-primary-200 pb-4">
-            <h6 className="fw-bold mb-3">商品特色</h6>
-            <ul className="mb-0">
-              {product.features?.split("\n").map(
-                (feature, index) =>
-                  feature.trim() && (
-                    <li key={index} className="mb-2">
-                      {feature}
-                    </li>
-                  ),
+          <div className="d-flex align-items-center mb-6">
+            <button
+              className="btn btn-qty d-flex align-items-center justify-content-center p-3"
+              type="button"
+              onClick={() => handleQtyChange(-1)}
+            >
+              <Minus strokeWidth={2.5} />
+            </button>
+            <input
+              type="number"
+              className="qty-input form-control w-auto fw-bold fs-24 text-center border-0"
+              size="2"
+              min="1"
+              max="99"
+              value={qtyDisplay}
+              onChange={handleQtyInput}
+              onBlur={handleQtyBlur}
+              onKeyDown={handleQtyKeyDown}
+            />
+            <button
+              className="btn btn-qty d-flex align-items-center justify-content-center p-3"
+              type="button"
+              onClick={() => handleQtyChange(+1)}
+            >
+              <Plus strokeWidth={2.5} />
+            </button>
+          </div>
+
+          <div className="d-flex gap-4 gap-md-6">
+            <button
+              className="btn btn-dora-outline btn-compact-mobile flex-grow-1 flex-md-grow-0"
+              onClick={() => handleAddToCart(product)}
+              disabled={addingProductId != null}
+            >
+              {addingProductId === product.id ? "加入中…" : "加入購物車"}
+            </button>
+
+            <button
+              className="btn btn-dora btn-compact-mobile d-flex align-items-center justify-content-center flex-grow-1 flex-md-grow-0"
+              onClick={handleBuyNow}
+              disabled={addingProductId != null}
+            >
+              {addingProductId === product.id ? (
+                <span>處理中…</span>
+              ) : (
+                <><span className="me-2">立即購買</span><ShoppingCart /></>
               )}
-            </ul>
-          </div>
+            </button>
 
-          <div className="mb-5 border-bottom border-primary-200 pb-4">
-            <h6 className="fw-bold mb-3">商品規格</h6>
-            {product.specifications?.split("\n").map((line, index) => {
-              const [label, ...valueParts] = line.split("：");
-              const value = valueParts.join("：");
-
-              return (
-                line.trim() && (
-                  <p key={index} className="mb-2 lh-sm">
-                    <span className="fw-bold">{label}：</span>
-                    <span className="fw-normal">{value}</span>
-                  </p>
-                )
-              );
-            })}
+            {/* 桌機版收藏按鈕 */}
+            <button
+              className={`btn-favorite btn d-none d-md-flex align-items-center gap-2 px-0 py-3${isCurrentFavorite ? " is-favorited" : ""}`}
+              onClick={() => toggleFavoriteProduct(product)}
+            >
+              {isCurrentFavorite ? <HeartFill color="#D75E7E" /> : <Heart />}
+              <span>{isCurrentFavorite ? "取消收藏" : "加入收藏"}</span>
+            </button>
           </div>
-
-          <div className="mb-5 border-bottom border-primary-200 pb-4">
-            <h6 className="fw-bold mb-3">保養與注意事項</h6>
-            <ul className="mb-0">
-              <li>建議避免長時間受潮或浸水</li>
-              <li>若有灰塵可輕拍或使用柔軟刷具清理</li>
-              <li>請勿大力拉扯或機洗</li>
-              <li>手工商品每款略有差異，屬正常現象</li>
-            </ul>
-          </div>
-
-          <div className="mb-5 border-bottom border-primary-200 pb-4">
-            <h6 className="fw-bold mb-3">貼心提醒</h6>
-            <ul className="mb-0">
-              <li className="mb-4">螢幕顯示顏色可能與實品略有差異</li>
-              <li>
-                若有客製化需求（尺寸、配件），歡迎使用
-                <a
-                  href="#/customization"
-                  className="fw-bold text-decoration-underline"
-                >
-                  客製化服務
-                </a>
-                洽詢
-              </li>
-            </ul>
-          </div>
-        </main>
+        </div>
       </div>
 
-      {/* 相關商品 */}
-      <section className="py-7">
-        <div className="container">
-          <h6 className="fw-bold mb-4">相關商品</h6>
-          <div className="row">
-            {relatedProducts?.map((item) => {
-              const isRelatedFavorite = isProductFavorite(item);
-
-              return (
-                <div className="col-md-3 col-12 mb-4" key={item.id}>
-                  <div className="card w-100 h-100 border-0 shadow-sm position-relative">
-                    {/* 收藏按鈕 */}
-                    <button
-                      className="btn btn-light shadow-sm rounded-circle position-absolute wishlist-btn"
-                      style={{
-                        top: "30px",
-                        right: "30px",
-                        zIndex: 10,
-                        padding: "12px 12px",
-                      }}
-                      onClick={() => handleToggleFavoriteRelated(item)}
-                    >
-                      <Heart
-                        className={isRelatedFavorite ? "is-favorite" : ""}
-                      />
-                    </button>
-
-                    {/* 圖片 */}
-                    <img
-                      src={item.imageUrl}
-                      className="card-img-top image-hover p-4"
-                      alt={item.title}
-                      style={{ objectFit: "cover" }}
-                    />
-
-                    {/* 文字與購物車 */}
-                    <div className="card-body p-2 d-flex flex-column px-4">
-                      <p className="card-title text-truncate small mb-2 fw-bold text-gray-600">
-                        {item.title}
-                      </p>
-
-                      <div className="d-flex justify-content-between align-items-center mt-auto">
-                        <span className="fw-bold">NT${item.price}</span>
-                        <button
-                          className="btn btn-sm p-1 btn-add-cart-icon"
-                          onClick={() => handleAddToCartClick(product)}
-                        >
-                          <ShoppingCart />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      <main>
+        <div className="border-bottom border-primary-200 pb-4 mb-6 mb-md-8">
+          <h6 className="fw-bold mb-4">商品介紹</h6>
+          {product.content?.split("\n").map(
+            (line, index) =>
+              line.trim() && (
+                <p key={index} className="mb-2">
+                  {line}
+                </p>
+              ),
+          )}
         </div>
+
+        <div className="border-bottom border-primary-200 pb-4 mb-6 mb-md-8">
+          <h6 className="fw-bold mb-4">商品特色</h6>
+          <ul className="mb-0">
+            {product.features?.split("\n").map(
+              (feature, index) =>
+                feature.trim() && (
+                  <li key={index} className="mb-2">
+                    {feature}
+                  </li>
+                ),
+            )}
+          </ul>
+        </div>
+
+        <div className="border-bottom border-primary-200 pb-4 mb-6 mb-md-8">
+          <h6 className="fw-bold mb-4">商品規格</h6>
+          {product.specifications?.split("\n").map((line, index) => {
+            const [label, ...valueParts] = line.split("：");
+            const value = valueParts.join("：");
+
+            return (
+              line.trim() && (
+                <p key={index} className="mb-2 lh-sm">
+                  <span className="fw-bold">{label}：</span>
+                  <span className="fw-normal">{value}</span>
+                </p>
+              )
+            );
+          })}
+        </div>
+
+        <div className="border-bottom border-primary-200 pb-4 mb-6 mb-md-8">
+          <h6 className="fw-bold mb-4">保養與注意事項</h6>
+          <ul className="mb-0">
+            <li>建議避免長時間受潮或浸水</li>
+            <li>若有灰塵可輕拍或使用柔軟刷具清理</li>
+            <li>請勿大力拉扯或機洗</li>
+            <li>手工商品每款略有差異，屬正常現象</li>
+          </ul>
+        </div>
+
+        <div className="border-bottom border-primary-200 pb-4">
+          <h6 className="fw-bold mb-4">貼心提醒</h6>
+          <ul className="mb-0">
+            <li className="mb-4">螢幕顯示顏色可能與實品略有差異</li>
+            <li>
+              若有客製化需求（尺寸、配件），歡迎使用
+              <a
+                href="#/customization"
+                className="fw-bold text-decoration-underline"
+              >
+                客製化服務
+              </a>
+              洽詢
+            </li>
+          </ul>
+        </div>
+      </main>
+
+      {/* 相關商品 */}
+      <section className="pb-10 py-lg-12">
+        <h6 className="fw-bold mb-4">相關商品</h6>
+        <ul className="row row-cols-1 row-cols-md-2 row-cols-lg-4 row-gap-6 ps-0">
+          {relatedProducts.map((item) => (
+            <li className="col list-unstyled" key={item.id}>
+              <ProductCard product={item} />
+            </li>
+          ))}
+        </ul>
       </section>
-    </>
+    </div>
   );
 }
 

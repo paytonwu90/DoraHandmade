@@ -29,6 +29,11 @@
   }
 }
 
+// sidebar-nav 內的 sticky 元素需貼在 header 正下方（header 實測高度 69px）
+.sidebar-nav > .sticky-top {
+  top: 73px;
+}
+
 // Sidebar 手風琴 (目前只有材料下拉區塊)
 .sidebar-accordion {
   &__toggle {

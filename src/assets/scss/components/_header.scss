@@ -1,5 +1,4 @@
 .header {
-  background-color: $primary-50;
   z-index: 1050;
 }
 
@@ -51,20 +50,16 @@
 .btn-icon {
   padding: 12px;
   border: none;
+  color: $secondary-700;
   background: transparent;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: color 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  svg {
-    color: $gray-600;
-    transition: 0.3s ease;
-  }
-
-  &:hover svg {
-    color: $primary !important;
+  &:hover {
+    color: $primary;
   }
 
   &:focus {
@@ -75,64 +70,19 @@
 
 // Navbar Toggler
 .navbar-toggler-custom {
-  border: none !important;
-  box-shadow: none !important;
-  font-size: 16px;
-  padding: 12px !important;
-
-  &:hover {
-    color: $primary !important;
+  // 滑鼠點擊後不留 focus ring（覆蓋 Bootstrap .navbar-toggler:focus 的 box-shadow）
+  &:focus {
+    box-shadow: none;
   }
 
-  &:focus {
-    box-shadow: none !important;
-    outline: none !important;
-    color: $primary !important;
+  // 鍵盤導航時才顯示，與 .nav-link:focus-visible 一致
+  // Bootstrap $navbar-toggler-focus-width 無顏色變數，box-shadow 預設用 currentColor（深色）
+  // 手動指定與 .nav-link 相同的 $focus-ring-box-shadow 保持一致
+  &:focus-visible {
+    box-shadow: $focus-ring-box-shadow;
   }
 }
 
-// Navigation Links
-.nav-link-custom {
-  // transition: 0.3s ease;
-  // 1. 預設顏色
-  // color: $gray-600 !important;
-
-  svg {
-    // color: $gray-600;
-  }
-
-  // 2. 核心修正：僅在選單「展開中」或是「明確處於 Active」時才強制橘色
-  // Hover 狀態下，如果選單是收合的，我們給予較淡的橘色或維持灰色，直到開啟
-  &:hover:not(.show) {
-    // color: $primary-400 !important; // 懸停但未開啟時，使用較淡的品牌色或不變
-
-    svg {
-      // color: $primary-400;
-    }
-  }
-
-  &.show,
-  &.show svg,
-  &.active,
-  &.active svg {
-    // color: $primary !important;
-  }
-
-  // 3. 焦點重置：移除所有點擊後產生的外框
-  &:focus {
-    outline: none !important;
-    box-shadow: none !important;
-  }
-
-  // 4. 暴力保護：只要沒展開且滑鼠移開，絕對變灰色
-  // &:not(.show):not(:hover) {
-  //   color: $gray-600 !important;
-
-  //   svg {
-  //     color: $gray-600 !important;
-  //   }
-  // }
-}
 
 // Dropdown
 .user-dropdown {
@@ -146,10 +96,14 @@
   .dropdown-item,
   .dropdown-item-toggle {
     font-weight: 700;
-    text-align: center;
+    text-align: left; // 手機版靠左，配合 submenu 展開後的左側 accent border
     display: block;
     padding: 8px 16px;
     white-space: nowrap;
+
+    @include media-breakpoint-up(lg) {
+      text-align: center;
+    }
   }
 
   // 子選單標籤 (成品/材料)，使用 button 元素故需重置預設樣式
@@ -167,10 +121,6 @@
     }
   }
 
-  &.show>.nav-link-custom,
-  &.show>.nav-link-custom svg {
-    // color: $primary !important;
-  }
 
   // Debug
   // border: 2px solid red !important;
@@ -239,30 +189,4 @@
       transform: none;
     }
   }
-}
-
-@include media-breakpoint-down(lg) {
-  .navbar-icons .btn-icon:hover svg {
-    color: $primary !important;
-  }
-
-  .category-dropdown {
-    .dropdown-item {
-      // 靠左對齊，配合 submenu 展開後的左側 accent border
-      // .dropdown-item-toggle 靠 justify-content 控制
-      text-align: left;
-    }
-  }
-
-  .navbar-collapse {
-    background-color: $white;
-    border-radius: 0.5rem;
-    // border: 3px solid blue !important; // Debug
-  }
-}
-
-// TODO: 繞過 main.jsx 的暫時手段，之後要移除
-// 強制顯示，防止 Bootstrap JS 干擾 React 狀態
-.force-show {
-  display: block !important;
 }

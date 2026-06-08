@@ -86,7 +86,7 @@ function Home() {
       </Swiper>
       
       <div className="container py-10 py-lg-15">
-        <h2 className="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 gap-lg-3 text-p-28-b text-primary-700 mb-6 mb-lg-12">
+        <h2 className="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 gap-lg-3 text-p-6-b text-primary-700 mb-6 mb-lg-12">
           <Sparkles style={{ marginTop: "2px" }} />
           <span className="t-section-title">新品上架</span>
         </h2>
@@ -112,7 +112,7 @@ function Home() {
 
       <div className="bg-primary-50">
         <div className="container py-10 py-lg-15">
-          <h2 className="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 gap-lg-3 text-p-28-b text-primary-700 mb-6 mb-lg-12">
+          <h2 className="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 gap-lg-3 text-p-6-b text-primary-700 mb-6 mb-lg-12">
             <Crown style={{ marginTop: "2px" }} />
             <span className="t-section-title">熱銷 TOP</span>
           </h2>
@@ -138,7 +138,7 @@ function Home() {
       </div>
       
       <div className="container pt-10 pb-6 py-lg-15">
-        <h2 className="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 gap-lg-3 text-p-28-b text-primary-700 mb-6 mb-lg-12">
+        <h2 className="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 gap-lg-3 text-p-6-b text-primary-700 mb-6 mb-lg-12">
           <Scissors style={{ marginTop: "2px" }} />
           <span className="t-section-title">材料新上架</span>
         </h2>
@@ -174,7 +174,7 @@ function Home() {
           <ClassicBow />
           <ClassicBow className="d-none d-lg-inline-flex" />
         </div>
-        <h2 className="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 gap-lg-3 text-p-28-b text-primary-700 mb-6 mb-lg-12">
+        <h2 className="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 gap-lg-3 text-p-6-b text-primary-700 mb-6 mb-lg-12">
           <BookOpen style={{ marginTop: "2px" }} />
           <span className="t-section-title">最新文章</span>
         </h2>

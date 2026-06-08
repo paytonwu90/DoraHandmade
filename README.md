@@ -1,5 +1,7 @@
 # 2025 React 專題班-愛哆啦也愛手作 | DoraHandmade
 
+**線上預覽：** https://paytonwu90.github.io/DoraHandmade/
+
 ## 創作理念與初衷
 
 源於朋友在空閒時間手作蝴蝶結的熱情。 過去依賴大型電商平台與FB 粉專 卻面臨功能限制多 、 手續費高昂且缺乏直接接觸顧客管道的困境 。
