@@ -6,6 +6,7 @@ import axios from "axios";
 import { useCartActionContext } from "@contexts/CartAction";
 import { useFavoriteProductsContext } from "@contexts/FavoriteProducts";
 import ProductCard from "@components/ProductCard";
+import useMessage from "@hooks/useMessage.jsx";
 
 // API 設定
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -28,6 +29,7 @@ function SingleProduct() {
   const navigate = useNavigate();
 
   const { handleAddToCart, addingProductId } = useCartActionContext();
+  const { showError } = useMessage();
 
   // 收藏 Context
   const { toggleFavoriteProduct, isProductFavorite } = useFavoriteProductsContext();
@@ -56,13 +58,13 @@ function SingleProduct() {
         setRelatedProducts([...sameCategory, ...others].slice(0, 4));
       } catch (error) {
         console.error("取得商品失敗：", error);
-        alert("商品載入失敗，請稍後再試");
+        showError("商品載入失敗，請稍後再試");
       }
     };
     if (id) {
       fetchData();
     }
-  }, [id]);
+  }, [id, showError]);
 
   const handleQtyChange = (delta) => {
     const newQty = Math.max(1, Math.min(99, qty + delta));
