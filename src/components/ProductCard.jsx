@@ -12,7 +12,7 @@ function ProductCard({ product }) {
     <div className="product-card">
       <div className="position-relative z-3">
         <div className="product-card__like">
-          <button type="button" className="d-block bg-gray-50 p-4 rounded-5"
+          <button type="button" className="d-block p-4 rounded-5"
             onClick={() => toggleFavoriteProduct(product)}
           >
             {isProductFavorite(product) ? <HeartFill color="#D75E7E" /> : <Heart />}
