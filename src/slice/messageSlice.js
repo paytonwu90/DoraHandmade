@@ -15,8 +15,7 @@ export const messageSlice = createSlice({
         createMessage(state, action) {
             state.push({
               id: action.payload.id,
-              type: action.payload.success ? "primary" : "orange",
-              title: action.payload.success ? "成功" : "失敗",
+              type: action.payload.success ? "success" : "error",
               text: action.payload.message,
             });
         },
