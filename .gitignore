@@ -29,3 +29,6 @@ dist-ssr
 
 # Playwright 驗證截圖（本機暫存，不需 commit）
 scripts/screenshots/
+
+# Playwright MCP 輸出
+.playwright-mcp/
