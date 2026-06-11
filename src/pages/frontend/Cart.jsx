@@ -386,6 +386,10 @@ function Cart() {
 
     // 刪除購物車項目
     const removeCartItem = async (itemId) => {
+        if (debounceRef.current[itemId]) {
+            clearTimeout(debounceRef.current[itemId]);
+            delete debounceRef.current[itemId];
+        }
         setUpdatingId(itemId);
         try {
             await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart/${itemId}`);
