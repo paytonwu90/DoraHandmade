@@ -360,7 +360,7 @@ function Cart() {
             });
             // 重新取得購物車資料
             const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-            setCartData(response.data.data.carts);
+            setCartData(response.data.data.carts ?? []);
             setCartError("")
         } catch (error) {
             setCartError("數量更新失敗，請稍後再試", error);
@@ -391,7 +391,7 @@ function Cart() {
             await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart/${itemId}`);
             // 重新取得購物車資料
             const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-            setCartData(response.data.data.carts);
+            setCartData(response.data.data.carts ?? []);
             setCartError("")
         } catch (error) {
             setCartError("刪除商品失敗，請稍後再試", error);
