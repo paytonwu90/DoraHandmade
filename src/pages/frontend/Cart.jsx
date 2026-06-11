@@ -4,7 +4,7 @@ import Loading from "@components/Loading";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2, TriangleAlert } from "lucide-react";
 import { currency } from "../../utils/filter";
 import * as bootstrap from "bootstrap";
 import { emailValidation, twPhoneValidation } from "../../utils/validation";
@@ -660,6 +660,7 @@ function Cart() {
                                                     className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''} me-2`}
                                                     type="button"
                                                     disabled={(localQty[item.id] ?? item.qty) === 1 || updatingId === item.id}
+                                                    onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) - 1)}
                                                 ><Minus size={16} color="#777777" /></button>
                                                 <input
                                                     type="number" min="1"
