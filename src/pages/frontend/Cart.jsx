@@ -454,6 +454,7 @@ function Cart() {
                     },
                     message: [
                         `付款方式:${formData.paymentMethod}`,
+                        `取貨方式:${deliveryMethod}`,
                         `收件人:${recipient.name}`,
                         `電話:${recipient.tel}`,
                         `Email:${recipient.email}`,
@@ -702,12 +703,7 @@ function Cart() {
                                         type="button"
                                         className="btn border-0 p-0"
                                         style={{ color: "#999", fontSize: "1.1rem", lineHeight: 1 }}
-                                        onClick={() => {
-                                            const coupon = availableCoupons[0];
-                                            setCouponCode(coupon.code);
-                                            setShowCouponList(false);
-                                            applyCoupon(coupon.code);  // ← 直接帶入 code 觸發
-                                        }}
+                                        onClick={() => setShowCouponList(false)}
                                     >✕</button>
                                 </div>
                                 {availableCoupons.map((coupon) => (
@@ -828,7 +824,7 @@ function Cart() {
                     className="form-control"
                     placeholder="請輸入聯絡電話"
                     {...register("tel", {
-                        required: "請輸入聯絡電話", ...twPhoneValidation
+                        ...twPhoneValidation, required: "請輸入聯絡電話"
                     })}
                 />
                 {errors.tel && <p className="text-danger">{errors.tel.message}</p>}
@@ -844,7 +840,7 @@ function Cart() {
                     className="form-control"
                     placeholder="請輸入 Email"
                     {...register("email", {
-                        required: "請輸入 Email", ...emailValidation
+                        ...emailValidation, required: "請輸入 Email"
                     })}
                     //onChange={updateBuyerData}
                 />
