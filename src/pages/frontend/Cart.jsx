@@ -236,6 +236,7 @@ function Cart() {
         formState: { errors, isValid },
         reset,
         watch,
+        setValue,
     } = useForm({
         mode: "onChange"
     });
@@ -339,6 +340,9 @@ function Cart() {
             email: recipient.email,
             address: recipient.address
         });
+        setValue("recipientName", recipient.name, { shouldValidate: true });
+        setValue("recipientTel", recipient.tel, { shouldValidate: true });
+        setValue("recipientEmail", recipient.email, { shouldValidate: true });
     };
 
     const [showAddRecipientForm, setShowAddRecipientForm] = useState(false);
@@ -439,9 +443,9 @@ function Cart() {
                 tel: formData.tel,
                 address: formData.address,
             } : {
-                name: recipientInfo.name,
-                email: recipientInfo.email,
-                tel: recipientInfo.tel,
+                name: formData.recipientName,
+                email: formData.recipientEmail,
+                tel: formData.recipientTel,
                 address: recipientInfo.address,
             };
             const data = {
@@ -912,35 +916,41 @@ function Cart() {
                                     <label className="fw-bold mb-1">收件人</label>
                                     <input
                                         type="text"
-                                        name="name"
                                         className="form-control"
-                                        value={recipientInfo.name || ""}
-                                        onChange={updateRecipientData}
                                         placeholder="收件人姓名"
+                                        {...register("recipientName", {
+                                            required: "請輸入收件人姓名",
+                                            shouldUnregister: true,
+                                        })}
                                     />
+                                    {errors.recipientName && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientName.message}</p>}
                                 </div>
                                 <div className="col-6">
                                     <label className="fw-bold mb-1">聯絡電話</label>
                                     <input
                                         type="text"
-                                        name="tel"
                                         className="form-control"
-                                        value={recipientInfo.tel || ""}
-                                        onChange={updateRecipientData}
                                         placeholder="收件人電話"
+                                        {...register("recipientTel", {
+                                            required: "請輸入收件人電話",
+                                            shouldUnregister: true,
+                                        })}
                                     />
+                                    {errors.recipientTel && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientTel.message}</p>}
                                 </div>
                             </div>
                             <div>
                                 <label className="fw-bold mb-1">Email</label>
                                 <input
                                     type="email"
-                                    name="email"
                                     className="form-control"
-                                    value={recipientInfo.email || ""}
-                                    onChange={updateRecipientData}
                                     placeholder="收件人 Email"
+                                    {...register("recipientEmail", {
+                                        required: "請輸入收件人 Email",
+                                        shouldUnregister: true,
+                                    })}
                                 />
+                                {errors.recipientEmail && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientEmail.message}</p>}
                             </div>
                         </div>
                     )}
