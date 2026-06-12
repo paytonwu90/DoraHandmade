@@ -177,8 +177,8 @@ const Header = () => {
           >
             <span className="logo-font">
               <img src={logoImg} className="mb-2 me-1" alt="愛哆啦也愛手作" />
-              <span className="logo-text-dark">愛哆啦也愛</span>
-              <span className="logo-text-brand">手作</span>
+              <span className="text-secondary-700">愛哆啦也愛</span>
+              <span className="text-primary-700">手作</span>
             </span>
           </Link>
 
