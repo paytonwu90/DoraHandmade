@@ -12,3 +12,7 @@ description: "分析 staged 變更，產生 conventional commits 格式的 commi
 - 在第一行後加上 body，格式依變更性質決定：
   - 單一目的的變更：用段落說明「為什麼」，不超過 3 行
   - 多個獨立變更：用 bullet point 條列各項變更
+
+輸出格式：
+- 只輸出 commit message 的文字內容，讓使用者審核
+- **不執行 `git commit`**，等使用者確認後才由使用者或下一步執行
