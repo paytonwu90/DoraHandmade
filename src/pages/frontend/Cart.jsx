@@ -238,19 +238,17 @@ function Cart() {
         watch,
         setValue,
     } = useForm({
-        mode: "onChange"
+        mode: "onChange",
+        defaultValues: {
+            name: "林小明",
+            tel: "0910552225",
+            email: "ming.lin@gmail.com",
+            address: "台北市中正區三愛里信義路二段277號",
+        }
     });
 
     // 收件人選擇
     const [isSameAsBuyer, setIsSameAsBuyer] = useState(true);
-    // 購買人資訊用 state 儲存
-    const [buyerInfo, setBuyerInfo] = useState({
-        name: "林小明",
-        tel: "0910552225",
-        email: "ming.lin@gmail.com",
-        address: "",
-    });
-
     // 其他收件人資訊
     const [recipientInfo, setRecipientInfo] = useState({
         name: "",
@@ -289,19 +287,6 @@ function Cart() {
         setRecipientInfo(prev => ({ ...prev, [name]: value }));
     };
 
-    const buyerName = watch("name");
-    const buyerTel = watch("tel");
-    const buyerEmail = watch("email");
-    const buyerAddress = watch("address");
-
-    useEffect(() => {
-    setBuyerInfo({
-        name: buyerName || "",
-        tel: buyerTel || "",
-        email: buyerEmail || "",
-        address: buyerAddress || "",
-    });
-    }, [buyerName, buyerTel, buyerEmail, buyerAddress]);
     // Modal/Offcanvas ref
     const recipientModalRef = useRef(null);
     const recipientOffcanvasRef = useRef(null);
@@ -882,10 +867,10 @@ function Cart() {
                     </div>
                     {isSameAsBuyer && (
                         <div className="border-0 rounded-4 p-5 mb-4" style={{backgroundColor: "#EFEFEF"}}>
-                            <p className="text-p-16-r mb-2">姓名: {buyerInfo.name}</p>
-                            <p className="text-p-16-r mb-2">電話: {buyerInfo.tel}</p>
-                            <p className="text-p-16-r mb-2">Email: {buyerInfo.email}</p>
-                            <p className="text-p-16-r mb-2">地址: {buyerInfo.address}</p>
+                            <p className="text-p-16-r mb-2">姓名: {watch("name")}</p>
+                            <p className="text-p-16-r mb-2">電話: {watch("tel")}</p>
+                            <p className="text-p-16-r mb-2">Email: {watch("email")}</p>
+                            <p className="text-p-16-r mb-2">地址: {watch("address")}</p>
                         </div>
                     )}
                     <div className="form-check d-flex align-items-center">
