@@ -4,7 +4,7 @@ import Loading from "@components/Loading";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { Minus, Plus, Trash2, TriangleAlert } from "lucide-react";
 import { currency } from "../../utils/filter";
 import * as bootstrap from "bootstrap";
 import { emailValidation, twPhoneValidation } from "../../utils/validation";
@@ -236,20 +236,19 @@ function Cart() {
         formState: { errors, isValid },
         reset,
         watch,
+        setValue,
     } = useForm({
-        mode: "onChange"
+        mode: "onChange",
+        defaultValues: {
+            name: "林小明",
+            tel: "0910552225",
+            email: "ming.lin@gmail.com",
+            address: "台北市中正區三愛里信義路二段277號",
+        }
     });
 
     // 收件人選擇
     const [isSameAsBuyer, setIsSameAsBuyer] = useState(true);
-    // 購買人資訊用 state 儲存
-    const [buyerInfo, setBuyerInfo] = useState({
-        name: "林小明",
-        tel: "0910552225",
-        email: "ming.lin@gmail.com",
-        address: "",
-    });
-
     // 其他收件人資訊
     const [recipientInfo, setRecipientInfo] = useState({
         name: "",
@@ -288,19 +287,6 @@ function Cart() {
         setRecipientInfo(prev => ({ ...prev, [name]: value }));
     };
 
-    const buyerName = watch("name");
-    const buyerTel = watch("tel");
-    const buyerEmail = watch("email");
-    const buyerAddress = watch("address");
-
-    useEffect(() => {
-    setBuyerInfo({
-        name: buyerName || "",
-        tel: buyerTel || "",
-        email: buyerEmail || "",
-        address: buyerAddress || "",
-    });
-    }, [buyerName, buyerTel, buyerEmail, buyerAddress]);
     // Modal/Offcanvas ref
     const recipientModalRef = useRef(null);
     const recipientOffcanvasRef = useRef(null);
@@ -339,6 +325,9 @@ function Cart() {
             email: recipient.email,
             address: recipient.address
         });
+        setValue("recipientName", recipient.name, { shouldValidate: true });
+        setValue("recipientTel", recipient.tel, { shouldValidate: true });
+        setValue("recipientEmail", recipient.email, { shouldValidate: true });
     };
 
     const [showAddRecipientForm, setShowAddRecipientForm] = useState(false);
@@ -360,7 +349,7 @@ function Cart() {
             });
             // 重新取得購物車資料
             const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-            setCartData(response.data.data.carts);
+            setCartData(response.data.data.carts ?? []);
             setCartError("")
         } catch (error) {
             setCartError("數量更新失敗，請稍後再試", error);
@@ -386,12 +375,16 @@ function Cart() {
 
     // 刪除購物車項目
     const removeCartItem = async (itemId) => {
+        if (debounceRef.current[itemId]) {
+            clearTimeout(debounceRef.current[itemId]);
+            delete debounceRef.current[itemId];
+        }
         setUpdatingId(itemId);
         try {
             await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart/${itemId}`);
             // 重新取得購物車資料
             const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-            setCartData(response.data.data.carts);
+            setCartData(response.data.data.carts ?? []);
             setCartError("")
         } catch (error) {
             setCartError("刪除商品失敗，請稍後再試", error);
@@ -435,9 +428,9 @@ function Cart() {
                 tel: formData.tel,
                 address: formData.address,
             } : {
-                name: recipientInfo.name,
-                email: recipientInfo.email,
-                tel: recipientInfo.tel,
+                name: formData.recipientName,
+                email: formData.recipientEmail,
+                tel: formData.recipientTel,
                 address: recipientInfo.address,
             };
             const data = {
@@ -450,6 +443,7 @@ function Cart() {
                     },
                     message: [
                         `付款方式:${formData.paymentMethod}`,
+                        `取貨方式:${deliveryMethod}`,
                         `收件人:${recipient.name}`,
                         `電話:${recipient.tel}`,
                         `Email:${recipient.email}`,
@@ -660,6 +654,7 @@ function Cart() {
                                                     className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''} me-2`}
                                                     type="button"
                                                     disabled={(localQty[item.id] ?? item.qty) === 1 || updatingId === item.id}
+                                                    onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) - 1)}
                                                 ><Minus size={16} color="#777777" /></button>
                                                 <input
                                                     type="number" min="1"
@@ -697,12 +692,7 @@ function Cart() {
                                         type="button"
                                         className="btn border-0 p-0"
                                         style={{ color: "#999", fontSize: "1.1rem", lineHeight: 1 }}
-                                        onClick={() => {
-                                            const coupon = availableCoupons[0];
-                                            setCouponCode(coupon.code);
-                                            setShowCouponList(false);
-                                            applyCoupon(coupon.code);  // ← 直接帶入 code 觸發
-                                        }}
+                                        onClick={() => setShowCouponList(false)}
                                     >✕</button>
                                 </div>
                                 {availableCoupons.map((coupon) => (
@@ -823,7 +813,7 @@ function Cart() {
                     className="form-control"
                     placeholder="請輸入聯絡電話"
                     {...register("tel", {
-                        required: "請輸入聯絡電話", ...twPhoneValidation
+                        ...twPhoneValidation, required: "請輸入聯絡電話"
                     })}
                 />
                 {errors.tel && <p className="text-danger">{errors.tel.message}</p>}
@@ -839,7 +829,7 @@ function Cart() {
                     className="form-control"
                     placeholder="請輸入 Email"
                     {...register("email", {
-                        required: "請輸入 Email", ...emailValidation
+                        ...emailValidation, required: "請輸入 Email"
                     })}
                     //onChange={updateBuyerData}
                 />
@@ -877,10 +867,10 @@ function Cart() {
                     </div>
                     {isSameAsBuyer && (
                         <div className="border-0 rounded-4 p-5 mb-4" style={{backgroundColor: "#EFEFEF"}}>
-                            <p className="text-p-16-r mb-2">姓名: {buyerInfo.name}</p>
-                            <p className="text-p-16-r mb-2">電話: {buyerInfo.tel}</p>
-                            <p className="text-p-16-r mb-2">Email: {buyerInfo.email}</p>
-                            <p className="text-p-16-r mb-2">地址: {buyerInfo.address}</p>
+                            <p className="text-p-16-r mb-2">姓名: {watch("name")}</p>
+                            <p className="text-p-16-r mb-2">電話: {watch("tel")}</p>
+                            <p className="text-p-16-r mb-2">Email: {watch("email")}</p>
+                            <p className="text-p-16-r mb-2">地址: {watch("address")}</p>
                         </div>
                     )}
                     <div className="form-check d-flex align-items-center">
@@ -911,35 +901,41 @@ function Cart() {
                                     <label className="fw-bold mb-1">收件人</label>
                                     <input
                                         type="text"
-                                        name="name"
                                         className="form-control"
-                                        value={recipientInfo.name || ""}
-                                        onChange={updateRecipientData}
                                         placeholder="收件人姓名"
+                                        {...register("recipientName", {
+                                            required: "請輸入收件人姓名",
+                                            shouldUnregister: true,
+                                        })}
                                     />
+                                    {errors.recipientName && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientName.message}</p>}
                                 </div>
                                 <div className="col-6">
                                     <label className="fw-bold mb-1">聯絡電話</label>
                                     <input
                                         type="text"
-                                        name="tel"
                                         className="form-control"
-                                        value={recipientInfo.tel || ""}
-                                        onChange={updateRecipientData}
                                         placeholder="收件人電話"
+                                        {...register("recipientTel", {
+                                            required: "請輸入收件人電話",
+                                            shouldUnregister: true,
+                                        })}
                                     />
+                                    {errors.recipientTel && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientTel.message}</p>}
                                 </div>
                             </div>
                             <div>
                                 <label className="fw-bold mb-1">Email</label>
                                 <input
                                     type="email"
-                                    name="email"
                                     className="form-control"
-                                    value={recipientInfo.email || ""}
-                                    onChange={updateRecipientData}
                                     placeholder="收件人 Email"
+                                    {...register("recipientEmail", {
+                                        required: "請輸入收件人 Email",
+                                        shouldUnregister: true,
+                                    })}
                                 />
+                                {errors.recipientEmail && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientEmail.message}</p>}
                             </div>
                         </div>
                     )}
