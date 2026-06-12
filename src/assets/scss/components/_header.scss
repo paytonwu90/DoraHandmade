@@ -23,20 +23,10 @@
 .logo-font {
   font-family: "Texturina", serif;
   font-weight: bold;
-  font-size: 28px;
-}
-
-.logo-text-dark {
-  color: $secondary-700;
-}
-
-.logo-text-brand {
-  color: $primary-700;
-}
-
-.navbar-brand:hover {
-  opacity: 0.8;
-  transition: 0.3s ease;
+  font-size: 20px;
+  @include media-breakpoint-up(lg) {
+    font-size: 28px;
+  }
 }
 
 // Icons Container
