@@ -244,6 +244,7 @@ function Cart() {
             tel: "0910552225",
             email: "ming.lin@gmail.com",
             address: "台北市中正區三愛里信義路二段277號",
+            paymentMethod: "creditCard",
         }
     });
 
