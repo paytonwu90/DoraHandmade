@@ -6,7 +6,7 @@ description: "分析 staged 變更，產生 conventional commits 格式的 commi
 
 規則：
 - 不執行 `git add`，只針對已 staged 的檔案
-- 使用 conventional commits 格式（feat / fix / docs / refactor 等）
+- 使用 conventional commits 格式（feat / fix / docs / refactor 等），**不加 scope**
 - 第一行不超過 72 字元
 - 用正體中文撰寫
 - 在第一行後加上 body，格式依變更性質決定：
