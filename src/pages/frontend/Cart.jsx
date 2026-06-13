@@ -4,7 +4,7 @@ import Loading from "@components/Loading";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
-import { Minus, Plus, Trash2, TriangleAlert } from "lucide-react";
+import { Minus, Plus, Trash2, TriangleAlert, X } from "lucide-react";
 import { currency } from "../../utils/filter";
 import * as bootstrap from "bootstrap";
 import { emailValidation, twPhoneValidation } from "../../utils/validation";
@@ -642,35 +642,43 @@ function Cart() {
                         </div>
                         {/* 手機版購物車顯示 */}
                         <div className="d-md-none">
-                            <div className="card mobile-card" style={{borderRadius: "16px 16px 0 0"}}>
+                            <div className="card mobile-card">
                                 <div className="mobile-card-header fw-bold mb-2">商品明細</div>
                                 {cartData.map(item => (
-                                <div key={item.id} className="d-flex justify-content-between align-items-center p-2">
-                                    <div style={{flex:1}}>
+                                <div key={item.id} className="px-3 py-2">
+                                    {/* 第一排：商品名稱 + 刪除 */}
+                                    <div className="d-flex justify-content-between align-items-start">
                                         <div className="fw-bold text-p-20-b">{item.product.title}</div>
-                                        <div className="d-flex justify-content-start align-items-center mt-1 text-p-16-b">
+                                        <button className="btn p-1 ms-2 flex-shrink-0 border-0" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><X size={18} color="#999" /></button>
+                                    </div>
+                                    {/* 第二排：單價／數量控制 + 小計 */}
+                                    <div className="d-flex justify-content-between align-items-center mt-1">
+                                        <div className="d-flex align-items-center text-p-16-b flex-grow-1">
                                             <span className="text-gray-600">單價 ${item.product.price} / 數量</span>
-                                            <div className="input-group" style={{maxWidth: 100}}>
+                                            <div className="d-flex flex-nowrap ms-2">
                                                 <button
-                                                    className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''} me-2`}
+                                                    className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''}`}
                                                     type="button"
                                                     disabled={(localQty[item.id] ?? item.qty) === 1 || updatingId === item.id}
                                                     onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) - 1)}
-                                                ><Minus size={16} color="#777777" /></button>
+                                                ><Minus size={16} className="text-gray-600" /></button>
                                                 <input
                                                     type="number" min="1"
                                                     value={localQty[item.id] ?? item.qty}
                                                     onChange={e => handleQtyChange(item, Number(e.target.value))}
-                                                    // 移除 disabled，讓使用者可以直接輸入
-                                                    className="text-center bg-white border-0"
+                                                    className="text-center bg-white border-0 cart-qty-input"
                                                     style={{width: 40, fontSize: "20px"}}
                                                 />
-                                                <button className="btn btn-sm border-0" type="button" disabled={updatingId===item.id} onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) + 1)}><Plus size={16} color="#777777" /></button>
+                                                <button
+                                                    className="btn btn-sm border-0"
+                                                    type="button"
+                                                    disabled={updatingId===item.id}
+                                                    onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) + 1)}
+                                                ><Plus size={16} className="text-gray-600" /></button>
                                             </div>
-                                            <button className="btn btn-sm" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><Trash2 className="text-primary" /></button>
                                         </div>
+                                        <div className="text-p-20-b ms-2">${item.total}</div>
                                     </div>
-                                    <div className="fw-bold" style={{fontSize: "1.1rem"}}>${item.total}</div>
                                 </div>
                                 ))}
                             </div>
