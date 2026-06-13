@@ -642,8 +642,8 @@ function Cart() {
                         </div>
                         {/* 手機版購物車顯示 */}
                         <div className="d-md-none">
-                            <div className="card mobile-card">
-                                <div className="mobile-card-header fw-bold mb-2">商品明細</div>
+                            <div className="card rounded-4 overflow-hidden">
+                                <div className="fw-bold text-gray-600 bg-secondary-50 px-3 py-2 mb-2">商品明細</div>
                                 {cartData.map(item => (
                                 <div key={item.id} className="px-3 py-2">
                                     {/* 第一排：商品名稱 + 刪除 */}

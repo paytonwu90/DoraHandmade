@@ -14,16 +14,6 @@
 
 }
 
-.mobile-card {
-    border-radius: 16px;
-    &-header {
-        background: $secondary-50;
-        color: $gray-600;
-        border-radius: 16px 16px 0 0;
-        padding: 8px 12px;
-    }
-}
-
 .cart-qty-input[type="number"] {
     appearance: textfield;
     -moz-appearance: textfield;
