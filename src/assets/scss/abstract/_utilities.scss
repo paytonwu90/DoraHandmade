@@ -1,0 +1,5 @@
+.w-lg-100 {
+  @include media-breakpoint-up(lg) {
+    width: 100% !important;
+  }
+}

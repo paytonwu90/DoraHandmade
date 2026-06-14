@@ -1026,10 +1026,10 @@ function Cart() {
                                 )}
                             </div>
                             <div className="modal-footer d-flex flex-row gap-2">
-                                <button type="button" className="recipientBtn flex-fill" data-bs-dismiss="modal" onClick={closeRecipientModal}>取消</button>
+                                <button type="button" className="btn btn-dora-outline flex-fill" data-bs-dismiss="modal" onClick={closeRecipientModal}>取消</button>
                                 <button
                                     type="button"
-                                    className="checkoutBtn flex-fill"
+                                    className="btn btn-dora flex-fill"
                                     onClick={() => {
                                         setShowAddRecipientForm(false);
                                         closeRecipientModal(); closeRecipientOffcanvas();}}
@@ -1130,8 +1130,8 @@ function Cart() {
                         )}
                     </div>
                     <div className="offcanvas-footer d-flex justify-content-between p-3">
-                        <button type="button" className="recipientBtn w-50 me-2" onClick={closeRecipientOffcanvas}>取消</button>
-                        <button type="button" className="checkoutBtn w-50" onClick={() => {
+                        <button type="button" className="btn btn-dora-outline w-50 me-2" onClick={closeRecipientOffcanvas}>取消</button>
+                        <button type="button" className="btn btn-dora w-50" onClick={() => {
                             setShowAddRecipientForm(false);
                             closeRecipientModal(); closeRecipientOffcanvas();}}>確定</button>
                     </div>
@@ -1232,7 +1232,7 @@ function Cart() {
                 <div className="mt-6 mb-6 mt-md-15 mb-md-15">
                 <form onSubmit={handleSubmit(onSubmit)}>
                 <h2 className="cart-heading-title">結帳明細</h2>
-                <div className="billDetails w-100">
+                <div className="billDetails rounded-4 p-5 mb-6 mb-lg-8">
                     <div className="d-flex">
                         <div className="p-2 flex-grow-1">商品小計</div>
                         <div className="p-2">
@@ -1256,12 +1256,15 @@ function Cart() {
                         </div>
                     </div>
                 </div>
-                <button
-                    className="checkoutBtn w-100"
-                    disabled={cartData.length === 0 || !isValid}
-                >
-                    立即結帳
-                </button>
+                <div className="text-center">
+                    <button
+                        className="btn btn-dora w-lg-100"
+                        style={{ '--bs-btn-padding-x': '66px' }}
+                        disabled={cartData.length === 0 || !isValid}
+                    >
+                        立即結帳
+                    </button>
+                </div>
                 </form>
                 </div>
             </div>

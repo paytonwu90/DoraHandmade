@@ -66,42 +66,5 @@
 }
 
 .billDetails {
-    border: 1px solid #D2D2D2;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 32px;
-}
-
-.checkoutBtn {
-    background: $primary-700;
-    color: #fff;
-    border-radius: 0px;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    &:hover {
-        background: $primary-900;
-        color: #fff;
-    }
-    &:disabled {
-        color: #fff;
-        opacity: 0.5;
-        cursor: not-allowed;
-        &:hover {
-            background: $primary-700;
-            color: #fff;
-        }
-    }
-}
-
-.recipientBtn {
-    background: #fff;
-    color: $primary-500;
-    border: 2.5px solid $primary-500;
-    border-radius: 0px;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    &:hover {
-        background: $primary-50;
-        color: $primary-500;
-    }
+    border: 1px solid $gray-200;
 }
