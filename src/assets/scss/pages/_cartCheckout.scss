@@ -14,6 +14,40 @@
 
 }
 
+.btn-apply-coupon {
+    --bs-btn-active-bg: #{$white};
+    --bs-btn-active-color: #{$primary-700};
+    --bs-btn-active-border-color: #{$primary-300};
+    background: $white;
+    color: $primary-600;
+    border: 1px solid $primary-200;
+    border-radius: 8px;
+    font-size: $font-size-sm;
+    white-space: nowrap;
+    &:hover {
+        background: $white;
+        color: $primary-700;
+        border-color: $primary-300;
+    }
+}
+
+.btn-coupon {
+    --bs-btn-active-bg: #{$secondary-50};
+    --bs-btn-active-color: #{$secondary-700};
+    --bs-btn-active-border-color: var(--bs-border-color);
+    background: $white;
+    color: $secondary-700;
+    border: 1px solid var(--bs-border-color);
+    white-space: nowrap;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    &:hover {
+        background: $secondary-50;
+        color: $secondary-700;
+        border-color: var(--bs-border-color);
+    }
+}
+
 .cart-qty-input[type="number"] {
     appearance: textfield;
     -moz-appearance: textfield;

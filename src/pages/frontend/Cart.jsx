@@ -649,7 +649,7 @@ function Cart() {
                                     {/* 第一排：商品名稱 + 刪除 */}
                                     <div className="d-flex justify-content-between align-items-start">
                                         <div className="fw-bold text-p-20-b">{item.product.title}</div>
-                                        <button className="btn p-1 ms-2 flex-shrink-0 border-0" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><X size={18} color="#999" /></button>
+                                        <button className="btn p-1 ms-2 flex-shrink-0 border-0 text-gray-500" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><X size={18} /></button>
                                     </div>
                                     {/* 第二排：單價／數量控制 + 小計 */}
                                     <div className="d-flex justify-content-between align-items-center mt-1">
@@ -693,43 +693,32 @@ function Cart() {
                     {/* 優惠券列表（可折疊） */}
                     {showCouponList && (
                         <div className="mb-3" style={{ maxWidth: 500 }}>
-                            <div className="border rounded-3 overflow-hidden">
-                                <div className="px-3 py-2 d-flex justify-content-between align-items-center"
-                                     style={{ background: "#f8f3f0", borderBottom: "1px solid #e8ddd8" }}>
-                                    <span className="fw-bold text-p-16-b" style={{ color: "#493B3F" }}>可用優惠券</span>
+                            <div className="border rounded-4 overflow-hidden">
+                                <div className="px-3 py-1 d-flex justify-content-between align-items-center bg-secondary-50 border-bottom">
+                                    <span className="text-p-16-b text-secondary-700">可用優惠券</span>
                                     <button
                                         type="button"
-                                        className="btn border-0 p-0"
-                                        style={{ color: "#999", fontSize: "1.1rem", lineHeight: 1 }}
+                                        className="btn border-0 p-1 text-gray-500"
                                         onClick={() => setShowCouponList(false)}
-                                    >✕</button>
+                                    ><X size={16} /></button>
                                 </div>
-                                {availableCoupons.map((coupon) => (
+                                {availableCoupons.map((coupon, idx) => (
                                     <div
                                         key={coupon.code}
-                                        className="d-flex align-items-center justify-content-between px-3 py-3"
-                                        style={{ borderBottom: "1px solid #f0e8e4", background: "#fff" }}
+                                        className={`d-flex align-items-center justify-content-between px-3 py-3${idx < availableCoupons.length - 1 ? " border-bottom" : ""}`}
                                     >
                                         <div>
-                                            <p className="mb-0 fw-bold text-p-16-b" style={{ color: "#493B3F" }}>
+                                            <p className="mb-0 text-p-16-b text-secondary-700">
                                                 {coupon.name}
                                             </p>
-                                            <p className="mb-0 small" style={{ color: "#888" }}>
-                                                代碼：<code style={{ color: "#c0607a" }}>{coupon.code}</code>
-                                                &nbsp;折扣：<span className="fw-bold" style={{ color: "#493B3F" }}>{coupon.discount}</span>
+                                            <p className="mb-0 small text-gray-500">
+                                                代碼：<code className="text-primary">{coupon.code}</code>
+                                                &nbsp;折扣：<span className="fw-bold text-secondary-700">{coupon.discount}</span>
                                             </p>
                                         </div>
                                         <button
                                             type="button"
-                                            className="btn btn-sm ms-3 flex-shrink-0"
-                                            style={{
-                                                background: "#fff0f4",
-                                                color: "#c0607a",
-                                                border: "1px solid #f5c6d0",
-                                                borderRadius: "8px",
-                                                fontSize: "0.82rem",
-                                                whiteSpace: "nowrap",
-                                            }}
+                                            className="btn btn-sm btn-apply-coupon ms-3 flex-shrink-0"
                                             onClick={() => {
                                                 setCouponCode(coupon.code);
                                                 setShowCouponList(false);
@@ -743,23 +732,17 @@ function Cart() {
                     )}
 
                     {/* 輸入框 + 按鈕列 */}
-                    <div className="d-flex" style={{ maxWidth: 500 }}>
+                    <div className="input-group" style={{ maxWidth: 500 }}>
                         <input
                             type="text"
-                            className="form-control me-2"
+                            className="form-control"
                             placeholder="輸入優惠券代碼"
                             value={couponCode}
                             onChange={e => setCouponCode(e.target.value)}
                         />
                         <button
                             type="button"
-                            className="btn btn-sm"
-                            style={{
-                                background: "#fff",
-                                border: "1px solid #ccc",
-                                color: "#493B3F",
-                                whiteSpace: "nowrap",
-                            }}
+                            className="btn btn-sm btn-coupon px-3"
                             onClick={() => setShowCouponList(prev => !prev)}
                         >{showCouponList ? "收起" : "檢視"}</button>
                     </div>
