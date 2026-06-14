@@ -14,6 +14,12 @@ npm run deploy     # 將 dist/ 部署至 GitHub Pages（gh-pages 分支）
 
 專案目前**未設定測試框架**。
 
+## Playwright 驗證注意事項
+
+**Dev server**：使用者的 Dev Server 通常是常駐的，驗證前先確認哪個 port 已在運行（`netstat -ano | findstr LISTEN` 或檢查 5173/5174/5175），**不要重新執行 `npm run dev`**。
+
+**Playwright session 卡死**：若 Playwright 工具回傳 `Browser is already in use` 錯誤，**先提醒使用者關閉其他 session 開啟的 Playwright 瀏覽器視窗**，再重試，不要強制終止 Chrome 程序。
+
 ## 視覺驗證
 
 修改 UI 元件後，用 Playwright 截圖確認視覺結果是否符合設計稿：
@@ -112,6 +118,10 @@ Bootstrap 5 透過 SCSS 變數覆寫方式客製化。自訂工具類別如 `.te
 - 圖示按鈕：`addingProductId === product.id` 時以 Bootstrap spinner 取代 icon（參考 `ProductCard.jsx`）
 
 **色彩與設計 Token** — 處理樣式相關任務前，先讀取 `src/assets/scss/abstract/_variables.scss` 確認主色、輔助色與間距等設計 token。
+
+**Bootstrap 元件分析** — 分析或比較任何 Bootstrap 元件（按鈕、表單、間距等）的行為或樣式前，**必須先讀取 `src/assets/scss/abstract/_variables.scss` 的相關設定**，確認專案是否已覆寫 Bootstrap 預設值（如 `$btn-border-radius`、`$btn-padding-y` 等），再下結論。不得假設 Bootstrap 預設值未被修改。
+
+**Bootstrap Grid 冗餘 class** — 不得寫 `col-{breakpoint}-12`。Bootstrap 的 col 在未指定的 breakpoint 以下預設即為 100% 寬，`col-sm-12` 等寫法是冗餘的。寫 code 或 review 時一律移除。
 
 **Typography** — 專案有兩套字體 class 系統，需要找字體相關 class 時直接查這兩個檔案：
 - `src/assets/scss/_fonts.scss` — 新系統，生成 `.t-{name}`（如 `.t-section-title`）、`.t-h-{1-6}`、`.t-p-{l/m/r/s}`
