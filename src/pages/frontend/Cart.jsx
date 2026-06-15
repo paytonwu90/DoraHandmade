@@ -877,13 +877,10 @@ function Cart() {
                         {/* 新增選擇常用收件人按鈕，按鈕在最右邊 */}
                         {!isSameAsBuyer && (
                             <button
-                                className="btn border-0 ms-auto"
+                                className="btn btn-underline ms-auto"
                                 type="button"
-                                style={{ padding: "12px 24px 12px 24px", gap: "8px" }}
                                 onClick={openRecipientSelector}
-                            >
-                                <span className="text-p-16-b" style={{color: "#493B3F", borderBottom: "1px solid #493B3F",lineHeight: "150%",paddingBottom: "8px"}}>選擇常用收件人</span>
-                            </button>
+                            >選擇常用收件人</button>
                         )}
                     </div>
                     {!isSameAsBuyer && (
@@ -940,15 +937,10 @@ function Cart() {
                                 <div className="d-flex">
                                     <h2 className="h6 flex-grow-1">選擇常用收件人</h2>
                                     <button
-                                    className="btn border-0 ms-auto"
-                                    type="button"
-                                    // 點擊後顯示新增收件人表單
-                                    onClick={() => setShowAddRecipientForm(true)}
-                                    style={{ padding: "12px 24px 12px 24px", gap: "8px" }}
-                                    //onClick={openRecipientSelector}
-                                >
-                                    <span className="text-p-16-b" style={{color: "#493B3F", borderBottom: "1px solid #493B3F",lineHeight: "150%",paddingBottom: "8px"}}>新增常用收件人</span>
-                                </button>
+                                        className="btn btn-underline ms-auto"
+                                        type="button"
+                                        onClick={() => setShowAddRecipientForm(true)}
+                                    >新增常用收件人</button>
                                 </div>
                                 {/* 這裡可放常用收件人列表與選擇按鈕，若有資料才顯示 */}
                                 {commonRecipients.length > 0 ? (
