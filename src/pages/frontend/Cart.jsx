@@ -858,11 +858,11 @@ function Cart() {
                         <label htmlFor="sameAsBuyer" className="form-check-label text-p-16-b">同購買人</label>
                     </div>
                     {isSameAsBuyer && (
-                        <div className="border-0 rounded-4 p-5 mb-4" style={{backgroundColor: "#EFEFEF"}}>
-                            <p className="text-p-16-r mb-2">姓名: {watch("name")}</p>
-                            <p className="text-p-16-r mb-2">電話: {watch("tel")}</p>
-                            <p className="text-p-16-r mb-2">Email: {watch("email")}</p>
-                            <p className="text-p-16-r mb-2">地址: {watch("address")}</p>
+                        <div className="border-0 rounded-4 p-5 mb-4 bg-gray-100">
+                            <p className="mb-2">姓名: {watch("name")}</p>
+                            <p className="mb-2">電話: {watch("tel")}</p>
+                            <p className="mb-2">Email: {watch("email")}</p>
+                            <p className="mb-2">地址: {watch("address")}</p>
                         </div>
                     )}
                     <div className="form-check d-flex align-items-center">
@@ -884,7 +884,7 @@ function Cart() {
                         )}
                     </div>
                     {!isSameAsBuyer && (
-                        <div style={{ background: "#f3f3f3", borderRadius: 16, padding: 20, marginTop: 16, marginBottom: 32 }}>
+                        <div className="rounded-4 p-5 mt-4 mb-8 bg-gray-100">
                             <div className="row mb-2">
                                 <div className="col-6">
                                     <label className="fw-bold mb-1">收件人</label>
@@ -969,7 +969,7 @@ function Cart() {
                                     <p>尚無常用收件人</p>
                                 )}
                                 {showAddRecipientForm && (
-                                <div style={{ background: "#f3f3f3", borderRadius: 16, padding: 20, marginTop: 16, marginBottom: 32 }}>
+                                <div className="rounded-4 p-5 mt-4 mb-8 bg-gray-100">
                                     <div className="row mb-2">
                                     <div className="col-6">
                                         <label className="fw-bold mb-1">收件人</label>
@@ -1073,7 +1073,7 @@ function Cart() {
                             <p>尚無常用收件人</p>
                         )}
                         {showAddRecipientForm && (
-                        <div style={{ background: "#f3f3f3", borderRadius: 16, padding: 20, marginTop: 16, marginBottom: 32 }}>
+                        <div className="rounded-4 p-5 mt-4 mb-8 bg-gray-100">
                             <div className="row mb-2">
                                 <div className="col-6">
                                     <label className="fw-bold mb-1">收件人</label>
