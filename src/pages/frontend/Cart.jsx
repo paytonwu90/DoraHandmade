@@ -504,7 +504,7 @@ function Cart() {
     <div className="container" style={{ position: "relative", minHeight: 300 }}>
         <Loading isLoading={isLoading} text="購物車載入中" />
         <div className="row">
-            <div className="col-sm-12 col-md-9">
+            <div className="col-lg-9">
                 <div className="mt-6 mb-6 mt-md-15 mb-md-15">
                     <h2 className="cart-heading-title">購物車</h2>
                     {cartError && (
@@ -1228,7 +1228,7 @@ function Cart() {
                     )}
                 </div>
             </div>
-            <div className="col-sm-12 col-md-3">
+            <div className="col-lg-3">
                 <div className="mt-6 mb-6 mt-md-15 mb-md-15">
                 <form onSubmit={handleSubmit(onSubmit)}>
                 <h2 className="cart-heading-title">結帳明細</h2>
