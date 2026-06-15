@@ -45,16 +45,6 @@ $text-gray: #666;
   color: $text-gray;
 }
 
-.form-control {
-  border-radius: 8px;
-  padding: 10px 12px;
-
-  &:focus {
-    border-color: $primary-700;
-    box-shadow: 0 0 0 0.15rem rgba($primary-700, 0.2);
-  }
-}
-
 
 // ===== Button =====
 .auth-btn {

@@ -39,8 +39,8 @@
     color: $secondary-700;
     border: 1px solid var(--bs-border-color);
     white-space: nowrap;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-top-right-radius: $input-border-radius;
+    border-bottom-right-radius: $input-border-radius;
     &:hover {
         background: $secondary-50;
         color: $secondary-700;
