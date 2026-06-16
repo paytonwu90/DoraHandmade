@@ -32,3 +32,6 @@ scripts/screenshots/
 
 # Playwright MCP 輸出
 .playwright-mcp/
+
+# Claude Code trace 輸出（本機暫存，不需 commit）
+.claude/traces/
