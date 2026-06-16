@@ -14,13 +14,46 @@
 
 }
 
-.mobile-card {
-    border-radius: 16px 16px 0px 0px;
-    &-header {
+.btn-apply-coupon {
+    --bs-btn-active-bg: #{$white};
+    --bs-btn-active-color: #{$primary-700};
+    --bs-btn-active-border-color: #{$primary-300};
+    background: $white;
+    color: $primary-600;
+    border: 1px solid $primary-200;
+    border-radius: 8px;
+    font-size: $font-size-sm;
+    white-space: nowrap;
+    &:hover {
+        background: $white;
+        color: $primary-700;
+        border-color: $primary-300;
+    }
+}
+
+.btn-coupon {
+    --bs-btn-active-bg: #{$secondary-50};
+    --bs-btn-active-color: #{$secondary-700};
+    --bs-btn-active-border-color: var(--bs-border-color);
+    background: $white;
+    color: $secondary-700;
+    border: 1px solid var(--bs-border-color);
+    white-space: nowrap;
+    border-top-right-radius: $input-border-radius;
+    border-bottom-right-radius: $input-border-radius;
+    &:hover {
         background: $secondary-50;
-        color: $gray-600;
-        border-radius: 16px 16px 0 0;
-        padding: 8px 12px;
+        color: $secondary-700;
+        border-color: var(--bs-border-color);
+    }
+}
+
+.cart-qty-input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
     }
 }
 
@@ -33,42 +66,5 @@
 }
 
 .billDetails {
-    border: 1px solid #D2D2D2;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 32px;
-}
-
-.checkoutBtn {
-    background: $primary-700;
-    color: #fff;
-    border-radius: 0px;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    &:hover {
-        background: $primary-900;
-        color: #fff;
-    }
-    &:disabled {
-        color: #fff;
-        opacity: 0.5;
-        cursor: not-allowed;
-        &:hover {
-            background: $primary-700;
-            color: #fff;
-        }
-    }
-}
-
-.recipientBtn {
-    background: #fff;
-    color: $primary-500;
-    border: 2.5px solid $primary-500;
-    border-radius: 0px;
-    padding-top: 18px;
-    padding-bottom: 18px;
-    &:hover {
-        background: $primary-50;
-        color: $primary-500;
-    }
+    border: 1px solid $gray-200;
 }

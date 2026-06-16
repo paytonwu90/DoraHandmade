@@ -4,7 +4,7 @@ import Loading from "@components/Loading";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
-import { Minus, Plus, Trash2, TriangleAlert } from "lucide-react";
+import { Minus, Plus, Trash2, TriangleAlert, X } from "lucide-react";
 import { currency } from "../../utils/filter";
 import * as bootstrap from "bootstrap";
 import { emailValidation, twPhoneValidation } from "../../utils/validation";
@@ -244,6 +244,7 @@ function Cart() {
             tel: "0910552225",
             email: "ming.lin@gmail.com",
             address: "台北市中正區三愛里信義路二段277號",
+            paymentMethod: "creditCard",
         }
     });
 
@@ -503,7 +504,7 @@ function Cart() {
     <div className="container" style={{ position: "relative", minHeight: 300 }}>
         <Loading isLoading={isLoading} text="購物車載入中" />
         <div className="row">
-            <div className="col-sm-12 col-md-9">
+            <div className="col-lg-9">
                 <div className="mt-6 mb-6 mt-md-15 mb-md-15">
                     <h2 className="cart-heading-title">購物車</h2>
                     {cartError && (
@@ -587,17 +588,16 @@ function Cart() {
                         <>
                         {/* 電腦版購物車顯示 */}
                         <div className="d-none d-md-block">
-                        <div className="card">
+                        <div className="bg-white border border-secondary-100 rounded-4 overflow-hidden">
                             <div className="table-responsive">
                                 <table className="table table-borderless align-middle mb-0">
                                 <thead>
                                     <tr>
-                                    <th style={{background: "#EAE1E3"}} scope="col">商品</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">單價</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">數量</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">單位</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">小計</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">操作</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col">商品明細</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col">單價</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col">數量</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col">小計</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -611,7 +611,7 @@ function Cart() {
                                         <td>
                                             <div className="input-group" style={{maxWidth: 140}}>
                                                 <button
-                                                    className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''} me-2`}
+                                                    className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''}`}
                                                     type="button"
                                                     disabled={(localQty[item.id] ?? item.qty) === 1 || updatingId === item.id}
                                                     onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) - 1)}
@@ -621,16 +621,15 @@ function Cart() {
                                                     value={localQty[item.id] ?? item.qty}
                                                     onChange={e => handleQtyChange(item, Number(e.target.value))}
                                                     // 移除 disabled，讓使用者可以直接輸入
-                                                    className="text-center bg-white border-0"
-                                                    style={{width: 40, fontSize: "20px"}}
+                                                    className="text-center fs-20 bg-white border-0 cart-qty-input"
+                                                    style={{width: 40}}
                                                 />
                                                 <button className="btn btn-sm border-0" type="button" disabled={updatingId===item.id} onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) + 1)}><Plus /></button>
                                             </div>
                                         </td>
-                                        <td className="text-center">{item.product.unit}</td>
                                         <td>{currency(item.total)}</td>
                                         <td>
-                                            <button className="btn btn-danger btn-sm text-white" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><Trash2 color="white" /> 刪除</button>
+                                            <button className="btn p-1 border-0 text-gray-500" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><X size={18} /></button>
                                         </td>
                                     </tr>
                                     ))}
@@ -641,35 +640,43 @@ function Cart() {
                         </div>
                         {/* 手機版購物車顯示 */}
                         <div className="d-md-none">
-                            <div className="card mobile-card" style={{borderRadius: "16px 16px 0 0"}}>
-                                <div className="mobile-card-header fw-bold mb-2">商品明細</div>
+                            <div className="bg-white border border-secondary-100 rounded-4 overflow-hidden">
+                                <div className="fw-bold text-gray-600 bg-secondary-50 px-3 py-2 mb-2">商品明細</div>
                                 {cartData.map(item => (
-                                <div key={item.id} className="d-flex justify-content-between align-items-center p-2">
-                                    <div style={{flex:1}}>
+                                <div key={item.id} className="px-3 py-2">
+                                    {/* 第一排：商品名稱 + 刪除 */}
+                                    <div className="d-flex justify-content-between align-items-start">
                                         <div className="fw-bold text-p-20-b">{item.product.title}</div>
-                                        <div className="d-flex justify-content-start align-items-center mt-1 text-p-16-b">
+                                        <button className="btn p-1 ms-2 flex-shrink-0 border-0 text-gray-500" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><X size={18} /></button>
+                                    </div>
+                                    {/* 第二排：單價／數量控制 + 小計 */}
+                                    <div className="d-flex justify-content-between align-items-center mt-1">
+                                        <div className="d-flex align-items-center text-p-16-b flex-grow-1">
                                             <span className="text-gray-600">單價 ${item.product.price} / 數量</span>
-                                            <div className="input-group" style={{maxWidth: 100}}>
+                                            <div className="d-flex flex-nowrap ms-2">
                                                 <button
-                                                    className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''} me-2`}
+                                                    className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''}`}
                                                     type="button"
                                                     disabled={(localQty[item.id] ?? item.qty) === 1 || updatingId === item.id}
                                                     onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) - 1)}
-                                                ><Minus size={16} color="#777777" /></button>
+                                                ><Minus size={16} className="text-gray-600" /></button>
                                                 <input
                                                     type="number" min="1"
                                                     value={localQty[item.id] ?? item.qty}
                                                     onChange={e => handleQtyChange(item, Number(e.target.value))}
-                                                    // 移除 disabled，讓使用者可以直接輸入
-                                                    className="text-center bg-white border-0"
-                                                    style={{width: 40, fontSize: "20px"}}
+                                                    className="text-center fs-20 bg-white border-0 cart-qty-input"
+                                                    style={{width: 40}}
                                                 />
-                                                <button className="btn btn-sm border-0" type="button" disabled={updatingId===item.id} onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) + 1)}><Plus size={16} color="#777777" /></button>
+                                                <button
+                                                    className="btn btn-sm border-0"
+                                                    type="button"
+                                                    disabled={updatingId===item.id}
+                                                    onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) + 1)}
+                                                ><Plus size={16} className="text-gray-600" /></button>
                                             </div>
-                                            <button className="btn btn-sm" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><Trash2 className="text-primary" /></button>
                                         </div>
+                                        <div className="text-p-20-b ms-2">${item.total}</div>
                                     </div>
-                                    <div className="fw-bold" style={{fontSize: "1.1rem"}}>${item.total}</div>
                                 </div>
                                 ))}
                             </div>
@@ -684,43 +691,32 @@ function Cart() {
                     {/* 優惠券列表（可折疊） */}
                     {showCouponList && (
                         <div className="mb-3" style={{ maxWidth: 500 }}>
-                            <div className="border rounded-3 overflow-hidden">
-                                <div className="px-3 py-2 d-flex justify-content-between align-items-center"
-                                     style={{ background: "#f8f3f0", borderBottom: "1px solid #e8ddd8" }}>
-                                    <span className="fw-bold text-p-16-b" style={{ color: "#493B3F" }}>可用優惠券</span>
+                            <div className="border rounded-4 overflow-hidden">
+                                <div className="px-3 py-1 d-flex justify-content-between align-items-center bg-secondary-50 border-bottom">
+                                    <span className="text-p-16-b text-secondary-700">可用優惠券</span>
                                     <button
                                         type="button"
-                                        className="btn border-0 p-0"
-                                        style={{ color: "#999", fontSize: "1.1rem", lineHeight: 1 }}
+                                        className="btn border-0 p-1 text-gray-500"
                                         onClick={() => setShowCouponList(false)}
-                                    >✕</button>
+                                    ><X size={16} /></button>
                                 </div>
-                                {availableCoupons.map((coupon) => (
+                                {availableCoupons.map((coupon, idx) => (
                                     <div
                                         key={coupon.code}
-                                        className="d-flex align-items-center justify-content-between px-3 py-3"
-                                        style={{ borderBottom: "1px solid #f0e8e4", background: "#fff" }}
+                                        className={`d-flex align-items-center justify-content-between px-3 py-3${idx < availableCoupons.length - 1 ? " border-bottom" : ""}`}
                                     >
                                         <div>
-                                            <p className="mb-0 fw-bold text-p-16-b" style={{ color: "#493B3F" }}>
+                                            <p className="mb-0 text-p-16-b text-secondary-700">
                                                 {coupon.name}
                                             </p>
-                                            <p className="mb-0 small" style={{ color: "#888" }}>
-                                                代碼：<code style={{ color: "#c0607a" }}>{coupon.code}</code>
-                                                &nbsp;折扣：<span className="fw-bold" style={{ color: "#493B3F" }}>{coupon.discount}</span>
+                                            <p className="mb-0 small text-gray-500">
+                                                代碼：<code className="text-primary">{coupon.code}</code>
+                                                &nbsp;折扣：<span className="fw-bold text-secondary-700">{coupon.discount}</span>
                                             </p>
                                         </div>
                                         <button
                                             type="button"
-                                            className="btn btn-sm ms-3 flex-shrink-0"
-                                            style={{
-                                                background: "#fff0f4",
-                                                color: "#c0607a",
-                                                border: "1px solid #f5c6d0",
-                                                borderRadius: "8px",
-                                                fontSize: "0.82rem",
-                                                whiteSpace: "nowrap",
-                                            }}
+                                            className="btn btn-sm btn-apply-coupon ms-3 flex-shrink-0"
                                             onClick={() => {
                                                 setCouponCode(coupon.code);
                                                 setShowCouponList(false);
@@ -734,23 +730,17 @@ function Cart() {
                     )}
 
                     {/* 輸入框 + 按鈕列 */}
-                    <div className="d-flex" style={{ maxWidth: 500 }}>
+                    <div className="input-group" style={{ maxWidth: 500 }}>
                         <input
                             type="text"
-                            className="form-control me-2"
+                            className="form-control"
                             placeholder="輸入優惠券代碼"
                             value={couponCode}
                             onChange={e => setCouponCode(e.target.value)}
                         />
                         <button
                             type="button"
-                            className="btn btn-sm"
-                            style={{
-                                background: "#fff",
-                                border: "1px solid #ccc",
-                                color: "#493B3F",
-                                whiteSpace: "nowrap",
-                            }}
+                            className="btn btn-sm btn-coupon px-3"
                             onClick={() => setShowCouponList(prev => !prev)}
                         >{showCouponList ? "收起" : "檢視"}</button>
                     </div>
@@ -866,11 +856,11 @@ function Cart() {
                         <label htmlFor="sameAsBuyer" className="form-check-label text-p-16-b">同購買人</label>
                     </div>
                     {isSameAsBuyer && (
-                        <div className="border-0 rounded-4 p-5 mb-4" style={{backgroundColor: "#EFEFEF"}}>
-                            <p className="text-p-16-r mb-2">姓名: {watch("name")}</p>
-                            <p className="text-p-16-r mb-2">電話: {watch("tel")}</p>
-                            <p className="text-p-16-r mb-2">Email: {watch("email")}</p>
-                            <p className="text-p-16-r mb-2">地址: {watch("address")}</p>
+                        <div className="border-0 rounded-4 p-5 mb-4 bg-gray-100">
+                            <p className="mb-2">姓名: {watch("name")}</p>
+                            <p className="mb-2">電話: {watch("tel")}</p>
+                            <p className="mb-2">Email: {watch("email")}</p>
+                            <p className="mb-2">地址: {watch("address")}</p>
                         </div>
                     )}
                     <div className="form-check d-flex align-items-center">
@@ -885,17 +875,14 @@ function Cart() {
                         {/* 新增選擇常用收件人按鈕，按鈕在最右邊 */}
                         {!isSameAsBuyer && (
                             <button
-                                className="btn border-0 ms-auto"
+                                className="btn btn-underline ms-auto"
                                 type="button"
-                                style={{ padding: "12px 24px 12px 24px", gap: "8px" }}
                                 onClick={openRecipientSelector}
-                            >
-                                <span className="text-p-16-b" style={{color: "#493B3F", borderBottom: "1px solid #493B3F",lineHeight: "150%",paddingBottom: "8px"}}>選擇常用收件人</span>
-                            </button>
+                            >選擇常用收件人</button>
                         )}
                     </div>
                     {!isSameAsBuyer && (
-                        <div style={{ background: "#f3f3f3", borderRadius: 16, padding: 20, marginTop: 16, marginBottom: 32 }}>
+                        <div className="rounded-4 p-5 mt-4 mb-8 bg-gray-100">
                             <div className="row mb-2">
                                 <div className="col-6">
                                     <label className="fw-bold mb-1">收件人</label>
@@ -948,15 +935,10 @@ function Cart() {
                                 <div className="d-flex">
                                     <h2 className="h6 flex-grow-1">選擇常用收件人</h2>
                                     <button
-                                    className="btn border-0 ms-auto"
-                                    type="button"
-                                    // 點擊後顯示新增收件人表單
-                                    onClick={() => setShowAddRecipientForm(true)}
-                                    style={{ padding: "12px 24px 12px 24px", gap: "8px" }}
-                                    //onClick={openRecipientSelector}
-                                >
-                                    <span className="text-p-16-b" style={{color: "#493B3F", borderBottom: "1px solid #493B3F",lineHeight: "150%",paddingBottom: "8px"}}>新增常用收件人</span>
-                                </button>
+                                        className="btn btn-underline ms-auto"
+                                        type="button"
+                                        onClick={() => setShowAddRecipientForm(true)}
+                                    >新增常用收件人</button>
                                 </div>
                                 {/* 這裡可放常用收件人列表與選擇按鈕，若有資料才顯示 */}
                                 {commonRecipients.length > 0 ? (
@@ -985,7 +967,7 @@ function Cart() {
                                     <p>尚無常用收件人</p>
                                 )}
                                 {showAddRecipientForm && (
-                                <div style={{ background: "#f3f3f3", borderRadius: 16, padding: 20, marginTop: 16, marginBottom: 32 }}>
+                                <div className="rounded-4 p-5 mt-4 mb-8 bg-gray-100">
                                     <div className="row mb-2">
                                     <div className="col-6">
                                         <label className="fw-bold mb-1">收件人</label>
@@ -1034,10 +1016,10 @@ function Cart() {
                                 )}
                             </div>
                             <div className="modal-footer d-flex flex-row gap-2">
-                                <button type="button" className="recipientBtn flex-fill" data-bs-dismiss="modal" onClick={closeRecipientModal}>取消</button>
+                                <button type="button" className="btn btn-dora-outline flex-fill" data-bs-dismiss="modal" onClick={closeRecipientModal}>取消</button>
                                 <button
                                     type="button"
-                                    className="checkoutBtn flex-fill"
+                                    className="btn btn-dora flex-fill"
                                     onClick={() => {
                                         setShowAddRecipientForm(false);
                                         closeRecipientModal(); closeRecipientOffcanvas();}}
@@ -1089,7 +1071,7 @@ function Cart() {
                             <p>尚無常用收件人</p>
                         )}
                         {showAddRecipientForm && (
-                        <div style={{ background: "#f3f3f3", borderRadius: 16, padding: 20, marginTop: 16, marginBottom: 32 }}>
+                        <div className="rounded-4 p-5 mt-4 mb-8 bg-gray-100">
                             <div className="row mb-2">
                                 <div className="col-6">
                                     <label className="fw-bold mb-1">收件人</label>
@@ -1138,8 +1120,8 @@ function Cart() {
                         )}
                     </div>
                     <div className="offcanvas-footer d-flex justify-content-between p-3">
-                        <button type="button" className="recipientBtn w-50 me-2" onClick={closeRecipientOffcanvas}>取消</button>
-                        <button type="button" className="checkoutBtn w-50" onClick={() => {
+                        <button type="button" className="btn btn-dora-outline w-50 me-2" onClick={closeRecipientOffcanvas}>取消</button>
+                        <button type="button" className="btn btn-dora w-50" onClick={() => {
                             setShowAddRecipientForm(false);
                             closeRecipientModal(); closeRecipientOffcanvas();}}>確定</button>
                     </div>
@@ -1236,11 +1218,11 @@ function Cart() {
                     )}
                 </div>
             </div>
-            <div className="col-sm-12 col-md-3">
+            <div className="col-lg-3">
                 <div className="mt-6 mb-6 mt-md-15 mb-md-15">
                 <form onSubmit={handleSubmit(onSubmit)}>
                 <h2 className="cart-heading-title">結帳明細</h2>
-                <div className="billDetails w-100">
+                <div className="billDetails rounded-4 p-5 mb-6 mb-lg-8">
                     <div className="d-flex">
                         <div className="p-2 flex-grow-1">商品小計</div>
                         <div className="p-2">
@@ -1264,12 +1246,15 @@ function Cart() {
                         </div>
                     </div>
                 </div>
-                <button
-                    className="checkoutBtn w-100"
-                    disabled={cartData.length === 0 || !isValid}
-                >
-                    立即結帳
-                </button>
+                <div className="text-center">
+                    <button
+                        className="btn btn-dora w-lg-100"
+                        style={{ '--bs-btn-padding-x': '66px' }}
+                        disabled={cartData.length === 0 || !isValid}
+                    >
+                        立即結帳
+                    </button>
+                </div>
                 </form>
                 </div>
             </div>

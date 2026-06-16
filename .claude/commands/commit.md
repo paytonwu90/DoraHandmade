@@ -13,6 +13,9 @@ description: "分析 staged 變更，產生 conventional commits 格式的 commi
   - 單一目的的變更：用段落說明「為什麼」，不超過 3 行
   - 多個獨立變更：用 bullet point 條列各項變更
 
+前置檢查：
+- 若 staged 的檔案混合了性質不同的變更（例如：code 修正 + 文件更新、功能開發 + refactor），**先提出建議拆分成多個 commit**，等使用者決定後再繼續
+
 輸出格式：
 - 只輸出 commit message 的文字內容，讓使用者審核
 - **不執行 `git commit`**，等使用者確認後才由使用者或下一步執行
