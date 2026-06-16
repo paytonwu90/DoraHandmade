@@ -329,6 +329,7 @@ function Cart() {
         setValue("recipientName", recipient.name, { shouldValidate: true });
         setValue("recipientTel", recipient.tel, { shouldValidate: true });
         setValue("recipientEmail", recipient.email, { shouldValidate: true });
+        setValue("recipientAddress", recipient.address, { shouldValidate: true });
     };
 
     const [showAddRecipientForm, setShowAddRecipientForm] = useState(false);
@@ -432,7 +433,7 @@ function Cart() {
                 name: formData.recipientName,
                 email: formData.recipientEmail,
                 tel: formData.recipientTel,
-                address: recipientInfo.address,
+                address: formData.recipientAddress,
             };
             const data = {
                 data: {
@@ -923,6 +924,19 @@ function Cart() {
                                     })}
                                 />
                                 {errors.recipientEmail && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientEmail.message}</p>}
+                            </div>
+                            <div className="mt-2">
+                                <label className="fw-bold mb-1">收件地址</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="收件人地址"
+                                    {...register("recipientAddress", {
+                                        required: "請輸入收件人地址",
+                                        shouldUnregister: true,
+                                    })}
+                                />
+                                {errors.recipientAddress && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientAddress.message}</p>}
                             </div>
                         </div>
                     )}
