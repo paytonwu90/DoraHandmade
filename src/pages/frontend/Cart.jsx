@@ -328,7 +328,6 @@ function Cart() {
         });
         setValue("recipientName", recipient.name, { shouldValidate: true });
         setValue("recipientTel", recipient.tel, { shouldValidate: true });
-        setValue("recipientEmail", recipient.email, { shouldValidate: true });
         setValue("recipientAddress", recipient.address, { shouldValidate: true });
     };
 
@@ -431,7 +430,6 @@ function Cart() {
                 address: formData.address,
             } : {
                 name: formData.recipientName,
-                email: formData.recipientEmail,
                 tel: formData.recipientTel,
                 address: formData.recipientAddress,
             };
@@ -448,7 +446,6 @@ function Cart() {
                         `取貨方式:${deliveryMethod}`,
                         `收件人:${recipient.name}`,
                         `電話:${recipient.tel}`,
-                        `Email:${recipient.email}`,
                         `地址:${recipient.address}`,
                         selectedStore
                             ? `取貨門市:${selectedStore.label}`
@@ -911,19 +908,6 @@ function Cart() {
                                     />
                                     {errors.recipientTel && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientTel.message}</p>}
                                 </div>
-                            </div>
-                            <div>
-                                <label className="fw-bold mb-1">Email</label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    placeholder="收件人 Email"
-                                    {...register("recipientEmail", {
-                                        required: "請輸入收件人 Email",
-                                        shouldUnregister: true,
-                                    })}
-                                />
-                                {errors.recipientEmail && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientEmail.message}</p>}
                             </div>
                             <div className="mt-2">
                                 <label className="fw-bold mb-1">收件地址</label>
