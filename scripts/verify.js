@@ -274,10 +274,47 @@ async function verifyCategoryDropdown() {
   }
 }
 
+async function verifyCart() {
+  console.log('Cart - Recipient Form...');
+  {
+    const page = await browser.newPage();
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(`${BASE}/#/cart`, { waitUntil: 'networkidle' });
+
+    // 勾選「指定其他收件人」
+    await page.click('#otherRecipient');
+    await page.waitForTimeout(300);
+
+    // 斷言 1：收件地址欄位出現
+    const addressInput = page.locator('input[placeholder="收件人地址"]');
+    await addressInput.waitFor({ state: 'visible', timeout: 3000 });
+    console.log('  ✓ 收件地址欄位出現');
+
+    // 斷言 2：地址空白時按鈕為 disabled
+    const submitBtn = page.locator('button:has-text("立即結帳")');
+    const isDisabled = await submitBtn.isDisabled();
+    if (!isDisabled) throw new Error('地址空白時「立即結帳」應為 disabled');
+    console.log('  ✓ 地址空白時「立即結帳」為 disabled');
+
+    // 填入完整收件人資料後按鈕解除 disabled
+    await page.fill('input[placeholder="收件人姓名"]', '王小美');
+    await page.fill('input[placeholder="收件人電話"]', '0922333444');
+    await page.fill('input[placeholder="收件人地址"]', '台北市信義區信義路五段8號');
+    await page.waitForTimeout(300);
+
+    const isDisabledAfter = await submitBtn.isDisabled();
+    if (isDisabledAfter) throw new Error('填寫完整後「立即結帳」應解除 disabled');
+    console.log('  ✓ 填寫完整後「立即結帳」解除 disabled');
+
+    await page.close();
+  }
+}
+
 const sections = {
   'user-dropdown': verifyUserDropdown,
   'sort-dropdown': verifySortDropdown,
   'category-dropdown': verifyCategoryDropdown,
+  'cart': verifyCart,
 };
 
 const target = process.argv[2];
