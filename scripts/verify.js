@@ -31,7 +31,7 @@ async function checkDevServer() {
   for (let i = 1; i <= maxRetries; i++) {
     const page = await browser.newPage();
     try {
-      await page.goto(BASE, { waitUntil: 'networkidle', timeout: 10000 });
+      await page.goto(BASE, { waitUntil: 'load', timeout: 10000 });
       await page.close();
       return;
     } catch (e) {
