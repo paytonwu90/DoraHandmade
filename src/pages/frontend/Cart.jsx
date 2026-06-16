@@ -588,17 +588,16 @@ function Cart() {
                         <>
                         {/* 電腦版購物車顯示 */}
                         <div className="d-none d-md-block">
-                        <div className="card">
+                        <div className="bg-white border border-secondary-100 rounded-4 overflow-hidden">
                             <div className="table-responsive">
                                 <table className="table table-borderless align-middle mb-0">
                                 <thead>
                                     <tr>
-                                    <th style={{background: "#EAE1E3"}} scope="col">商品</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">單價</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">數量</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">單位</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">小計</th>
-                                    <th style={{background: "#EAE1E3"}} scope="col">操作</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col">商品明細</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col">單價</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col">數量</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col">小計</th>
+                                    <th className="bg-secondary-50 text-gray-600" scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -612,7 +611,7 @@ function Cart() {
                                         <td>
                                             <div className="input-group" style={{maxWidth: 140}}>
                                                 <button
-                                                    className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''} me-2`}
+                                                    className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''}`}
                                                     type="button"
                                                     disabled={(localQty[item.id] ?? item.qty) === 1 || updatingId === item.id}
                                                     onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) - 1)}
@@ -622,16 +621,15 @@ function Cart() {
                                                     value={localQty[item.id] ?? item.qty}
                                                     onChange={e => handleQtyChange(item, Number(e.target.value))}
                                                     // 移除 disabled，讓使用者可以直接輸入
-                                                    className="text-center bg-white border-0"
-                                                    style={{width: 40, fontSize: "20px"}}
+                                                    className="text-center fs-20 bg-white border-0 cart-qty-input"
+                                                    style={{width: 40}}
                                                 />
                                                 <button className="btn btn-sm border-0" type="button" disabled={updatingId===item.id} onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) + 1)}><Plus /></button>
                                             </div>
                                         </td>
-                                        <td className="text-center">{item.product.unit}</td>
                                         <td>{currency(item.total)}</td>
                                         <td>
-                                            <button className="btn btn-danger btn-sm text-white" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><Trash2 color="white" /> 刪除</button>
+                                            <button className="btn p-1 border-0 text-gray-500" disabled={updatingId===item.id} onClick={() => removeCartItem(item.id)}><X size={18} /></button>
                                         </td>
                                     </tr>
                                     ))}
@@ -642,7 +640,7 @@ function Cart() {
                         </div>
                         {/* 手機版購物車顯示 */}
                         <div className="d-md-none">
-                            <div className="card rounded-4 overflow-hidden">
+                            <div className="bg-white border border-secondary-100 rounded-4 overflow-hidden">
                                 <div className="fw-bold text-gray-600 bg-secondary-50 px-3 py-2 mb-2">商品明細</div>
                                 {cartData.map(item => (
                                 <div key={item.id} className="px-3 py-2">
@@ -666,8 +664,8 @@ function Cart() {
                                                     type="number" min="1"
                                                     value={localQty[item.id] ?? item.qty}
                                                     onChange={e => handleQtyChange(item, Number(e.target.value))}
-                                                    className="text-center bg-white border-0 cart-qty-input"
-                                                    style={{width: 40, fontSize: "20px"}}
+                                                    className="text-center fs-20 bg-white border-0 cart-qty-input"
+                                                    style={{width: 40}}
                                                 />
                                                 <button
                                                     className="btn btn-sm border-0"
