@@ -254,7 +254,6 @@ function Cart() {
     const [recipientInfo, setRecipientInfo] = useState({
         name: "",
         tel: "",
-        email: "",
         address: ""
     });
 
@@ -264,21 +263,18 @@ function Cart() {
             id: 1,
             name: "林小魚",
             tel: "0910552225",
-            email: "fish.lin@gmail.com",
             address: "台北市信義區信義路五段7號"
         },
         {
             id: 2,
             name: "林鮭魚",
             tel: "0921628826",
-            email: "xiaohua.li@gmail.com",
             address: "台北市大安區和平東路三段12號"
         },
         {
             id: 3,
             name: "林葦辰",
             tel: "0919104401",
-            email: "weicheng.lin@gmail.com",
             address: "台北市中正區忠孝東路一段1號"
         }
     ]);
@@ -323,7 +319,6 @@ function Cart() {
         setRecipientInfo({
             name: recipient.name,
             tel: recipient.tel,
-            email: recipient.email,
             address: recipient.address
         });
         setValue("recipientName", recipient.name, { shouldValidate: true });
@@ -990,22 +985,11 @@ function Cart() {
                                         />
                                     </div>
                                     </div>
-                                    <div>
-                                    <label className="fw-bold mb-1">Email</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        className="form-control"
-                                        value={recipientInfo.email || ""}
-                                        onChange={updateRecipientData}
-                                        placeholder="收件人 Email"
-                                    />
-                                    </div>
                                     <button
                                         type="button"
                                         className="btn btn-secondary mt-2 w-100"
                                         onClick={() => {
-                                            if (recipientInfo.name && recipientInfo.tel && recipientInfo.email) {
+                                            if (recipientInfo.name && recipientInfo.tel) {
                                         setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
                                     }
                                         }}
@@ -1093,22 +1077,11 @@ function Cart() {
                                     />
                                 </div>
                             </div>
-                            <div>
-                            <label className="fw-bold mb-1">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                className="form-control"
-                                value={recipientInfo.email || ""}
-                                onChange={updateRecipientData}
-                                placeholder="收件人 Email"
-                            />
-                            </div>
                             <button
                                 type="button"
                                 className="btn btn-secondary mt-2 w-100"
                                 onClick={() => {
-                                    if (recipientInfo.name && recipientInfo.tel && recipientInfo.email) {
+                                    if (recipientInfo.name && recipientInfo.tel) {
                                 setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
                             }
                                 }}
