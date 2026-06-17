@@ -899,6 +899,7 @@ function Cart() {
                                         placeholder="收件人電話"
                                         {...register("recipientTel", {
                                             required: "請輸入收件人電話",
+                                            pattern: twPhoneValidation.pattern,
                                             shouldUnregister: true,
                                         })}
                                     />
