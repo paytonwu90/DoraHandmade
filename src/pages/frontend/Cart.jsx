@@ -328,7 +328,7 @@ function Cart() {
         });
         setValue("recipientName", recipient.name, { shouldValidate: true });
         setValue("recipientTel", recipient.tel, { shouldValidate: true });
-        setValue("recipientEmail", recipient.email, { shouldValidate: true });
+        setValue("recipientAddress", recipient.address, { shouldValidate: true });
     };
 
     const [showAddRecipientForm, setShowAddRecipientForm] = useState(false);
@@ -430,9 +430,8 @@ function Cart() {
                 address: formData.address,
             } : {
                 name: formData.recipientName,
-                email: formData.recipientEmail,
                 tel: formData.recipientTel,
-                address: recipientInfo.address,
+                address: formData.recipientAddress,
             };
             const data = {
                 data: {
@@ -447,7 +446,6 @@ function Cart() {
                         `取貨方式:${deliveryMethod}`,
                         `收件人:${recipient.name}`,
                         `電話:${recipient.tel}`,
-                        `Email:${recipient.email}`,
                         `地址:${recipient.address}`,
                         selectedStore
                             ? `取貨門市:${selectedStore.label}`
@@ -911,18 +909,18 @@ function Cart() {
                                     {errors.recipientTel && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientTel.message}</p>}
                                 </div>
                             </div>
-                            <div>
-                                <label className="fw-bold mb-1">Email</label>
+                            <div className="mt-2">
+                                <label className="fw-bold mb-1">收件地址</label>
                                 <input
-                                    type="email"
+                                    type="text"
                                     className="form-control"
-                                    placeholder="收件人 Email"
-                                    {...register("recipientEmail", {
-                                        required: "請輸入收件人 Email",
+                                    placeholder="收件人地址"
+                                    {...register("recipientAddress", {
+                                        required: "請輸入收件人地址",
                                         shouldUnregister: true,
                                     })}
                                 />
-                                {errors.recipientEmail && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientEmail.message}</p>}
+                                {errors.recipientAddress && <p className="text-danger mt-1" style={{ fontSize: "0.85rem" }}>{errors.recipientAddress.message}</p>}
                             </div>
                         </div>
                     )}
@@ -931,21 +929,21 @@ function Cart() {
                 <div className="modal" id="recipientModal">
                     <div className="modal-dialog modal-dialog-centered">
                         <div className="modal-content">
-                            <div className="modal-body">
+                            <div className="modal-body p-10 pb-6">
                                 <div className="d-flex">
                                     <h2 className="h6 flex-grow-1">選擇常用收件人</h2>
                                     <button
-                                        className="btn btn-underline ms-auto"
+                                        className="btn btn-underline"
                                         type="button"
                                         onClick={() => setShowAddRecipientForm(true)}
                                     >新增常用收件人</button>
                                 </div>
                                 {/* 這裡可放常用收件人列表與選擇按鈕，若有資料才顯示 */}
                                 {commonRecipients.length > 0 ? (
-                                    commonRecipients.map(recipient => (
-                                        <div key={recipient.id} className="form-check d-flex align-items-center mb-3">
+                                    commonRecipients.map((recipient, index) => (
+                                        <div key={recipient.id} className={`form-check d-flex align-items-center${index === commonRecipients.length - 1 ? '' : ' mb-4'}`}>
                                             <input
-                                                className="form-check-input"
+                                                className="form-check-input me-2"
                                                 type="radio"
                                                 name="commonRecipient"
                                                 id={`recipient-${recipient.id}`}
@@ -1015,7 +1013,7 @@ function Cart() {
                                 </div>
                                 )}
                             </div>
-                            <div className="modal-footer d-flex flex-row gap-2">
+                            <div className="d-flex flex-row gap-2 p-10 pt-0">
                                 <button type="button" className="btn btn-dora-outline flex-fill" data-bs-dismiss="modal" onClick={closeRecipientModal}>取消</button>
                                 <button
                                     type="button"
@@ -1032,16 +1030,15 @@ function Cart() {
                 </div>
                 {/* 手機版 Offcanvas */}
                 <div className="offcanvas offcanvas-bottom custom-offcanvas-80" id="recipientOffcanvas">
-                    <div className="offcanvas-body">
+                    <div className="offcanvas-body p-0">
                         <div className="d-flex">
                             <h2 className="text-p-24 flex-grow-1">選擇常用收件人</h2>
                             <button
-                                className="btn border-0 ms-auto"
+                                className="btn border-0 p-3"
                                 type="button"
-                                style={{ padding: "12px", gap: "10px" }}
                                 onClick={() => setShowAddRecipientForm(true)}
                             >
-                                <span className="text-p-16-b" style={{color: "#493B3F"}}><Plus size={24} /></span>
+                                <Plus size={24} strokeWidth={2.5} className="text-secondary-700" />
                             </button>
                         </div>
                         {/* 這裡可放常用收件人列表與選擇按鈕 */}
@@ -1049,7 +1046,7 @@ function Cart() {
                             commonRecipients.map(recipient => (
                                 <div key={recipient.id} className="form-check d-flex align-items-center mb-3">
                                     <input
-                                        className="form-check-input"
+                                        className="form-check-input me-2"
                                         type="radio"
                                         name="commonRecipient"
                                         id={`recipient-${recipient.id}`}
