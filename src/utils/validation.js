@@ -6,7 +6,7 @@ export const emailValidation = {
   },
 };
 
-const phonePattern = /^[0-9]{10}$/;
+export const phonePattern = /^[0-9]{10}$/;
 export const twPhoneValidation = {
   required: "請輸入手機號碼",
   pattern: {

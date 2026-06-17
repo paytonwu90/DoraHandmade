@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { Minus, Plus, Trash2, TriangleAlert, X } from "lucide-react";
 import { currency } from "../../utils/filter";
 import * as bootstrap from "bootstrap";
-import { emailValidation, twPhoneValidation } from "../../utils/validation";
+import { emailValidation, twPhoneValidation, phonePattern } from "../../utils/validation";
 const VITE_API_BASE = import.meta.env.VITE_API_BASE;
 const VITE_API_PATH = import.meta.env.VITE_API_PATH;
 
@@ -327,6 +327,7 @@ function Cart() {
     };
 
     const [showAddRecipientForm, setShowAddRecipientForm] = useState(false);
+    const [addRecipientTelError, setAddRecipientTelError] = useState("");
 
     const deleteCommonRecipient = (id) => {
         setCommonRecipients(prev => prev.filter(recipient => recipient.id !== id));
@@ -978,20 +979,25 @@ function Cart() {
                                         <input
                                         type="text"
                                         name="tel"
-                                        className="form-control"
+                                        className={`form-control${addRecipientTelError ? " is-invalid" : ""}`}
                                         value={recipientInfo.tel || ""}
-                                        onChange={updateRecipientData}
+                                        // 輸入時清除錯誤，避免打字途中一直顯示紅字；格式驗證留到按下「新增」才觸發
+                                        onChange={(e) => { updateRecipientData(e); setAddRecipientTelError(""); }}
                                         placeholder="收件人電話"
                                         />
+                                        {addRecipientTelError && <div className="invalid-feedback">{addRecipientTelError}</div>}
                                     </div>
                                     </div>
                                     <button
                                         type="button"
                                         className="btn btn-secondary mt-2 w-100"
                                         onClick={() => {
-                                            if (recipientInfo.name && recipientInfo.tel) {
-                                        setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
-                                    }
+                                            if (!recipientInfo.name || !phonePattern.test(recipientInfo.tel)) {
+                                                setAddRecipientTelError(twPhoneValidation.pattern.message);
+                                                return;
+                                            }
+                                            setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
+                                            setAddRecipientTelError("");
                                         }}
                                     >新增常用收件人</button>
                                 </div>
@@ -1070,20 +1076,25 @@ function Cart() {
                                     <input
                                     type="text"
                                     name="tel"
-                                    className="form-control"
+                                    className={`form-control${addRecipientTelError ? " is-invalid" : ""}`}
                                     value={recipientInfo.tel || ""}
-                                    onChange={updateRecipientData}
+                                    // 輸入時清除錯誤，避免打字途中一直顯示紅字；格式驗證留到按下「新增」才觸發
+                                    onChange={(e) => { updateRecipientData(e); setAddRecipientTelError(""); }}
                                     placeholder="收件人電話"
                                     />
+                                    {addRecipientTelError && <div className="invalid-feedback">{addRecipientTelError}</div>}
                                 </div>
                             </div>
                             <button
                                 type="button"
                                 className="btn btn-secondary mt-2 w-100"
                                 onClick={() => {
-                                    if (recipientInfo.name && recipientInfo.tel) {
-                                setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
-                            }
+                                    if (!recipientInfo.name || !phonePattern.test(recipientInfo.tel)) {
+                                        setAddRecipientTelError(twPhoneValidation.pattern.message);
+                                        return;
+                                    }
+                                    setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
+                                    setAddRecipientTelError("");
                                 }}
                             >新增常用收件人</button>
                         </div>
