@@ -327,7 +327,9 @@ function Cart() {
     };
 
     const [showAddRecipientForm, setShowAddRecipientForm] = useState(false);
+    const [addRecipientNameError, setAddRecipientNameError] = useState("");
     const [addRecipientTelError, setAddRecipientTelError] = useState("");
+    const [addRecipientAddressError, setAddRecipientAddressError] = useState("");
 
     const deleteCommonRecipient = (id) => {
         setCommonRecipients(prev => prev.filter(recipient => recipient.id !== id));
@@ -969,11 +971,12 @@ function Cart() {
                                         <input
                                         type="text"
                                         name="name"
-                                        className="form-control"
+                                        className={`form-control${addRecipientNameError ? " is-invalid" : ""}`}
                                         value={recipientInfo.name || ""}
-                                        onChange={updateRecipientData}
+                                        onChange={(e) => { updateRecipientData(e); setAddRecipientNameError(""); }}
                                         placeholder="收件人姓名"
                                         />
+                                        {addRecipientNameError && <div className="invalid-feedback">{addRecipientNameError}</div>}
                                     </div>
                                     <div className="col-6">
                                         <label className="fw-bold mb-1">聯絡電話</label>
@@ -989,16 +992,33 @@ function Cart() {
                                         {addRecipientTelError && <div className="invalid-feedback">{addRecipientTelError}</div>}
                                     </div>
                                     </div>
+                                    <div className="mt-2">
+                                        <label className="fw-bold mb-1">收件地址</label>
+                                        <input
+                                        type="text"
+                                        name="address"
+                                        className={`form-control${addRecipientAddressError ? " is-invalid" : ""}`}
+                                        value={recipientInfo.address || ""}
+                                        onChange={(e) => { updateRecipientData(e); setAddRecipientAddressError(""); }}
+                                        placeholder="收件人地址"
+                                        />
+                                        {addRecipientAddressError && <div className="invalid-feedback">{addRecipientAddressError}</div>}
+                                    </div>
                                     <button
                                         type="button"
                                         className="btn btn-secondary mt-2 w-100"
                                         onClick={() => {
-                                            if (!recipientInfo.name || !phonePattern.test(recipientInfo.tel)) {
-                                                setAddRecipientTelError(twPhoneValidation.pattern.message);
-                                                return;
-                                            }
+                                            const nameInvalid = !recipientInfo.name;
+                                            const telInvalid = !phonePattern.test(recipientInfo.tel);
+                                            const addressInvalid = !recipientInfo.address;
+                                            if (nameInvalid) setAddRecipientNameError("請輸入收件人姓名");
+                                            if (telInvalid) setAddRecipientTelError(twPhoneValidation.pattern.message);
+                                            if (addressInvalid) setAddRecipientAddressError("請輸入收件地址");
+                                            if (nameInvalid || telInvalid || addressInvalid) return;
                                             setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
+                                            setAddRecipientNameError("");
                                             setAddRecipientTelError("");
+                                            setAddRecipientAddressError("");
                                         }}
                                     >新增常用收件人</button>
                                 </div>
@@ -1066,11 +1086,12 @@ function Cart() {
                                     <input
                                     type="text"
                                     name="name"
-                                    className="form-control"
+                                    className={`form-control${addRecipientNameError ? " is-invalid" : ""}`}
                                     value={recipientInfo.name || ""}
-                                    onChange={updateRecipientData}
+                                    onChange={(e) => { updateRecipientData(e); setAddRecipientNameError(""); }}
                                     placeholder="收件人姓名"
                                     />
+                                    {addRecipientNameError && <div className="invalid-feedback">{addRecipientNameError}</div>}
                                 </div>
                                 <div className="col-6">
                                     <label className="fw-bold mb-1">聯絡電話</label>
@@ -1086,16 +1107,33 @@ function Cart() {
                                     {addRecipientTelError && <div className="invalid-feedback">{addRecipientTelError}</div>}
                                 </div>
                             </div>
+                            <div className="mt-2">
+                                <label className="fw-bold mb-1">收件地址</label>
+                                <input
+                                type="text"
+                                name="address"
+                                className={`form-control${addRecipientAddressError ? " is-invalid" : ""}`}
+                                value={recipientInfo.address || ""}
+                                onChange={(e) => { updateRecipientData(e); setAddRecipientAddressError(""); }}
+                                placeholder="收件人地址"
+                                />
+                                {addRecipientAddressError && <div className="invalid-feedback">{addRecipientAddressError}</div>}
+                            </div>
                             <button
                                 type="button"
                                 className="btn btn-secondary mt-2 w-100"
                                 onClick={() => {
-                                    if (!recipientInfo.name || !phonePattern.test(recipientInfo.tel)) {
-                                        setAddRecipientTelError(twPhoneValidation.pattern.message);
-                                        return;
-                                    }
+                                    const nameInvalid = !recipientInfo.name;
+                                    const telInvalid = !phonePattern.test(recipientInfo.tel);
+                                    const addressInvalid = !recipientInfo.address;
+                                    if (nameInvalid) setAddRecipientNameError("請輸入收件人姓名");
+                                    if (telInvalid) setAddRecipientTelError(twPhoneValidation.pattern.message);
+                                    if (addressInvalid) setAddRecipientAddressError("請輸入收件地址");
+                                    if (nameInvalid || telInvalid || addressInvalid) return;
                                     setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
+                                    setAddRecipientNameError("");
                                     setAddRecipientTelError("");
+                                    setAddRecipientAddressError("");
                                 }}
                             >新增常用收件人</button>
                         </div>
