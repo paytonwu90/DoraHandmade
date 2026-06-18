@@ -402,21 +402,7 @@ function Cart() {
     const recipientOffcanvasRef = useRef(null);
     const toastRef = useRef(null);
     const [ orderId, setOrderId ] = useState(null);
-    // 開啟收件人選單
-    const openRecipientSelector = () => {
-    if (window.innerWidth < 768) {
-        if (!recipientOffcanvasRef.current) {
-        recipientOffcanvasRef.current = new bootstrap.Offcanvas('#recipientOffcanvas');
-        }
-        recipientOffcanvasRef.current.show();
-    } else {
-        if (!recipientModalRef.current) {
-        recipientModalRef.current = new bootstrap.Modal('#recipientModal', { keyboard: false });
-        }
-        recipientModalRef.current.show();
-    }
-    };
-
+    
     const showToast = () => {
     const toast = new bootstrap.Toast(toastRef.current);
     toast.show();
@@ -606,6 +592,7 @@ function Cart() {
         recipientModalRef.current = new bootstrap.Modal('#recipientModal', {
             keyboard: false
         });
+        recipientOffcanvasRef.current = new bootstrap.Offcanvas('#recipientOffcanvas');
 
         // Modal 關閉時移除焦點
         document
@@ -1003,13 +990,20 @@ function Cart() {
                         />
                         <label htmlFor="otherRecipient" className="form-check-label text-p-16-b">指定其他收件人</label>
                         {/* 新增選擇常用收件人按鈕，按鈕在最右邊 */}
-                        {!isSameAsBuyer && (
+                        {!isSameAsBuyer && (<>
+                            {/* 電腦版（≥768px）：開啟 Modal */}
                             <button
-                                className="btn btn-underline ms-auto"
+                                className="btn btn-underline ms-auto d-none d-md-block"
                                 type="button"
-                                onClick={openRecipientSelector}
+                                onClick={() => recipientModalRef.current?.show()}
                             >選擇常用收件人</button>
-                        )}
+                            {/* 手機版（<768px）：開啟 Offcanvas */}
+                            <button
+                                className="btn btn-underline ms-auto d-md-none"
+                                type="button"
+                                onClick={() => recipientOffcanvasRef.current?.show()}
+                            >選擇常用收件人</button>
+                        </>)}
                     </div>
                     {!isSameAsBuyer && (
                         <div className="rounded-4 p-5 mt-4 mb-8 bg-gray-100">
