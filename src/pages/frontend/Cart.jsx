@@ -603,6 +603,17 @@ function Cart() {
         }
         });
 
+        // Modal/Offcanvas 完全關閉後重設新增表單狀態（含 backdrop 點擊）
+        const resetAddForm = () => {
+            setShowAddRecipientForm(false);
+            setAddRecipientDraft({ name: "", tel: "", address: "" });
+            setAddRecipientNameError("");
+            setAddRecipientTelError("");
+            setAddRecipientAddressError("");
+        };
+        document.querySelector("#recipientModal").addEventListener("hidden.bs.modal", resetAddForm);
+        document.querySelector("#recipientOffcanvas").addEventListener("hidden.bs.offcanvas", resetAddForm);
+
     const fetchCartData = async () => {
         setIsLoading(true);
         try {
