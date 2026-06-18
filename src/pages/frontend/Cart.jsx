@@ -251,7 +251,7 @@ function Cart() {
     // 收件人選擇
     const [isSameAsBuyer, setIsSameAsBuyer] = useState(true);
     // 其他收件人資訊
-    const [recipientInfo, setRecipientInfo] = useState({
+    const [addRecipientDraft, setAddRecipientDraft] = useState({
         name: "",
         tel: "",
         address: ""
@@ -281,7 +281,7 @@ function Cart() {
     // 更新指定收件人資訊
     const updateRecipientData = (e) => {
         const { name, value } = e.target;
-        setRecipientInfo(prev => ({ ...prev, [name]: value }));
+        setAddRecipientDraft(prev => ({ ...prev, [name]: value }));
     };
 
     // Modal/Offcanvas ref
@@ -316,11 +316,6 @@ function Cart() {
     };
 
     const handleSelectCommonRecipient = (recipient) => {
-        setRecipientInfo({
-            name: recipient.name,
-            tel: recipient.tel,
-            address: recipient.address
-        });
         setValue("recipientName", recipient.name, { shouldValidate: true });
         setValue("recipientTel", recipient.tel, { shouldValidate: true });
         setValue("recipientAddress", recipient.address, { shouldValidate: true });
@@ -458,7 +453,7 @@ function Cart() {
             const responses2 = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
             setCartData(responses2.data.data.carts || []);
             reset();
-            setRecipientInfo({ name: "", tel: "", email: "", address: "" })
+            setAddRecipientDraft({ name: "", tel: "", address: "" })
             showToast();
         } catch (error) {
             console.error("送出訂單失敗:", error);
@@ -934,7 +929,13 @@ function Cart() {
                                     <button
                                         className="btn btn-underline"
                                         type="button"
-                                        onClick={() => setShowAddRecipientForm(true)}
+                                        onClick={() => {
+                                            setShowAddRecipientForm(true);
+                                            setAddRecipientDraft({ name: "", tel: "", address: "" });
+                                            setAddRecipientNameError("");
+                                            setAddRecipientTelError("");
+                                            setAddRecipientAddressError("");
+                                        }}
                                     >新增常用收件人</button>
                                 </div>
                                 {/* 這裡可放常用收件人列表與選擇按鈕，若有資料才顯示 */}
@@ -972,7 +973,7 @@ function Cart() {
                                         type="text"
                                         name="name"
                                         className={`form-control${addRecipientNameError ? " is-invalid" : ""}`}
-                                        value={recipientInfo.name || ""}
+                                        value={addRecipientDraft.name || ""}
                                         onChange={(e) => { updateRecipientData(e); setAddRecipientNameError(""); }}
                                         placeholder="收件人姓名"
                                         />
@@ -984,7 +985,7 @@ function Cart() {
                                         type="text"
                                         name="tel"
                                         className={`form-control${addRecipientTelError ? " is-invalid" : ""}`}
-                                        value={recipientInfo.tel || ""}
+                                        value={addRecipientDraft.tel || ""}
                                         // 輸入時清除錯誤，避免打字途中一直顯示紅字；格式驗證留到按下「新增」才觸發
                                         onChange={(e) => { updateRecipientData(e); setAddRecipientTelError(""); }}
                                         placeholder="收件人電話"
@@ -998,7 +999,7 @@ function Cart() {
                                         type="text"
                                         name="address"
                                         className={`form-control${addRecipientAddressError ? " is-invalid" : ""}`}
-                                        value={recipientInfo.address || ""}
+                                        value={addRecipientDraft.address || ""}
                                         onChange={(e) => { updateRecipientData(e); setAddRecipientAddressError(""); }}
                                         placeholder="收件人地址"
                                         />
@@ -1008,14 +1009,14 @@ function Cart() {
                                         type="button"
                                         className="btn btn-secondary mt-2 w-100"
                                         onClick={() => {
-                                            const nameInvalid = !recipientInfo.name;
-                                            const telInvalid = !phonePattern.test(recipientInfo.tel);
-                                            const addressInvalid = !recipientInfo.address;
+                                            const nameInvalid = !addRecipientDraft.name;
+                                            const telInvalid = !phonePattern.test(addRecipientDraft.tel);
+                                            const addressInvalid = !addRecipientDraft.address;
                                             if (nameInvalid) setAddRecipientNameError("請輸入收件人姓名");
                                             if (telInvalid) setAddRecipientTelError(twPhoneValidation.pattern.message);
                                             if (addressInvalid) setAddRecipientAddressError("請輸入收件地址");
                                             if (nameInvalid || telInvalid || addressInvalid) return;
-                                            setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
+                                            setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...addRecipientDraft }]);
                                             setAddRecipientNameError("");
                                             setAddRecipientTelError("");
                                             setAddRecipientAddressError("");
@@ -1047,7 +1048,13 @@ function Cart() {
                             <button
                                 className="btn border-0 p-3"
                                 type="button"
-                                onClick={() => setShowAddRecipientForm(true)}
+                                onClick={() => {
+                                    setShowAddRecipientForm(true);
+                                    setAddRecipientDraft({ name: "", tel: "", address: "" });
+                                    setAddRecipientNameError("");
+                                    setAddRecipientTelError("");
+                                    setAddRecipientAddressError("");
+                                }}
                             >
                                 <Plus size={24} strokeWidth={2.5} className="text-secondary-700" />
                             </button>
@@ -1087,7 +1094,7 @@ function Cart() {
                                     type="text"
                                     name="name"
                                     className={`form-control${addRecipientNameError ? " is-invalid" : ""}`}
-                                    value={recipientInfo.name || ""}
+                                    value={addRecipientDraft.name || ""}
                                     onChange={(e) => { updateRecipientData(e); setAddRecipientNameError(""); }}
                                     placeholder="收件人姓名"
                                     />
@@ -1099,7 +1106,7 @@ function Cart() {
                                     type="text"
                                     name="tel"
                                     className={`form-control${addRecipientTelError ? " is-invalid" : ""}`}
-                                    value={recipientInfo.tel || ""}
+                                    value={addRecipientDraft.tel || ""}
                                     // 輸入時清除錯誤，避免打字途中一直顯示紅字；格式驗證留到按下「新增」才觸發
                                     onChange={(e) => { updateRecipientData(e); setAddRecipientTelError(""); }}
                                     placeholder="收件人電話"
@@ -1113,7 +1120,7 @@ function Cart() {
                                 type="text"
                                 name="address"
                                 className={`form-control${addRecipientAddressError ? " is-invalid" : ""}`}
-                                value={recipientInfo.address || ""}
+                                value={addRecipientDraft.address || ""}
                                 onChange={(e) => { updateRecipientData(e); setAddRecipientAddressError(""); }}
                                 placeholder="收件人地址"
                                 />
@@ -1123,14 +1130,14 @@ function Cart() {
                                 type="button"
                                 className="btn btn-secondary mt-2 w-100"
                                 onClick={() => {
-                                    const nameInvalid = !recipientInfo.name;
-                                    const telInvalid = !phonePattern.test(recipientInfo.tel);
-                                    const addressInvalid = !recipientInfo.address;
+                                    const nameInvalid = !addRecipientDraft.name;
+                                    const telInvalid = !phonePattern.test(addRecipientDraft.tel);
+                                    const addressInvalid = !addRecipientDraft.address;
                                     if (nameInvalid) setAddRecipientNameError("請輸入收件人姓名");
                                     if (telInvalid) setAddRecipientTelError(twPhoneValidation.pattern.message);
                                     if (addressInvalid) setAddRecipientAddressError("請輸入收件地址");
                                     if (nameInvalid || telInvalid || addressInvalid) return;
-                                    setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...recipientInfo }]);
+                                    setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...addRecipientDraft }]);
                                     setAddRecipientNameError("");
                                     setAddRecipientTelError("");
                                     setAddRecipientAddressError("");
