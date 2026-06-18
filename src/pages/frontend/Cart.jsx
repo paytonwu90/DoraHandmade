@@ -4,7 +4,7 @@ import Loading from "@components/Loading";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
-import { Minus, Plus, Trash2, TriangleAlert, X } from "lucide-react";
+import { Minus, Plus, TriangleAlert, X } from "lucide-react";
 import { currency } from "../../utils/filter";
 import * as bootstrap from "bootstrap";
 import { emailValidation, twPhoneValidation, phonePattern } from "../../utils/validation";
