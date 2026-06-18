@@ -587,7 +587,7 @@ function Cart() {
 
 
 
-    // API 取得購物車資料顯示在此
+    // Bootstrap 收件人選擇器初始化
     useEffect(() => {
         recipientModalRef.current = new bootstrap.Modal('#recipientModal', {
             keyboard: false
@@ -613,20 +613,23 @@ function Cart() {
         };
         document.querySelector("#recipientModal").addEventListener("hidden.bs.modal", resetAddForm);
         document.querySelector("#recipientOffcanvas").addEventListener("hidden.bs.offcanvas", resetAddForm);
+    }, []);
 
-    const fetchCartData = async () => {
-        setIsLoading(true);
-        try {
-            const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-            setCartData(response.data.data.carts);
-        } catch (error) {
-            setCartError("購物車資料載入失敗，請稍後再試", error);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-    fetchCartData();
-  }, []);
+    // API 取得購物車資料
+    useEffect(() => {
+        const fetchCartData = async () => {
+            setIsLoading(true);
+            try {
+                const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
+                setCartData(response.data.data.carts);
+            } catch (error) {
+                setCartError("購物車資料載入失敗，請稍後再試", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchCartData();
+    }, []);
   return (
     <>
     <div className="container" style={{ position: "relative", minHeight: 300 }}>
