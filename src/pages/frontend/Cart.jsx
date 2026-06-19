@@ -61,10 +61,10 @@ function RecipientSelectorContent({
                             className="form-check-input me-2"
                             type="radio"
                             name="commonRecipient"
-                            id={`recipient-${recipient.id}`}
+                            id={`${variant}-recipient-${recipient.id}`}
                             onChange={() => onPendingRecipient(recipient)}
                         />
-                        <label className="form-check-label me-2" htmlFor={`recipient-${recipient.id}`}>
+                        <label className="form-check-label me-2" htmlFor={`${variant}-recipient-${recipient.id}`}>
                             {recipient.name} {recipient.tel}
                         </label>
                         <button
