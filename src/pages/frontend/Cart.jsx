@@ -33,7 +33,6 @@ function RecipientSelectorContent({
     onDraftNameChange,
     onDraftTelChange,
     onDraftAddressChange,
-    onAddRecipient,
 }) {
     const isModal = variant === "modal";
     return (
@@ -81,35 +80,33 @@ function RecipientSelectorContent({
                 <p>尚無常用收件人</p>
             )}
             {showAddRecipientForm && (
-                <div className="rounded-4 p-5 mt-4 mb-8 bg-gray-100">
-                    <div className="row mb-2">
-                        <div className="col-6">
-                            <label className="fw-bold mb-1">收件人</label>
-                            <input
-                                type="text"
-                                name="name"
-                                className={`form-control${addRecipientNameError ? " is-invalid" : ""}`}
-                                value={addRecipientDraft.name || ""}
-                                onChange={onDraftNameChange}
-                                placeholder="收件人姓名"
-                            />
-                            {addRecipientNameError && <div className="invalid-feedback">{addRecipientNameError}</div>}
-                        </div>
-                        <div className="col-6">
-                            <label className="fw-bold mb-1">聯絡電話</label>
-                            <input
-                                type="text"
-                                name="tel"
-                                className={`form-control${addRecipientTelError ? " is-invalid" : ""}`}
-                                value={addRecipientDraft.tel || ""}
-                                // 輸入時清除錯誤，避免打字途中一直顯示紅字；格式驗證留到按下「新增」才觸發
-                                onChange={onDraftTelChange}
-                                placeholder="收件人電話"
-                            />
-                            {addRecipientTelError && <div className="invalid-feedback">{addRecipientTelError}</div>}
-                        </div>
+                <div className="rounded-4 p-5 mt-4 mb-8 mb-lg-0 bg-gray-100">
+                    <div className="mb-3 mb-lg-6">
+                        <label className="fw-bold mb-1">收件人</label>
+                        <input
+                            type="text"
+                            name="name"
+                            className={`form-control${addRecipientNameError ? " is-invalid" : ""}`}
+                            value={addRecipientDraft.name || ""}
+                            onChange={onDraftNameChange}
+                            placeholder="請輸入收件人姓名"
+                        />
+                        {addRecipientNameError && <div className="invalid-feedback">{addRecipientNameError}</div>}
                     </div>
-                    <div className="mt-2">
+                    <div className="mb-3 mb-lg-6">
+                        <label className="fw-bold mb-1">手機號碼</label>
+                        <input
+                            type="text"
+                            name="tel"
+                            className={`form-control${addRecipientTelError ? " is-invalid" : ""}`}
+                            value={addRecipientDraft.tel || ""}
+                            // 輸入時清除錯誤，避免打字途中一直顯示紅字；格式驗證留到按「確定」才觸發
+                            onChange={onDraftTelChange}
+                            placeholder="請輸入手機號碼"
+                        />
+                        {addRecipientTelError && <div className="invalid-feedback">{addRecipientTelError}</div>}
+                    </div>
+                    <div className="mb-3 mb-lg-6">
                         <label className="fw-bold mb-1">收件地址</label>
                         <input
                             type="text"
@@ -117,15 +114,11 @@ function RecipientSelectorContent({
                             className={`form-control${addRecipientAddressError ? " is-invalid" : ""}`}
                             value={addRecipientDraft.address || ""}
                             onChange={onDraftAddressChange}
-                            placeholder="收件人地址"
+                            placeholder="請輸入收件地址"
                         />
                         {addRecipientAddressError && <div className="invalid-feedback">{addRecipientAddressError}</div>}
                     </div>
-                    <button
-                        type="button"
-                        className="btn btn-secondary mt-2 w-100"
-                        onClick={onAddRecipient}
-                    >新增常用收件人</button>
+                    <p className="text-muted small mb-0">確認後，會將此資料新增至常用收件人</p>
                 </div>
             )}
         </>
@@ -442,11 +435,14 @@ function Cart() {
         if (nameInvalid) setAddRecipientNameError("請輸入收件人姓名");
         if (telInvalid) setAddRecipientTelError(twPhoneValidation.pattern.message);
         if (addressInvalid) setAddRecipientAddressError("請輸入收件地址");
-        if (nameInvalid || telInvalid || addressInvalid) return;
-        setCommonRecipients(prev => [...prev, { id: prev.length + 1, ...addRecipientDraft }]);
+        if (nameInvalid || telInvalid || addressInvalid) return false;
+        const newRecipient = { id: commonRecipients.length + 1, ...addRecipientDraft };
+        setCommonRecipients(prev => [...prev, newRecipient]);
+        applyRecipientToForm(newRecipient);
         setAddRecipientNameError("");
         setAddRecipientTelError("");
         setAddRecipientAddressError("");
+        return true;
     };
 
     const handleDraftNameChange = (e) => { updateRecipientData(e); setAddRecipientNameError(""); };
@@ -1086,7 +1082,6 @@ function Cart() {
                                     onDraftNameChange={handleDraftNameChange}
                                     onDraftTelChange={handleDraftTelChange}
                                     onDraftAddressChange={handleDraftAddressChange}
-                                    onAddRecipient={handleAddRecipient}
                                 />
                             </div>
                             <div className="d-flex flex-row gap-2 p-10 pt-0">
@@ -1095,7 +1090,11 @@ function Cart() {
                                     type="button"
                                     className="btn btn-dora flex-fill"
                                     onClick={() => {
-                                        if (pendingRecipient) applyRecipientToForm(pendingRecipient);
+                                        if (showAddRecipientForm) {
+                                            if (!handleAddRecipient()) return;
+                                        } else if (pendingRecipient) {
+                                            applyRecipientToForm(pendingRecipient);
+                                        }
                                         setShowAddRecipientForm(false);
                                         closeRecipientModal();
                                     }}
@@ -1123,13 +1122,16 @@ function Cart() {
                             onDraftNameChange={handleDraftNameChange}
                             onDraftTelChange={handleDraftTelChange}
                             onDraftAddressChange={handleDraftAddressChange}
-                            onAddRecipient={handleAddRecipient}
                         />
                     </div>
                     <div className="offcanvas-footer d-flex justify-content-between p-3">
                         <button type="button" className="btn btn-dora-outline w-50 me-2" onClick={closeRecipientOffcanvas}>取消</button>
                         <button type="button" className="btn btn-dora w-50" onClick={() => {
-                            if (pendingRecipient) applyRecipientToForm(pendingRecipient);
+                            if (showAddRecipientForm) {
+                                if (!handleAddRecipient()) return;
+                            } else if (pendingRecipient) {
+                                applyRecipientToForm(pendingRecipient);
+                            }
                             setShowAddRecipientForm(false);
                             closeRecipientOffcanvas();
                         }}>確定</button>
