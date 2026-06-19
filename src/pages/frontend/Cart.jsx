@@ -28,7 +28,7 @@ function RecipientSelectorContent({
     addRecipientTelError,
     addRecipientAddressError,
     onOpenAddForm,
-    onSelectRecipient,
+    onPendingRecipient,
     onDeleteRecipient,
     onDraftNameChange,
     onDraftTelChange,
@@ -63,7 +63,7 @@ function RecipientSelectorContent({
                             type="radio"
                             name="commonRecipient"
                             id={`recipient-${recipient.id}`}
-                            onChange={() => onSelectRecipient(recipient)}
+                            onChange={() => onPendingRecipient(recipient)}
                         />
                         <label className="form-check-label me-2" htmlFor={`recipient-${recipient.id}`}>
                             {recipient.name} {recipient.tel}
@@ -414,7 +414,7 @@ function Cart() {
         if (recipientOffcanvasRef.current) recipientOffcanvasRef.current.hide();
     };
 
-    const handleSelectCommonRecipient = (recipient) => {
+    const applyRecipientToForm = (recipient) => {
         setValue("recipientName", recipient.name, { shouldValidate: true });
         setValue("recipientTel", recipient.tel, { shouldValidate: true });
         setValue("recipientAddress", recipient.address, { shouldValidate: true });
@@ -424,6 +424,8 @@ function Cart() {
     const [addRecipientNameError, setAddRecipientNameError] = useState("");
     const [addRecipientTelError, setAddRecipientTelError] = useState("");
     const [addRecipientAddressError, setAddRecipientAddressError] = useState("");
+    // Radio 選取後暫存，按「確定」才透過 applyRecipientToForm 寫入主表單
+    const [pendingRecipient, setPendingRecipient] = useState(null);
 
     const handleOpenAddForm = () => {
         setShowAddRecipientForm(true);
@@ -610,6 +612,7 @@ function Cart() {
             setAddRecipientNameError("");
             setAddRecipientTelError("");
             setAddRecipientAddressError("");
+            setPendingRecipient(null);
         };
         document.querySelector("#recipientModal").addEventListener("hidden.bs.modal", resetAddForm);
         document.querySelector("#recipientOffcanvas").addEventListener("hidden.bs.offcanvas", resetAddForm);
@@ -952,7 +955,6 @@ function Cart() {
                     {...register("email", {
                         ...emailValidation, required: "請輸入 Email"
                     })}
-                    //onChange={updateBuyerData}
                 />
                 {errors.email && <p className="text-danger">{errors.email.message}</p>}
                 </div>
@@ -1003,7 +1005,6 @@ function Cart() {
                             onChange={() => setIsSameAsBuyer(false)}
                         />
                         <label htmlFor="otherRecipient" className="form-check-label text-p-16-b">指定其他收件人</label>
-                        {/* 新增選擇常用收件人按鈕，按鈕在最右邊 */}
                         {!isSameAsBuyer && (<>
                             {/* 電腦版（≥768px）：開啟 Modal */}
                             <button
@@ -1080,7 +1081,7 @@ function Cart() {
                                     addRecipientTelError={addRecipientTelError}
                                     addRecipientAddressError={addRecipientAddressError}
                                     onOpenAddForm={handleOpenAddForm}
-                                    onSelectRecipient={handleSelectCommonRecipient}
+                                    onPendingRecipient={setPendingRecipient}
                                     onDeleteRecipient={deleteCommonRecipient}
                                     onDraftNameChange={handleDraftNameChange}
                                     onDraftTelChange={handleDraftTelChange}
@@ -1094,8 +1095,10 @@ function Cart() {
                                     type="button"
                                     className="btn btn-dora flex-fill"
                                     onClick={() => {
+                                        if (pendingRecipient) applyRecipientToForm(pendingRecipient);
                                         setShowAddRecipientForm(false);
-                                        closeRecipientModal(); closeRecipientOffcanvas();}}
+                                        closeRecipientModal();
+                                    }}
                                 >
                                     確定
                                 </button>
@@ -1115,7 +1118,7 @@ function Cart() {
                             addRecipientTelError={addRecipientTelError}
                             addRecipientAddressError={addRecipientAddressError}
                             onOpenAddForm={handleOpenAddForm}
-                            onSelectRecipient={handleSelectCommonRecipient}
+                            onPendingRecipient={setPendingRecipient}
                             onDeleteRecipient={deleteCommonRecipient}
                             onDraftNameChange={handleDraftNameChange}
                             onDraftTelChange={handleDraftTelChange}
@@ -1126,8 +1129,10 @@ function Cart() {
                     <div className="offcanvas-footer d-flex justify-content-between p-3">
                         <button type="button" className="btn btn-dora-outline w-50 me-2" onClick={closeRecipientOffcanvas}>取消</button>
                         <button type="button" className="btn btn-dora w-50" onClick={() => {
+                            if (pendingRecipient) applyRecipientToForm(pendingRecipient);
                             setShowAddRecipientForm(false);
-                            closeRecipientModal(); closeRecipientOffcanvas();}}>確定</button>
+                            closeRecipientOffcanvas();
+                        }}>確定</button>
                     </div>
                 </div>
                 <hr className="border text-gray-100 mb-6 mb-md-8" />
