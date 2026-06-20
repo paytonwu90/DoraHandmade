@@ -597,9 +597,7 @@ function Cart() {
 
     // Bootstrap 收件人選擇器初始化
     useEffect(() => {
-        recipientModalRef.current = new bootstrap.Modal('#recipientModal', {
-            keyboard: false
-        });
+        recipientModalRef.current = new bootstrap.Modal('#recipientModal');
         recipientOffcanvasRef.current = new bootstrap.Offcanvas('#recipientOffcanvas');
 
         // Modal 關閉時移除焦點
