@@ -27,6 +27,7 @@ function RecipientSelectorContent({
     addRecipientNameError,
     addRecipientTelError,
     addRecipientAddressError,
+    selectedRecipientId,
     onOpenAddForm,
     onPendingRecipient,
     onDeleteRecipient,
@@ -60,8 +61,9 @@ function RecipientSelectorContent({
                         <input
                             className="form-check-input me-2"
                             type="radio"
-                            name="commonRecipient"
+                            name={`${variant}-commonRecipient`}
                             id={`${variant}-recipient-${recipient.id}`}
+                            checked={selectedRecipientId === recipient.id}
                             onChange={() => onPendingRecipient(recipient)}
                         />
                         <label className="form-check-label me-2" htmlFor={`${variant}-recipient-${recipient.id}`}>
@@ -426,6 +428,12 @@ function Cart() {
         setAddRecipientNameError("");
         setAddRecipientTelError("");
         setAddRecipientAddressError("");
+        setPendingRecipient(null);
+    };
+
+    const handlePendingRecipient = (recipient) => {
+        setPendingRecipient(recipient);
+        setShowAddRecipientForm(false);
     };
 
     const handleAddRecipient = () => {
@@ -1072,12 +1080,13 @@ function Cart() {
                                     variant="modal"
                                     commonRecipients={commonRecipients}
                                     showAddRecipientForm={showAddRecipientForm}
+                                    selectedRecipientId={pendingRecipient?.id ?? null}
                                     addRecipientDraft={addRecipientDraft}
                                     addRecipientNameError={addRecipientNameError}
                                     addRecipientTelError={addRecipientTelError}
                                     addRecipientAddressError={addRecipientAddressError}
                                     onOpenAddForm={handleOpenAddForm}
-                                    onPendingRecipient={setPendingRecipient}
+                                    onPendingRecipient={handlePendingRecipient}
                                     onDeleteRecipient={deleteCommonRecipient}
                                     onDraftNameChange={handleDraftNameChange}
                                     onDraftTelChange={handleDraftTelChange}
@@ -1112,6 +1121,7 @@ function Cart() {
                             variant="offcanvas"
                             commonRecipients={commonRecipients}
                             showAddRecipientForm={showAddRecipientForm}
+                            selectedRecipientId={pendingRecipient?.id ?? null}
                             addRecipientDraft={addRecipientDraft}
                             addRecipientNameError={addRecipientNameError}
                             addRecipientTelError={addRecipientTelError}
