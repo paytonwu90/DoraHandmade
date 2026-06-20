@@ -421,6 +421,8 @@ function Cart() {
     const [addRecipientAddressError, setAddRecipientAddressError] = useState("");
     // Radio 選取後暫存，按「確定」才透過 applyRecipientToForm 寫入主表單
     const [pendingRecipient, setPendingRecipient] = useState(null);
+    // 上次按「確定」確認的收件人 id，重開 Modal/Offcanvas 時用於恢復選取狀態
+    const [confirmedRecipientId, setConfirmedRecipientId] = useState(null);
 
     const handleOpenAddForm = () => {
         setShowAddRecipientForm(true);
@@ -443,14 +445,14 @@ function Cart() {
         if (nameInvalid) setAddRecipientNameError("請輸入收件人姓名");
         if (telInvalid) setAddRecipientTelError(twPhoneValidation.pattern.message);
         if (addressInvalid) setAddRecipientAddressError("請輸入收件地址");
-        if (nameInvalid || telInvalid || addressInvalid) return false;
+        if (nameInvalid || telInvalid || addressInvalid) return null;
         const newRecipient = { id: commonRecipients.length + 1, ...addRecipientDraft };
         setCommonRecipients(prev => [...prev, newRecipient]);
         applyRecipientToForm(newRecipient);
         setAddRecipientNameError("");
         setAddRecipientTelError("");
         setAddRecipientAddressError("");
-        return true;
+        return newRecipient;
     };
 
     const handleDraftNameChange = (e) => { updateRecipientData(e); setAddRecipientNameError(""); };
@@ -1080,7 +1082,7 @@ function Cart() {
                                     variant="modal"
                                     commonRecipients={commonRecipients}
                                     showAddRecipientForm={showAddRecipientForm}
-                                    selectedRecipientId={pendingRecipient?.id ?? null}
+                                    selectedRecipientId={pendingRecipient?.id ?? (showAddRecipientForm ? null : confirmedRecipientId)}
                                     addRecipientDraft={addRecipientDraft}
                                     addRecipientNameError={addRecipientNameError}
                                     addRecipientTelError={addRecipientTelError}
@@ -1100,9 +1102,12 @@ function Cart() {
                                     className="btn btn-dora flex-fill"
                                     onClick={() => {
                                         if (showAddRecipientForm) {
-                                            if (!handleAddRecipient()) return;
+                                            const saved = handleAddRecipient();
+                                            if (!saved) return;
+                                            setConfirmedRecipientId(saved.id);
                                         } else if (pendingRecipient) {
                                             applyRecipientToForm(pendingRecipient);
+                                            setConfirmedRecipientId(pendingRecipient.id);
                                         }
                                         setShowAddRecipientForm(false);
                                         closeRecipientModal();
@@ -1121,7 +1126,7 @@ function Cart() {
                             variant="offcanvas"
                             commonRecipients={commonRecipients}
                             showAddRecipientForm={showAddRecipientForm}
-                            selectedRecipientId={pendingRecipient?.id ?? null}
+                            selectedRecipientId={pendingRecipient?.id ?? (showAddRecipientForm ? null : confirmedRecipientId)}
                             addRecipientDraft={addRecipientDraft}
                             addRecipientNameError={addRecipientNameError}
                             addRecipientTelError={addRecipientTelError}
@@ -1138,9 +1143,12 @@ function Cart() {
                         <button type="button" className="btn btn-dora-outline w-50 me-2" onClick={closeRecipientOffcanvas}>取消</button>
                         <button type="button" className="btn btn-dora w-50" onClick={() => {
                             if (showAddRecipientForm) {
-                                if (!handleAddRecipient()) return;
+                                const saved = handleAddRecipient();
+                                if (!saved) return;
+                                setConfirmedRecipientId(saved.id);
                             } else if (pendingRecipient) {
                                 applyRecipientToForm(pendingRecipient);
+                                setConfirmedRecipientId(pendingRecipient.id);
                             }
                             setShowAddRecipientForm(false);
                             closeRecipientOffcanvas();
