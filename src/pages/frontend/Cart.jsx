@@ -1246,7 +1246,7 @@ function Cart() {
                     <div className="d-flex">
                         <div className="p-2 flex-grow-1">商品小計</div>
                         <div className="p-2">
-                            {currency(cartData.reduce((sum, item) => sum + item.total, 0))}
+                            {currency(subtotal)}
                         </div>
                     </div>
                     <div className="d-flex">
@@ -1262,7 +1262,7 @@ function Cart() {
                     <div className="d-flex">
                         <div className="p-2 flex-grow-1">結帳金額</div>
                         <div className="p-2">
-                            {cartData.reduce((sum, item) => sum + item.total, 0) === 0 ? 0 : currency(finalTotal !== null ? Math.floor(finalTotal) : subtotal)}
+                            {subtotal === 0 ? 0 : currency(finalTotal !== null ? Math.floor(finalTotal) : subtotal)}
                         </div>
                     </div>
                 </div>
