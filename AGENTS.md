@@ -14,9 +14,16 @@ npm run deploy     # 將 dist/ 部署至 GitHub Pages（gh-pages 分支）
 
 專案目前**未設定測試框架**。
 
+## Git 分支管理
+
+**開始改動前，確認目前所在分支。** 若目前在 `dev` 分支，評估這次異動是否應開新分支（功能開發、bug fix、重構等獨立工作通常都應開新分支）。
+
+- **若判斷應開新分支**：不得擅自建立，應告知使用者理由，交由使用者決定是否開分支、以及分支名稱。
+- **若使用者已明確表示不需要開分支**：直接在當前分支繼續作業。
+
 ## Playwright 驗證注意事項
 
-**Dev server**：使用者的 Dev Server 通常是常駐的，驗證前先確認哪個 port 已在運行（`netstat -ano | findstr LISTEN` 或檢查 5173/5174/5175），**不要重新執行 `npm run dev`**。
+**Dev server**：使用者的 Dev Server 通常是常駐的，**不要重新執行 `npm run dev`**。驗證前直接連 `http://localhost:5173`；若頁面無法載入或內容明顯不對，再執行 `netstat -ano | findstr LISTEN` 確認實際 port（5173／5174／5175）。
 
 **Playwright session 卡死**：若 Playwright 工具回傳 `Browser is already in use` 錯誤，**先提醒使用者關閉其他 session 開啟的 Playwright 瀏覽器視窗**，再重試，不要強制終止 Chrome 程序。
 
