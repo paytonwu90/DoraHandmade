@@ -19,6 +19,11 @@ const VITE_ECPAY_MAP_BASE    = import.meta.env.VITE_ECPAY_MAP_BASE;
 const VITE_ECPAY_REPLY_URL   = import.meta.env.VITE_ECPAY_REPLY_URL;
 const VITE_ECPAY_POLL_URL    = import.meta.env.VITE_ECPAY_POLL_URL;
 
+const availableCoupons = [
+    { name: "2026新春優惠", code: "newyear2026", discount: "9折" },
+    { name: "新會員折扣",   code: "newmember",   discount: "95折" },
+];
+
 function RecipientSelectorContent({
     variant,
     commonRecipients,
@@ -323,11 +328,6 @@ function Cart() {
     const [ couponStatus, setCouponStatus ] = useState({ message: "", type: "" });
     const [ showCouponList, setShowCouponList ] = useState(false);
 
-    // 優惠券列表（固定資料）
-    const availableCoupons = [
-        { name: "2026新春優惠", code: "newyear2026", discount: "9折" },
-        { name: "新會員折扣",   code: "newmember",   discount: "95折" },
-    ];
     // 折扣後的金額
     const [finalTotal, setFinalTotal] = useState(null);
     // useForm 表單驗證
