@@ -147,13 +147,6 @@ function Cart() {
     // 選擇的門市資訊
     const [selectedStore, setSelectedStore] = useState(null); // { name, id, type }
 
-    // 綠界超商地圖設定
-    // 綠界物流設定（從頂部 .env 變數讀入）
-    const ECPAY_MERCHANT_ID = VITE_ECPAY_MERCHANT_ID;
-    const ECPAY_HASH_KEY    = VITE_ECPAY_HASH_KEY;
-    const ECPAY_HASH_IV     = VITE_ECPAY_HASH_IV;
-    const ECPAY_MAP_BASE    = VITE_ECPAY_MAP_BASE;
-
     // 綠界 CheckMacValue 產生（依官方文件規格）
     const generateCheckMacValue = async (params) => {
         // Step 1：按 key 字母順序排序（case-insensitive）
@@ -163,7 +156,7 @@ function Cart() {
             .join("&");
 
         // Step 2：前後加上 HashKey / HashIV
-        const raw = `HashKey=${ECPAY_HASH_KEY}&${sorted}&HashIV=${ECPAY_HASH_IV}`;
+        const raw = `HashKey=${VITE_ECPAY_HASH_KEY}&${sorted}&HashIV=${VITE_ECPAY_HASH_IV}`;
 
         // Step 3：URLEncode 整個字串（.NET 風格）
         const urlEncoded = encodeURIComponent(raw)
@@ -207,7 +200,7 @@ function Cart() {
 
         // 組成要簽章的參數（不含 HashKey/HashIV）
         const params = {
-            MerchantID:       ECPAY_MERCHANT_ID,
+            MerchantID:       VITE_ECPAY_MERCHANT_ID,
             MerchantTradeNo:  tradeNo,
             LogisticsType:    "CVS",
             LogisticsSubType: subType,
@@ -229,7 +222,7 @@ function Cart() {
             // 開新分頁提交 POST
             const form = document.createElement("form");
             form.method  = "POST";
-            form.action  = ECPAY_MAP_BASE;
+            form.action  = VITE_ECPAY_MAP_BASE;
             form.target  = "_blank";
             form.enctype = "application/x-www-form-urlencoded";
 
@@ -306,7 +299,7 @@ function Cart() {
 
             const form = document.createElement("form");
             form.method  = "POST";
-            form.action  = ECPAY_MAP_BASE;
+            form.action  = VITE_ECPAY_MAP_BASE;
             form.target  = "cvsMap";
             form.enctype = "application/x-www-form-urlencoded";
 
