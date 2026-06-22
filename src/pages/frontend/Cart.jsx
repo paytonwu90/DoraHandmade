@@ -19,8 +19,9 @@ const VITE_ECPAY_MAP_BASE    = import.meta.env.VITE_ECPAY_MAP_BASE;
 const VITE_ECPAY_REPLY_URL   = import.meta.env.VITE_ECPAY_REPLY_URL;
 const VITE_ECPAY_POLL_URL    = import.meta.env.VITE_ECPAY_POLL_URL;
 
+// 六角學院未提供前台 GET coupon API，暫時寫死可用的優惠券清單
 const availableCoupons = [
-    { name: "2026新春優惠", code: "newyear2026", discount: "9折" },
+    { name: "618年中慶", code: "happy2026618", discount: "9折" },
     { name: "新會員折扣",   code: "newmember",   discount: "95折" },
 ];
 
