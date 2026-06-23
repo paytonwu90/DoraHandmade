@@ -330,7 +330,7 @@ function Cart() {
     const [ showCouponList, setShowCouponList ] = useState(false);
 
     // 折扣後的金額
-    const [finalTotal, setFinalTotal] = useState(null);
+    const [finalTotal, setFinalTotal] = useState(0);
     // useForm 表單驗證
     const {
         register,
@@ -471,6 +471,7 @@ function Cart() {
             // 重新取得購物車資料
             const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
             setCartData(response.data.data.carts ?? []);
+            setFinalTotal(response.data.data.final_total);
             setCartError("")
         } catch (error) {
             setCartError("數量更新失敗，請稍後再試", error);
@@ -506,6 +507,7 @@ function Cart() {
             // 重新取得購物車資料
             const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
             setCartData(response.data.data.carts ?? []);
+            setFinalTotal(response.data.data.final_total);
             setCartError("")
         } catch (error) {
             setCartError("刪除商品失敗，請稍後再試", error);
@@ -526,14 +528,14 @@ function Cart() {
                 }
             });
             setCouponStatus({ message: response.data.message || "優惠券已套用！", type: "success" });
-            setFinalTotal(response.data.data.final_total);
 
-            // 重新取得購物車資料
+            // coupon API 的折扣是 item-level，套用後 item 會多出 coupon 欄位且 final_total 更新。
+            // re-fetch 確保 cartData 與伺服器狀態同步，也讓 cartData 與 finalTotal 來自同一份快照。
             const cartRes = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-            setCartData(cartRes.data.data.carts);
+            setCartData(cartRes.data.data.carts ?? []);
+            setFinalTotal(cartRes.data.data.final_total);
         } catch {
             setCouponStatus({ message: "優惠券無效或已使用。", type: "danger" });
-            setFinalTotal(null);
         }
     };
 
@@ -622,7 +624,20 @@ function Cart() {
             setIsLoading(true);
             try {
                 const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-                setCartData(response.data.data.carts);
+                const data = response.data.data;
+                const carts = data.carts ?? [];
+                setCartData(carts);
+                setFinalTotal(data.final_total);
+
+                // 若購物車內有品項已套用 coupon，重新呼叫一次讓後端對所有品項套用折扣，
+                // 解決「先套 coupon 再加商品，新商品不享折扣」的 API 限制。
+                // applyCoupon 內部會更新 couponStatus（"已套用優惠券:xxx"），
+                // 此過程在 isLoading=true 的 overlay 遮蓋下不可見；
+                // overlay 消失後顯示的成功訊息屬於預期行為（告知使用者優惠券仍生效）。
+                const appliedCoupon = carts.find(item => item.coupon);
+                if (appliedCoupon) {
+                    await applyCoupon(appliedCoupon.coupon.code);
+                }
             } catch (error) {
                 setCartError("購物車資料載入失敗，請稍後再試", error);
             } finally {
@@ -630,6 +645,9 @@ function Cart() {
             }
         };
         fetchCartData();
+    // applyCoupon 捕捉的值（state setter、模組常數）在 mount 後不變，
+    // 呼叫時永遠傳入 codeOverride，不依賴 couponCode state，無 stale closure 風險
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
   return (
     <>
@@ -1252,9 +1270,9 @@ function Cart() {
                     </div>
                     <div className="d-flex">
                         <div className="p-2 flex-grow-1">優惠券</div>
-                        {finalTotal !== null ? (
+                        {subtotal - finalTotal > 0 ? (
                             <div className="p-2 text-success">
-                                折扣：- {currency(Math.floor(subtotal - finalTotal))}
+                                折扣：- {currency(subtotal - Math.ceil(finalTotal))}
                             </div>
                         ) : (
                             <></>
@@ -1263,7 +1281,7 @@ function Cart() {
                     <div className="d-flex">
                         <div className="p-2 flex-grow-1">結帳金額</div>
                         <div className="p-2">
-                            {subtotal === 0 ? 0 : currency(finalTotal !== null ? Math.floor(finalTotal) : subtotal)}
+                            {subtotal === 0 ? 0 : currency(Math.ceil(finalTotal))}
                         </div>
                     </div>
                 </div>
