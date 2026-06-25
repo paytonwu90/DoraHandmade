@@ -1,29 +1,23 @@
 import axios from "axios";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useContext } from "react";
 import UserContext from "@contexts/UserContext";
 import { useNavigate } from "react-router";
 import { UserCircle } from "lucide-react";
 import useMessage from "@hooks/useMessage.jsx";
+import useLogout from "@hooks/useLogout";
 
 function Account() {
     const navigate = useNavigate();
     const [ isLoggedIn, setIsLoggedIn ] = useState(false);
-    const { user, setUser } = useContext(UserContext);
-    const { showSuccess, showError } = useMessage();
+    const { user } = useContext(UserContext);
+    const { showError } = useMessage();
+    const logout = useLogout();
 
-    const LogOut = useCallback(() => {
-        const expiredDate = "Thu, 01 Jan 1970 00:00:00 UTC";
-        // 清除 cookie，指定 path 為 /
-        document.cookie = `doraToken=; expires=${expiredDate}; path=/;`;
-        // 清除 cookie，指定 path 為 /DoraHandmade
-        document.cookie = `doraToken=; expires=${expiredDate}; path=/DoraHandmade;`;
-
+    const LogOut = () => {
         setIsLoggedIn(false);
-        setUser(null);
-        showSuccess("已登出");
-        navigate("/login");
-    }, [setUser, showSuccess, navigate]);
+        logout();
+    };
 
     function maskString(str) {
         if (!str) return "";

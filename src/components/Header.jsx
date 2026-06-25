@@ -1,13 +1,12 @@
 import { Link, useNavigate } from "react-router";
 import { ShoppingCart, User, ChevronDown, ChevronRight } from "lucide-react";
 import { useState, useContext, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { createAsyncMessage } from "@/slice/messageSlice";
 import UserContext from "@contexts/UserContext";
+import useLogout from "@hooks/useLogout";
 import logoImg from "@images/logo.png";
 
 const Header = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const isLoggedIn = !!user;
   const userName = user?.name || "使用者";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,7 +14,7 @@ const Header = () => {
   const [openSubmenu, setOpenSubmenu] = useState(null); // null | 'handmade' | 'material'
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const logout = useLogout();
 
   const headerSubmenuRef = useRef(null);
   const mobileUserMenuRef = useRef(null);
@@ -45,14 +44,7 @@ const Header = () => {
 
   const handleLogout = (e) => {
     e.preventDefault();
-    setUser(null);
-    document.cookie =
-      "doraToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    // 為了確保 cookie 被正確刪除，指定 path 為 /DoraHandmade
-    const expiredDate = "Thu, 01 Jan 1970 00:00:00 UTC";
-    document.cookie = `doraToken=; expires=${expiredDate}; path=/DoraHandmade;`;
-    dispatch(createAsyncMessage({ success: true, message: "已登出成功" }));
-    navigate("/login");
+    logout();
   };
 
   const closeMobileMenu = () => {
