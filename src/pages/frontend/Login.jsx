@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router";
 import { useGoogleLogin } from "@react-oauth/google";
 import UserContext from "@contexts/UserContext";
+import { clearDoraToken } from "@utils/clearDoraToken";
 const API_USER_CHECK_URL = import.meta.env.VITE_API_USER_CHECK_URL;
 const API_SIGNUP_URL     = import.meta.env.VITE_API_SIGNUP_URL;
 const API_PATH           = import.meta.env.VITE_API_PATH;
@@ -149,19 +150,12 @@ function Signup() {
                         console.log("使用者已登入:", response.data);
                         navigate("/");
                     } else {
-                        // 本機端 token 無效，清除 cookie
-                        document.cookie = "doraToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                        // token 無效，清除 cookie with GitHub
-                        const COOKIE_PATH = "/DoraHandmade";
-                        document.cookie = `doraToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${COOKIE_PATH};`;
+                        clearDoraToken();
                         navigate("/login");
                     }
                 } catch (error) {
-                    // 403 或其他錯誤，清除 cookie
                     console.error("user_check 失敗:", error);
-                    document.cookie = "doraToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                    const COOKIE_PATH = "/DoraHandmade";
-                    document.cookie = `doraToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${COOKIE_PATH};`;
+                    clearDoraToken();
                     navigate("/login");
                 }
             };
