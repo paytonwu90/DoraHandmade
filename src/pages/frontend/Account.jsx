@@ -37,32 +37,31 @@ function Account() {
     useEffect(() => {
         // 取得 token
         const token = document.cookie.split("; ").find(row => row.startsWith("doraToken="))?.split("=")[1];
-        if (!token && !user) {
+        if (!token) {
             navigate("/login");
-        } else {
-            const tokenData = {
-                token: token,
-            }
-            const checkUser = async () => {
-                try {
-                    const response = await axios.post(import.meta.env.VITE_API_USER_CHECK_URL, tokenData);
-                    if (response.data.success === true) {
-                        setIsLoggedIn(true);
-                    } else {
-                        setIsLoggedIn(false);
-                        showError("使用者驗證失敗，請重新登入");
-                        navigate("/login");
-                    }
-                } catch (error) {
-                    console.error("使用者驗證失敗:", error);
+            return;
+        }
+        const tokenData = {
+            token: token,
+        }
+        const checkUser = async () => {
+            try {
+                const response = await axios.post(import.meta.env.VITE_API_USER_CHECK_URL, tokenData);
+                if (response.data.success === true) {
+                    setIsLoggedIn(true);
+                } else {
                     setIsLoggedIn(false);
                     showError("使用者驗證失敗，請重新登入");
                     navigate("/login");
                 }
-            };
-            checkUser();
-
-        }
+            } catch (error) {
+                console.error("使用者驗證失敗:", error);
+                setIsLoggedIn(false);
+                showError("使用者驗證失敗，請重新登入");
+                navigate("/login");
+            }
+        };
+        checkUser();
     }, [navigate, user, showError]);
 
 
