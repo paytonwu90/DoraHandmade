@@ -7,7 +7,7 @@ function MessageToast() {
   const dispatch = useDispatch();
 
   return (
-    <div className="toast-container position-fixed top-0 end-0 p-3">
+    <div className="toast-container position-fixed bottom-0 end-0 p-3">
       {messages.map((message) => (
         <div
           key={message.id}
