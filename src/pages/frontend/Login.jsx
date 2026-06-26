@@ -147,7 +147,6 @@ function Signup() {
                 try {
                     const response = await axios.post(API_USER_CHECK_URL, tokenData);
                     if (response.data.success) {
-                        console.log("使用者已登入:", response.data);
                         navigate("/");
                     } else {
                         clearDoraToken();
