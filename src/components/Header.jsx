@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { ShoppingCart, User, ChevronDown, ChevronRight } from "lucide-react";
 import { useState, useContext, useEffect, useRef } from "react";
 import UserContext from "@contexts/UserContext";
@@ -13,7 +13,6 @@ const Header = () => {
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState(null); // null | 'handmade' | 'material'
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const navigate = useNavigate();
   const logout = useLogout();
 
   const headerSubmenuRef = useRef(null);
