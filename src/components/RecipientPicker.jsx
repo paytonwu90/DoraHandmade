@@ -173,7 +173,6 @@ function RecipientPicker({ onConfirm, ref }) {
     if (nameInvalid || telInvalid || addressInvalid) return null;
     const newRecipient = { id: nextIdRef.current++, ...addRecipientDraft };
     setCommonRecipients(prev => [...prev, newRecipient]);
-    onConfirm(newRecipient);
     setAddRecipientNameError("");
     setAddRecipientTelError("");
     setAddRecipientAddressError("");
@@ -186,6 +185,20 @@ function RecipientPicker({ onConfirm, ref }) {
 
   const deleteCommonRecipient = (id) => {
     setCommonRecipients(prev => prev.filter(recipient => recipient.id !== id));
+  };
+
+  const handleConfirm = (close) => {
+    if (showAddRecipientForm) {
+      const saved = handleAddRecipient();
+      if (!saved) return;
+      onConfirm(saved);
+      setConfirmedRecipientId(saved.id);
+      setShowAddRecipientForm(false);
+    } else if (pendingRecipient) {
+      onConfirm(pendingRecipient);
+      setConfirmedRecipientId(pendingRecipient.id);
+    }
+    close();
   };
 
   useEffect(() => {
@@ -252,18 +265,7 @@ function RecipientPicker({ onConfirm, ref }) {
               <button
                 type="button"
                 className="btn btn-dora flex-fill"
-                onClick={() => {
-                  if (showAddRecipientForm) {
-                    const saved = handleAddRecipient();
-                    if (!saved) return;
-                    setConfirmedRecipientId(saved.id);
-                  } else if (pendingRecipient) {
-                    onConfirm(pendingRecipient);
-                    setConfirmedRecipientId(pendingRecipient.id);
-                  }
-                  setShowAddRecipientForm(false);
-                  closeModal();
-                }}
+                onClick={() => handleConfirm(closeModal)}
               >
                 確定
               </button>
@@ -293,18 +295,7 @@ function RecipientPicker({ onConfirm, ref }) {
         </div>
         <div className="offcanvas-footer d-flex justify-content-between p-3">
           <button type="button" className="btn btn-dora-outline w-50 me-2" onClick={closeOffcanvas}>取消</button>
-          <button type="button" className="btn btn-dora w-50" onClick={() => {
-            if (showAddRecipientForm) {
-              const saved = handleAddRecipient();
-              if (!saved) return;
-              setConfirmedRecipientId(saved.id);
-            } else if (pendingRecipient) {
-              onConfirm(pendingRecipient);
-              setConfirmedRecipientId(pendingRecipient.id);
-            }
-            setShowAddRecipientForm(false);
-            closeOffcanvas();
-          }}>確定</button>
+          <button type="button" className="btn btn-dora w-50" onClick={() => handleConfirm(closeOffcanvas)}>確定</button>
         </div>
       </div>
     </>
