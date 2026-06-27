@@ -284,7 +284,7 @@ function RecipientPicker({ onConfirm, ref }) {
             addRecipientTelError={addRecipientTelError}
             addRecipientAddressError={addRecipientAddressError}
             onOpenAddForm={handleOpenAddForm}
-            onPendingRecipient={setPendingRecipient}
+            onPendingRecipient={handlePendingRecipient}
             onDeleteRecipient={deleteCommonRecipient}
             onDraftNameChange={handleDraftNameChange}
             onDraftTelChange={handleDraftTelChange}
