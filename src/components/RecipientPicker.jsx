@@ -128,6 +128,9 @@ function RecipientPicker({ onConfirm, ref }) {
   // 上次按「確定」確認的收件人 id，重開 Modal/Offcanvas 時用於恢復選取狀態
   const [confirmedRecipientId, setConfirmedRecipientId] = useState(null);
 
+  // 用 ref 而非 commonRecipients.length + 1：刪除後再新增會讓 length 回退，導致 id 重複；
+  // ref 在 re-render 間保持不變，遞增後不會因為清單縮短而碰撞
+  const nextIdRef = useRef(4); // initial data has ids 1–3
   const modalDomRef = useRef(null);
   const offcanvasDomRef = useRef(null);
   const modalRef = useRef(null);
@@ -168,7 +171,7 @@ function RecipientPicker({ onConfirm, ref }) {
     if (telInvalid) setAddRecipientTelError(twPhoneValidation.pattern.message);
     if (addressInvalid) setAddRecipientAddressError("請輸入收件地址");
     if (nameInvalid || telInvalid || addressInvalid) return null;
-    const newRecipient = { id: commonRecipients.length + 1, ...addRecipientDraft };
+    const newRecipient = { id: nextIdRef.current++, ...addRecipientDraft };
     setCommonRecipients(prev => [...prev, newRecipient]);
     onConfirm(newRecipient);
     setAddRecipientNameError("");
@@ -186,15 +189,17 @@ function RecipientPicker({ onConfirm, ref }) {
   };
 
   useEffect(() => {
-    modalRef.current = new bootstrap.Modal(modalDomRef.current);
-    offcanvasRef.current = new bootstrap.Offcanvas(offcanvasDomRef.current);
+    const modalDom = modalDomRef.current;
+    const offcanvasDom = offcanvasDomRef.current;
+    modalRef.current = new bootstrap.Modal(modalDom);
+    offcanvasRef.current = new bootstrap.Offcanvas(offcanvasDom);
 
     // Modal 關閉時移除焦點
-    modalDomRef.current.addEventListener("hide.bs.modal", () => {
+    const blurActiveElement = () => {
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
       }
-    });
+    };
 
     // Modal/Offcanvas 完全關閉後重設新增表單狀態（含 backdrop 點擊）
     const resetAddForm = () => {
@@ -205,8 +210,17 @@ function RecipientPicker({ onConfirm, ref }) {
       setAddRecipientAddressError("");
       setPendingRecipient(null);
     };
-    modalDomRef.current.addEventListener("hidden.bs.modal", resetAddForm);
-    offcanvasDomRef.current.addEventListener("hidden.bs.offcanvas", resetAddForm);
+    modalDom.addEventListener("hide.bs.modal", blurActiveElement);
+    modalDom.addEventListener("hidden.bs.modal", resetAddForm);
+    offcanvasDom.addEventListener("hidden.bs.offcanvas", resetAddForm);
+
+    return () => {
+      modalDom.removeEventListener("hide.bs.modal", blurActiveElement);
+      modalDom.removeEventListener("hidden.bs.modal", resetAddForm);
+      offcanvasDom.removeEventListener("hidden.bs.offcanvas", resetAddForm);
+      modalRef.current?.dispose();
+      offcanvasRef.current?.dispose();
+    };
   }, []);
 
   return (
