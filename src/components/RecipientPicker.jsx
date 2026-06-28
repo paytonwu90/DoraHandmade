@@ -146,8 +146,8 @@ function RecipientPicker({ onConfirm, ref }) {
     setAddRecipientDraft(prev => ({ ...prev, [name]: value }));
   };
 
-  const closeModal = () => { if (modalRef.current) modalRef.current.hide(); };
-  const closeOffcanvas = () => { if (offcanvasRef.current) offcanvasRef.current.hide(); };
+  const closeModal = () => modalRef.current?.hide();
+  const closeOffcanvas = () => offcanvasRef.current?.hide();
 
   const handleOpenAddForm = () => {
     setShowAddRecipientForm(true);
@@ -239,7 +239,7 @@ function RecipientPicker({ onConfirm, ref }) {
   return (
     <>
       {/* 電腦版 Modal */}
-      <div className="modal" id="recipientModal" ref={modalDomRef}>
+      <div className="modal" id="recipientModal" ref={modalDomRef} tabIndex="-1" aria-label="選擇常用收件人">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-body p-10 pb-6">
@@ -274,7 +274,7 @@ function RecipientPicker({ onConfirm, ref }) {
         </div>
       </div>
       {/* 手機版 Offcanvas */}
-      <div className="offcanvas offcanvas-bottom custom-offcanvas-80" id="recipientOffcanvas" ref={offcanvasDomRef}>
+      <div className="offcanvas offcanvas-bottom custom-offcanvas-80" id="recipientOffcanvas" ref={offcanvasDomRef} tabIndex="-1" aria-label="選擇常用收件人">
         <div className="offcanvas-body p-0">
           <RecipientSelectorContent
             variant="offcanvas"
