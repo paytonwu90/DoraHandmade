@@ -33,14 +33,14 @@ function RecipientSelectorContent({
         </button>
       </div>
       {commonRecipients.length > 0 ? (
-        commonRecipients.map((recipient, index) => (
+        commonRecipients.map((recipient, index) => {
+          const spacingClass = isModal
+            ? (index !== commonRecipients.length - 1 ? " mb-4" : "")
+            : " mb-3";
+          return (
           <div
             key={recipient.id}
-            className={`form-check d-flex align-items-center${
-              isModal
-                ? index !== commonRecipients.length - 1 ? " mb-4" : ""
-                : " mb-3"
-            }`}
+            className={`form-check d-flex align-items-center${spacingClass}`}
           >
             <input
               className="form-check-input me-2"
@@ -61,7 +61,8 @@ function RecipientSelectorContent({
               刪除
             </button>
           </div>
-        ))
+          );
+        })
       ) : (
         <p>尚無常用收件人</p>
       )}
