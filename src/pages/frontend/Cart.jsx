@@ -27,11 +27,20 @@ function Cart() {
     const [localQty, setLocalQty] = useState({});
     const [cartError, setCartError] = useState("");
     const debounceRef = useRef({});
-    // 初始化 localQty（cartData 載入後同步）
+    // 新品項才初始化 localQty，已追蹤的不覆寫（避免並發 API 回傳時閃回舊值）；
+    // 同時清除已從購物車移除的品項
     useEffect(() => {
-        const init = {};
-        cartData.forEach(item => { init[item.id] = item.qty; });
-        setLocalQty(init);
+        setLocalQty(prev => {
+            const next = { ...prev };
+            const cartIds = new Set(cartData.map(item => item.id));
+            cartData.forEach(item => {
+                if (!(item.id in next)) next[item.id] = item.qty;
+            });
+            Object.keys(next).forEach(id => {
+                if (!cartIds.has(id)) delete next[id];
+            });
+            return next;
+        });
     }, [cartData]);
     const [deliveryMethod, setDeliveryMethod] = useState("familyMart");
     const [ updatingId, setUpdatingId ] = useState(null);
@@ -97,17 +106,28 @@ function Cart() {
         setUpdatingId(null);
     }, []);
 
-    // debounce 版本的數量更新
+    // debounce 版本的數量更新（+/- 按鈕用）
     const handleQtyChange = useCallback((item, newQty) => {
         if (newQty < 1) return;
         // 立即更新 UI
         setLocalQty(prev => ({ ...prev, [item.id]: newQty }));
         // 清掉上一個 timer
         if (debounceRef.current[item.id]) clearTimeout(debounceRef.current[item.id]);
-        // 800ms 後才打 API
+        // 300ms 後才打 API
         debounceRef.current[item.id] = setTimeout(() => {
             updateCartQty(item, newQty);
-        }, 800);
+        }, 300);
+    }, [updateCartQty]);
+
+    // input onBlur 時清掉 pending debounce，直接送 API
+    const handleInputBlur = useCallback((item, value) => {
+        const newQty = Math.max(1, Number(value) || 1);
+        if (debounceRef.current[item.id]) {
+            clearTimeout(debounceRef.current[item.id]);
+            delete debounceRef.current[item.id];
+        }
+        setLocalQty(prev => ({ ...prev, [item.id]: newQty }));
+        updateCartQty(item, newQty);
     }, [updateCartQty]);
 
 
@@ -351,18 +371,18 @@ function Cart() {
                                                 <button
                                                     className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''}`}
                                                     type="button"
-                                                    disabled={(localQty[item.id] ?? item.qty) === 1 || updatingId === item.id}
+                                                    disabled={(localQty[item.id] ?? item.qty) === 1}
                                                     onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) - 1)}
                                                 ><Minus /></button>
                                                 <input
                                                     type="number" min="1"
                                                     value={localQty[item.id] ?? item.qty}
-                                                    onChange={e => handleQtyChange(item, Number(e.target.value))}
-                                                    // 移除 disabled，讓使用者可以直接輸入
+                                                    onChange={e => setLocalQty(prev => ({ ...prev, [item.id]: Number(e.target.value) }))}
+                                                    onBlur={e => handleInputBlur(item, e.target.value)}
                                                     className="text-center fs-20 bg-white border-0 cart-qty-input"
                                                     style={{width: 40}}
                                                 />
-                                                <button className="btn btn-sm border-0" type="button" disabled={updatingId===item.id} onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) + 1)}><Plus /></button>
+                                                <button className="btn btn-sm border-0" type="button" onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) + 1)}><Plus /></button>
                                             </div>
                                         </td>
                                         <td>{currency(item.total)}</td>
@@ -395,20 +415,20 @@ function Cart() {
                                                 <button
                                                     className={`btn btn-sm border-0${(localQty[item.id] ?? item.qty) === 1 ? ' text-muted border-muted' : ''}`}
                                                     type="button"
-                                                    disabled={(localQty[item.id] ?? item.qty) === 1 || updatingId === item.id}
+                                                    disabled={(localQty[item.id] ?? item.qty) === 1}
                                                     onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) - 1)}
                                                 ><Minus size={16} className="text-gray-600" /></button>
                                                 <input
                                                     type="number" min="1"
                                                     value={localQty[item.id] ?? item.qty}
-                                                    onChange={e => handleQtyChange(item, Number(e.target.value))}
+                                                    onChange={e => setLocalQty(prev => ({ ...prev, [item.id]: Number(e.target.value) }))}
+                                                    onBlur={e => handleInputBlur(item, e.target.value)}
                                                     className="text-center fs-20 bg-white border-0 cart-qty-input"
                                                     style={{width: 40}}
                                                 />
                                                 <button
                                                     className="btn btn-sm border-0"
                                                     type="button"
-                                                    disabled={updatingId===item.id}
                                                     onClick={() => handleQtyChange(item, (localQty[item.id] ?? item.qty) + 1)}
                                                 ><Plus size={16} className="text-gray-600" /></button>
                                             </div>
