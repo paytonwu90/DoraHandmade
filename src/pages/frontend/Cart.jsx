@@ -1,7 +1,7 @@
 import axios from "axios";
 import OrderToast from "@components/OrderToast";
 import Loading from "@components/Loading";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
 import { Minus, Plus, TriangleAlert, X } from "lucide-react";
@@ -9,6 +9,7 @@ import { currency } from "@utils/filter";
 import * as bootstrap from "bootstrap";
 import { emailValidation, twPhoneValidation } from "@utils/validation";
 import { useEcpay } from "@hooks/useEcpay";
+import { useCartItems } from "@hooks/useCartItems";
 import RecipientPicker from "@components/RecipientPicker";
 const VITE_API_BASE = import.meta.env.VITE_API_BASE;
 const VITE_API_PATH = import.meta.env.VITE_API_PATH;
@@ -21,37 +22,25 @@ const availableCoupons = [
 
 
 function Cart() {
-    const [ cartData, setCartData ] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    // ── 新增：每個 item 的本地數量暫存 ──
-    const [localQty, setLocalQty] = useState({});
-    const [cartError, setCartError] = useState("");
-    const debounceRef = useRef({});
-    // 新品項才初始化 localQty，已追蹤的不覆寫（避免並發 API 回傳時閃回舊值）；
-    // 同時清除已從購物車移除的品項
-    useEffect(() => {
-        setLocalQty(prev => {
-            const next = { ...prev };
-            const cartIds = new Set(cartData.map(item => item.id));
-            cartData.forEach(item => {
-                if (!(item.id in next)) next[item.id] = item.qty;
-            });
-            Object.keys(next).forEach(id => {
-                if (!cartIds.has(id)) delete next[id];
-            });
-            return next;
-        });
-    }, [cartData]);
     const [deliveryMethod, setDeliveryMethod] = useState("familyMart");
-    const [ updatingId, setUpdatingId ] = useState(null);
+    // 折扣後的金額（useCartItems 與 useCoupon 共用，保留在 Cart.jsx）
+    const [finalTotal, setFinalTotal] = useState(0);
+    const {
+        cartData, setCartData,
+        localQty, setLocalQty,
+        cartError, setCartError,
+        updatingId,
+        handleQtyChange,
+        handleInputBlur,
+        removeCartItem,
+    } = useCartItems({ setFinalTotal });
     // 優惠券、運費等狀態可在此新增
     const [ couponCode, setCouponCode ] = useState("");
     const { selectedStore, setSelectedStore, openCvsMap } = useEcpay();
     const [ couponStatus, setCouponStatus ] = useState({ message: "", type: "" });
     const [ showCouponList, setShowCouponList ] = useState(false);
 
-    // 折扣後的金額
-    const [finalTotal, setFinalTotal] = useState(0);
     // useForm 表單驗證
     const {
         register,
@@ -82,76 +71,6 @@ function Cart() {
     const toast = new bootstrap.Toast(toastRef.current);
     toast.show();
     };
-    // 更新購物車數量
-    const updateCartQty = useCallback(async (item, newQty) => {
-        if (newQty < 1) return;
-        setUpdatingId(item.id);
-        try {
-            await axios.put(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart/${item.id}`, {
-                data: {
-                    product_id: item.product_id,
-                    qty: newQty
-                }
-            });
-            // 重新取得購物車資料
-            const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-            setCartData(response.data.data.carts ?? []);
-            setFinalTotal(response.data.data.final_total);
-            setCartError("")
-        } catch (error) {
-            setCartError("數量更新失敗，請稍後再試", error);
-            // 恢復為原本數量
-            setLocalQty(prev => ({ ...prev, [item.id]: item.qty }));
-        }
-        setUpdatingId(null);
-    }, []);
-
-    // debounce 版本的數量更新（+/- 按鈕用）
-    const handleQtyChange = useCallback((item, newQty) => {
-        if (newQty < 1) return;
-        // 立即更新 UI
-        setLocalQty(prev => ({ ...prev, [item.id]: newQty }));
-        // 清掉上一個 timer
-        if (debounceRef.current[item.id]) clearTimeout(debounceRef.current[item.id]);
-        // 300ms 後才打 API
-        debounceRef.current[item.id] = setTimeout(() => {
-            updateCartQty(item, newQty);
-        }, 300);
-    }, [updateCartQty]);
-
-    // input onBlur 時清掉 pending debounce，直接送 API
-    const handleInputBlur = useCallback((item, value) => {
-        const newQty = Math.max(1, Number(value) || 1);
-        if (debounceRef.current[item.id]) {
-            clearTimeout(debounceRef.current[item.id]);
-            delete debounceRef.current[item.id];
-        }
-        setLocalQty(prev => ({ ...prev, [item.id]: newQty }));
-        updateCartQty(item, newQty);
-    }, [updateCartQty]);
-
-
-    // 刪除購物車項目
-    const removeCartItem = async (itemId) => {
-        if (debounceRef.current[itemId]) {
-            clearTimeout(debounceRef.current[itemId]);
-            delete debounceRef.current[itemId];
-        }
-        setUpdatingId(itemId);
-        try {
-            await axios.delete(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart/${itemId}`);
-            // 重新取得購物車資料
-            const response = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-            setCartData(response.data.data.carts ?? []);
-            setFinalTotal(response.data.data.final_total);
-            setCartError("")
-        } catch (error) {
-            setCartError("刪除商品失敗，請稍後再試", error);
-        }
-        setUpdatingId(null);
-    };
-
-
     // 使用優惠券
     const applyCoupon = async (codeOverride) => {
         const code = codeOverride ?? couponCode;
