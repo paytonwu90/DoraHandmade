@@ -4,7 +4,7 @@ import Loading from "@components/Loading";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
-import { Minus, Plus, TriangleAlert, X } from "lucide-react";
+import { Minus, MoveRight, Plus, ShoppingBag, TriangleAlert, X } from "lucide-react";
 import { currency } from "@utils/filter";
 import * as bootstrap from "bootstrap";
 import { emailValidation, twPhoneValidation } from "@utils/validation";
@@ -167,75 +167,14 @@ function Cart() {
                     )}
                     {/* ── 空購物車提示 ── */}
                     {cartData.length === 0 ? (
-                        <div style={{
-                            textAlign: "center",
-                            padding: "64px 24px 80px",
-                            fontFamily: "'Noto Serif TC', 'PingFang TC', sans-serif",
-                        }}>
-                            {/* 浮動 icon */}
-                            <div className="float-icon" style={{ fontSize: "3rem", marginBottom: "24px" }}>
-                                🛍️
-                            </div>
-
-                            {/* Badge */}
-                            <div style={{
-                                display: "inline-block",
-                                padding: "6px 20px",
-                                borderRadius: "20px",
-                                background: "#FFF0F4",
-                                border: "1.5px solid #ECD4DE",
-                                color: "#C2547A",
-                                fontSize: "0.78rem",
-                                letterSpacing: "0.2em",
-                                fontWeight: 600,
-                                marginBottom: "24px",
-                                textTransform: "uppercase",
-                            }}>
-                                Empty Cart
-                            </div>
-
-                            <h3 style={{
-                                fontFamily: "'Noto Serif TC', serif",
-                                fontSize: "clamp(1.1rem, 2.5vw, 1.5rem)",
-                                fontWeight: 600,
-                                color: "#2a2a2a",
-                                margin: "0 0 16px",
-                                lineHeight: "1.6",
-                            }}>
-                                目前購物車還沒有商品
-                            </h3>
-
-                            <p style={{
-                                color: "#888",
-                                fontSize: "0.92rem",
-                                lineHeight: "1.9",
-                                margin: "0 0 40px",
-                            }}>
-                                快去挑選喜歡的手作飾品，<br />
-                                為日常增添一點儀式感吧 ♡
+                        <div className="text-center py-15">
+                            <ShoppingBag size={56} className="text-primary mb-5" strokeWidth={1.5} />
+                            <h3 className="text-p-20-b mb-3">購物車目前是空的</h3>
+                            <p className="text-gray-500 mb-8">
+                                還沒有加入任何商品，<br />
+                                快去挑選喜歡的蝴蝶結飾品吧。
                             </p>
-
-                            {/* 分隔線 */}
-                            <div style={{
-                                display: "flex", alignItems: "center", gap: "12px",
-                                marginBottom: "36px", maxWidth: 360, margin: "0 auto 36px",
-                            }}>
-                                <div style={{ flex: 1, height: "1px", background: "#F0E4EA" }} />
-                                <span style={{ color: "#D4A0B4", fontSize: "0.8rem", letterSpacing: "0.1em" }}>立即選購</span>
-                                <div style={{ flex: 1, height: "1px", background: "#F0E4EA" }} />
-                            </div>
-
-                            {/* 選購按鈕 */}
-                            <Link
-                                to="/product"
-                                style={{
-                                    display: "inline-flex", alignItems: "center", gap: "6px",
-                                    padding: "12px 32px", borderRadius: "24px",
-                                    background: "#C2547A", color: "#fff",
-                                    fontSize: "0.9rem", fontWeight: 500,
-                                    textDecoration: "none",
-                                }}
-                            >前往商品頁面 →</Link>
+                            <Link to="/product" className="btn btn-dora d-inline-flex align-items-center gap-2">前往選購<MoveRight strokeWidth={2.5} /></Link>
                         </div>
                     ) : (
                         <>
