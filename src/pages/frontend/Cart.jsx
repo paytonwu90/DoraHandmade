@@ -10,6 +10,7 @@ import * as bootstrap from "bootstrap";
 import { emailValidation, twPhoneValidation } from "@utils/validation";
 import { useEcpay } from "@hooks/useEcpay";
 import { useCartItems } from "@hooks/useCartItems";
+import { useCoupon } from "@hooks/useCoupon";
 import RecipientPicker from "@components/RecipientPicker";
 const VITE_API_BASE = import.meta.env.VITE_API_BASE;
 const VITE_API_PATH = import.meta.env.VITE_API_PATH;
@@ -35,11 +36,8 @@ function Cart() {
         handleInputBlur,
         removeCartItem,
     } = useCartItems({ setFinalTotal });
-    // 優惠券、運費等狀態可在此新增
-    const [ couponCode, setCouponCode ] = useState("");
     const { selectedStore, setSelectedStore, openCvsMap } = useEcpay();
-    const [ couponStatus, setCouponStatus ] = useState({ message: "", type: "" });
-    const [ showCouponList, setShowCouponList ] = useState(false);
+    const { couponCode, setCouponCode, couponStatus, showCouponList, setShowCouponList, applyCoupon } = useCoupon({ setCartData, setFinalTotal });
 
     // useForm 表單驗證
     const {
@@ -70,28 +68,6 @@ function Cart() {
     const showToast = () => {
     const toast = new bootstrap.Toast(toastRef.current);
     toast.show();
-    };
-    // 使用優惠券
-    const applyCoupon = async (codeOverride) => {
-        const code = codeOverride ?? couponCode;
-        if (!code) return;
-        setCouponStatus({ message: "正在套用...", type: "" });
-        try {
-            const response = await axios.post(`${VITE_API_BASE}/api/${VITE_API_PATH}/coupon`, {
-                data: {
-                    code: code
-                }
-            });
-            setCouponStatus({ message: response.data.message || "優惠券已套用！", type: "success" });
-
-            // coupon API 的折扣是 item-level，套用後 item 會多出 coupon 欄位且 final_total 更新。
-            // re-fetch 確保 cartData 與伺服器狀態同步，也讓 cartData 與 finalTotal 來自同一份快照。
-            const cartRes = await axios.get(`${VITE_API_BASE}/api/${VITE_API_PATH}/cart`);
-            setCartData(cartRes.data.data.carts ?? []);
-            setFinalTotal(cartRes.data.data.final_total);
-        } catch {
-            setCouponStatus({ message: "優惠券無效或已使用。", type: "danger" });
-        }
     };
 
     // 計算折扣金額
@@ -172,7 +148,7 @@ function Cart() {
             }
         };
         fetchCartData();
-    // applyCoupon 捕捉的值（state setter、模組常數）在 mount 後不變，
+    // applyCoupon 來自 useCoupon，內部僅捕捉 stable state setter，
     // 呼叫時永遠傳入 codeOverride，不依賴 couponCode state，無 stale closure 風險
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
