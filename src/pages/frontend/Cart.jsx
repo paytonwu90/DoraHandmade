@@ -276,6 +276,7 @@ function Cart() {
                         </>
                     )}
                 </div>
+                {cartData.length > 0 && (<>
                 {/* 優惠券輸入區塊 */}
                 <div className="mt-6 mb-6 mt-md-8 mb-md-8">
                     <h2 className="cart-heading-title">使用優惠券</h2>
@@ -624,7 +625,9 @@ function Cart() {
                         </div>
                     )}
                 </div>
+                </>)}
             </div>
+            {cartData.length > 0 && (
             <div className="col-lg-3">
                 <div className="mt-6 mb-6 mt-md-15 mb-md-15">
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -665,6 +668,7 @@ function Cart() {
                 </form>
                 </div>
             </div>
+            )}
         </div>
     </div>
     <OrderToast ref={toastRef} message="訂單已成立！" isSuccess={true} orderId={orderId} />
