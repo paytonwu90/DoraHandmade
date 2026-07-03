@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect, useContext, useCallback } from "react";
-import useMessage from "@hooks/useMessage.jsx";
+import useMessage from "@hooks/useMessage";
 import { useForm } from "react-hook-form";
 import { useNavigate, useLocation } from "react-router";
 import { useGoogleLogin } from "@react-oauth/google";

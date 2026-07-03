@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router";
 import { useState, useEffect, useContext, useCallback } from "react";
-import useMessage from "@hooks/useMessage.jsx";
+import useMessage from "@hooks/useMessage";
 import Loading from "@components/Loading";
 import axios from 'axios';
 import UserContext from "@contexts/UserContext";

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import useMessage from "@hooks/useMessage.jsx";
+import useMessage from "@hooks/useMessage";
 import { useState, useCallback, useEffect } from 'react';
 import Pagination from '@components/Pagination';
 import { confirmDelete } from "@utils/sweetAlert";

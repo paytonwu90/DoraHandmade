@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState, useCallback, useEffect, useRef } from 'react';
 import * as bootstrap from 'bootstrap';
-import useMessage from "@hooks/useMessage.jsx";
+import useMessage from "@hooks/useMessage";
 import OrderModal from '@components/backend/OrderModal';
 import Pagination from '@components/Pagination';
 const VITE_API_BASE = import.meta.env.VITE_API_BASE;

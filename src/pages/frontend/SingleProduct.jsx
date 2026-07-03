@@ -6,7 +6,7 @@ import axios from "axios";
 import { useCartActionContext } from "@contexts/CartAction";
 import { useFavoriteProductsContext } from "@contexts/FavoriteProducts";
 import ProductCard from "@components/ProductCard";
-import useMessage from "@hooks/useMessage.jsx";
+import useMessage from "@hooks/useMessage";
 
 // API 設定
 const API_BASE = import.meta.env.VITE_API_BASE;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import useMessage from "@hooks/useMessage.jsx";
+import useMessage from "@hooks/useMessage";
 const VITE_API_BASE = import.meta.env.VITE_API_BASE;
 const VITE_API_PATH = import.meta.env.VITE_API_PATH;
 

@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext, useCallback } from "react";
 import { useNavigate, Link } from "react-router";
 import UserContext from "@contexts/UserContext";
-import useMessage from "@hooks/useMessage.jsx";
+import useMessage from "@hooks/useMessage";
 import Loading from "@components/Loading";
 import axios from 'axios';
 const VITE_API_BASE = import.meta.env.VITE_API_BASE;

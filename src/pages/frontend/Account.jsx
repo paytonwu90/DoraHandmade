@@ -4,7 +4,7 @@ import { useContext } from "react";
 import UserContext from "@contexts/UserContext";
 import { useNavigate } from "react-router";
 import { UserCircle } from "lucide-react";
-import useMessage from "@hooks/useMessage.jsx";
+import useMessage from "@hooks/useMessage";
 import useLogout from "@hooks/useLogout";
 
 function Account() {
