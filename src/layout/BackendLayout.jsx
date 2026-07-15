@@ -1,7 +1,5 @@
 import { useForm } from "react-hook-form";
 import { emailValidation } from "../utils/validation";
-const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME;
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 import { Link, Outlet, useLocation, Navigate } from "react-router";
 import { useState, useEffect , useCallback } from "react";
 import { useNavigate } from "react-router";
@@ -28,21 +26,17 @@ const BackendLayout = () => {
 
     const onSubmit = useCallback(async (formData) => {
         try {
-            if (formData.username === ADMIN_USERNAME && formData.password === ADMIN_PASSWORD) {
-                // 登入六角API
-                const response = await axios.post(`${VITE_API_BASE}/admin/signin`, formData);
-                const { token, expired } = response.data;
-                document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
-                axios.defaults.headers.common.Authorization = token;
-                setIsLogin(true);
-                localStorage.setItem("adminLogin", "true");
-                navigate("/admin/product");
-            } else {
-                showError("帳號或密碼錯誤");
-            }
+            // 登入六角API
+            const response = await axios.post(`${VITE_API_BASE}/admin/signin`, formData);
+            const { token, expired } = response.data;
+            document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+            axios.defaults.headers.common.Authorization = token;
+            setIsLogin(true);
+            localStorage.setItem("adminLogin", "true");
+            navigate("/admin/product");
         } catch (error) {
             console.error(error);
-            showError("登入失敗，請稍後再試");
+            showError("帳號或密碼錯誤");
         }
     }, [navigate, showError]);
 
